@@ -2,39 +2,35 @@
 setlocal
 cd /d "%~dp0"
 
+set "REPOURL=https://github.com/nutyfreshz/kdkamato.git"
+
 echo ================================
-echo GitHub Folder Uploader
+echo KDKAMATO GitHub Uploader
 echo ================================
 echo.
 
 where git >nul 2>&1
 if errorlevel 1 (
     echo ERROR: Git is not installed or not in PATH.
-    echo Install Git for Windows first.
     pause
     exit /b 1
 )
 
 if not exist ".git" (
     echo First-time setup detected.
-    echo Initializing Git repository...
     git init
     if errorlevel 1 goto :error
 
     git branch -M main
 
-    echo.
-    set /p REPOURL=Paste GitHub repository URL: 
-    if "%REPOURL%"=="" (
-        echo ERROR: Repository URL cannot be empty.
-        pause
-        exit /b 1
-    )
-
     git remote add origin "%REPOURL%"
     if errorlevel 1 goto :error
 ) else (
-    echo Existing Git repository detected.
+    git remote get-url origin >nul 2>&1
+    if errorlevel 1 (
+        git remote add origin "%REPOURL%"
+        if errorlevel 1 goto :error
+    )
 )
 
 echo.
