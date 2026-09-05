@@ -72,9 +72,9 @@ export default function HomePage({ manga = [], articles = [] }) {
       <section className="lab section" id="lab">
         <div className="lab-grid-bg" />
         <div className="shell lab-shell">
-          <div className="section-heading compact"><p className="eyebrow cyan">KDKAMATO LAB</p><h2>TEST<br/>YOURSELF.</h2><p className="section-intro">Personal fitness/science tools that turn your own measurements into useful context, without live AI interpretation.</p></div>
+          <div className="section-heading compact"><p className="eyebrow cyan">KDKAMATO LAB</p><h2>TEST<br/>YOURSELF.</h2><p className="section-intro">เริ่มจากคำถามที่คุณอยากรู้ ไม่ต้องรู้ชื่อ metric มาก่อน แล้วค่อยลงไปดู science ที่อยู่ข้างใต้</p></div>
           <LabPreview />
-          <div className="tool-teasers"><Link href="/lab/exercise-fit"><span>C1</span>EXERCISE FIT <b>→</b></Link><Link href="/lab/squat-geometry"><span>C2</span>SQUAT GEOMETRY <b>→</b></Link><Link href="/lab/physique-goal"><span>C3</span>PHYSIQUE GOAL <b>→</b></Link></div>
+          <div className="tool-teasers"><Link href="/lab/exercise-fit"><span>C1</span>ท่าไหนเข้ากับโครงคุณ? <b>→</b></Link><Link href="/lab/squat-geometry"><span>C2</span>Squat แบบไหนเข้ากับขาคุณ? <b>→</b></Link><Link href="/lab/physique-goal"><span>C3</span>อยาก V-shape ขึ้น ควรพัฒนาอะไร? <b>→</b></Link></div>
         </div>
       </section>
 
