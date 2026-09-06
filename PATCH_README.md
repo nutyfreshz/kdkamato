@@ -1,50 +1,61 @@
-# KDKAMATO LAB 3C5Q Web Patch v1.2
+# KDKAMATO WEB TH/EN + Public Thai Rewrite Patch v1.0
 
-Source authority: `KDKAMATO_LAB_LAUNCH_HANDOFF_3C5Q_v1.1.md`
+## Purpose
 
-This is the single combined patch. It includes the previous 3C5Q implementation, the `/lab/[tool]` async params route hotfix, and the v1.1 LAB UX/product changes.
+This patch addresses two things together:
+
+1. Thai is the default website language and EN can be switched from the header.
+2. Public-facing Thai is rewritten for readers who are not already familiar with KDKAMATO terminology.
+
+The rule is: reduce language complexity, not scientific depth.
+
+## Scope completed
+
+- Home page static copy
+- Descent / hidden-mechanism sequence
+- Manga library UI and Manga reader UI
+- Knowledge library UI and Article reader UI
+- KDKAMATO LAB landing page
+- All current LAB tool instructions, measurement help, result blocks, privacy copy, and major deterministic result explanations
+- Training placeholder page, without inventing Free/Paid material before source-manuscript review
+- TH / EN switch, Thai default
+- Optional `*_TH` / `*_EN` Google Sheet fields for dynamic Manga and Article content
+
+## Important content behavior
+
+Technical terms are not removed when they carry real value. They are introduced after or beside understandable language.
+
+Examples:
+
+- `Ape Index` stays as the technical name, but the reader first sees how arm span compares with height.
+- `ankle dorsiflexion` is explained as the ability to let the knee travel forward while the heel stays down.
+- `Femur / Tibia` remain useful anatomy terms, but Thai explains that they are the thigh and lower-leg segments.
+- Geometry models are described as position models, not diagnosis or exact joint-angle calculations.
+
+## Architecture decision
+
+No Sanity/CMS was added in v1.0.
+
+Reason: the site already uses Google Sheet as a live content store for Manga and Articles. Adding a second content system now would create unnecessary maintenance before the wording is stable.
+
+Dynamic Manga/Article localization can be edited in the existing Google Sheet by adding the columns listed in `BILINGUAL_CONTENT_COLUMNS.md`.
+
+A visual editor for static interface copy can be added later if it still provides enough value after the Thai copy stabilizes.
 
 ## Apply
 
-1. Open this patch folder.
-2. Copy `app/`, `components/`, and `lib/` into the root of the existing KDKAMATO website.
-3. Allow overwrite/merge when Windows asks.
-4. Run the existing Git push `.bat` from the website root.
-5. Wait for Vercel to deploy.
+Place this patch folder directly inside the local KDKAMATO website repository, next to `package.json`, then run:
 
-## v1.1 changes included
+`APPLY_KDKAMATO_WEB_TH_EN_PATCH_v1.0.bat`
 
-- LAB landing cards now lead with user questions, not technical metric names.
-- First-visit tools are grouped by intent: training vs physique.
-- Q3 Frame Snapshot is removed from launch and replaced by Knee-to-Wall Ankle Mobility Check.
-- `/lab/knee-to-wall` added.
-- `/lab/frame-analysis` now redirects back to `/lab` instead of remaining a launch tile.
-- Measurement values reuse `sessionStorage` across compatible tools in the same browser session.
-- C1 → C2/Q4/Q5, Q1 → C3, Q3 → C2 context reuse is enabled.
-- Results show plain-language headline first and technical metric second.
-- Measurement fields explain why each input is needed before technical detail.
-- No live AI interpretation; deterministic calculation/rules only.
-- Raw anthropometric values are not attached to analytics events by this patch.
-- Dynamic route uses `await params`, preventing the Next.js 404 observed on `/lab/squat-geometry`.
+The script:
 
-## Expected routes
+1. verifies that the parent folder is the website repository
+2. backs up every file that will be replaced
+3. copies the patch files into the repository
+4. runs `npm run build` when `node_modules` is available
+5. automatically restores the backup if that build fails
 
-- `/lab`
-- `/lab/exercise-fit`
-- `/lab/squat-geometry`
-- `/lab/knee-to-wall`
-- `/lab/physique-goal`
-- `/lab/v-taper`
-- `/lab/ffmi`
-- `/lab/ape-index`
-- `/lab/femur-tibia`
+It does NOT push to GitHub or deploy production automatically.
 
-## Smoke test after deploy
-
-1. Open `/lab/squat-geometry` and confirm it no longer returns 404.
-2. Enter Height/Arm Span in C1, open Q4 and confirm the values are reused.
-3. Enter Femur/Tibia in Q5, open C2 and confirm the values are reused.
-4. Enter Knee-to-Wall left/right, open C2 and confirm the imported context note appears.
-5. Enter Shoulder/Waist in Q1, open C3 and confirm the values are reused.
-6. Confirm first result is plain Thai language and technical metric appears second.
-7. Confirm `/lab/frame-analysis` redirects to `/lab`.
+After local review/build passes, use the existing `upload_kdkamato_github.bat` workflow to publish.

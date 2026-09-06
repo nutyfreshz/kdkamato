@@ -2,19 +2,28 @@
 
 import { useState } from 'react';
 
-const items = [
-  ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'Whole-body physiology as an interconnected living system.'],
-  ['TRAINING SCIENCE', '/assets/a07_training_science.webp', 'Mechanical load, force transfer, and tissue response.'],
-  ['REHAB', '/assets/a08_rehab.webp', 'Capacity, controlled loading, and biological remodeling.'],
-  ['BIOLOGY & PHYSIOLOGY', '/assets/a09_biology.webp', 'Signals are received, regulated, and translated into cellular responses.']
-];
+const items = {
+  th: [
+    ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'มองร่างกายทั้งระบบ ตั้งแต่การควบคุมภายในจนถึงสิ่งที่เห็นจากภายนอก'],
+    ['TRAINING SCIENCE', '/assets/a07_training_science.webp', 'เข้าใจแรง การเคลื่อนไหว ภาระที่เนื้อเยื่อรับ และเหตุผลที่การจัดท่าต่างกัน'],
+    ['REHAB', '/assets/a08_rehab.webp', 'เข้าใจความสามารถของเนื้อเยื่อ การเพิ่มโหลดอย่างเป็นขั้นตอน และการกลับไปใช้งานจริง'],
+    ['BIOLOGY & PHYSIOLOGY', '/assets/a09_biology.webp', 'ตามดูว่าสัญญาณถูกส่ง รับ และเปลี่ยนเป็นการตอบสนองของเซลล์ได้อย่างไร']
+  ],
+  en: [
+    ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'Whole-body physiology as an interconnected living system.'],
+    ['TRAINING SCIENCE', '/assets/a07_training_science.webp', 'Mechanical load, force transfer, movement, and tissue response.'],
+    ['REHAB', '/assets/a08_rehab.webp', 'Capacity, progressive loading, recovery, and return to performance.'],
+    ['BIOLOGY & PHYSIOLOGY', '/assets/a09_biology.webp', 'How signals are received, regulated, and translated into cellular responses.']
+  ]
+};
 
-export default function KnowledgeSwitcher() {
+export default function KnowledgeSwitcher({ language = 'th' }) {
   const [active, setActive] = useState(0);
+  const content = items[language] || items.th;
   return (
     <div className="knowledge-stage">
-      <div className="knowledge-list" role="tablist" aria-label="Knowledge territories">
-        {items.map((item, index) => (
+      <div className="knowledge-list" role="tablist" aria-label={language === 'en' ? 'Knowledge territories' : 'หมวดความรู้'}>
+        {content.map((item, index) => (
           <button
             key={item[0]}
             className={`knowledge-item ${active === index ? 'is-active' : ''}`}
@@ -29,10 +38,10 @@ export default function KnowledgeSwitcher() {
         ))}
       </div>
       <div className="knowledge-visual">
-        {items.map((item, index) => (
+        {content.map((item, index) => (
           <img key={item[1]} className={`knowledge-image ${active === index ? 'is-active' : ''}`} src={item[1]} alt="" />
         ))}
-        <div className="knowledge-caption">{items[active][2]}</div>
+        <div className="knowledge-caption">{content[active][2]}</div>
       </div>
     </div>
   );

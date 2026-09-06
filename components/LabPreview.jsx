@@ -4,25 +4,29 @@ import { useMemo } from 'react';
 import { computeApeIndex } from '../lib/lab';
 import { useLabMeasurement } from '../lib/labSession';
 
-export default function LabPreview() {
+export default function LabPreview({ language = 'th' }) {
   const [height, setHeight] = useLabMeasurement('height','178');
   const [armSpan, setArmSpan] = useLabMeasurement('armSpan','184');
   const result = useMemo(() => computeApeIndex(height, armSpan), [height, armSpan]);
-  const headline = result ? (result.diff >= 0 ? `ยาวกว่า ${Math.abs(result.diff)} cm` : `สั้นกว่า ${Math.abs(result.diff)} cm`) : '—';
+  const headline = result
+    ? language === 'en'
+      ? (result.diff >= 0 ? `${Math.abs(result.diff)} cm longer` : `${Math.abs(result.diff)} cm shorter`)
+      : (result.diff >= 0 ? `ยาวกว่า ${Math.abs(result.diff)} cm` : `สั้นกว่า ${Math.abs(result.diff)} cm`)
+    : '—';
 
   return (
     <div className="lab-demo">
       <div className="lab-form">
-        <p className="meta">ลองของเล่นชิ้นแรก</p>
-        <h3>แขนคุณยาวแค่ไหนเมื่อเทียบกับตัว?</h3>
-        <p style={{color:'#8f989b'}}>วัด 2 ค่าแล้วดู reach context ก่อนเปิดดูว่ามันอาจเปลี่ยน setup ของ Bench / Deadlift ยังไง</p>
-        <label>ส่วนสูง <span>cm</span><input value={height} onChange={(e) => setHeight(e.target.value)} type="number" /></label>
-        <label>ช่วงแขน <span>cm</span><input value={armSpan} onChange={(e) => setArmSpan(e.target.value)} type="number" /></label>
-        <a className="lab-button" href="/lab/exercise-fit">ดูว่ามีผลกับท่ายังไง <span>→</span></a>
-        <small>Client-side only · ไม่มี AI interpretation · ค่านี้เป็น reach context ไม่ใช่ performance หรือ genetics score</small>
+        <p className="meta">{language === 'en' ? 'TRY A QUICK CHECK' : 'ลองเช็กแบบสั้น'}</p>
+        <h3>{language === 'en' ? 'How long are your arms relative to your height?' : 'แขนคุณยาวแค่ไหนเมื่อเทียบกับส่วนสูง?'}</h3>
+        <p style={{color:'#8f989b'}}>{language === 'en' ? 'Enter two measurements to see your reach, then explore how it can change movement range and setup in Bench Press or Deadlift.' : 'กรอกเพียง 2 ค่าเพื่อดูระยะเอื้อม (reach) แล้วค่อยดูว่ามันอาจเปลี่ยนช่วงการเคลื่อนไหวและการจัดท่าใน Bench Press หรือ Deadlift อย่างไร'}</p>
+        <label>{language === 'en' ? 'Height' : 'ส่วนสูง'} <span>cm</span><input value={height} onChange={(e) => setHeight(e.target.value)} type="number" /></label>
+        <label>{language === 'en' ? 'Arm span' : 'ช่วงแขน'} <span>cm</span><input value={armSpan} onChange={(e) => setArmSpan(e.target.value)} type="number" /></label>
+        <a className="lab-button" href="/lab/exercise-fit">{language === 'en' ? 'SEE HOW IT CHANGES MOVEMENT' : 'ดูว่ามีผลกับท่าอย่างไร'} <span>→</span></a>
+        <small>{language === 'en' ? 'Calculated on your device · No AI interpretation · Reach does not predict performance or genetics.' : 'คำนวณบนอุปกรณ์ของคุณ · ไม่มี AI ตีความ · ระยะเอื้อมไม่ได้ทำนายความเก่งหรือพันธุกรรม'}</small>
       </div>
       <div className="lab-result" aria-live="polite">
-        <p className="meta">ผลแบบภาษาง่ายก่อน</p>
+        <p className="meta">{language === 'en' ? 'PLAIN RESULT FIRST' : 'ดูผลแบบเข้าใจก่อน'}</p>
         <div className="result-number" style={{fontSize:'clamp(46px,7vw,92px)'}}>{headline}</div>
         <div className="result-readout"><span>Ape Index</span><b>{result ? `${result.diff >= 0 ? '+' : ''}${result.diff} cm · ${result.ratio}×` : '—'}</b></div>
         <div className="scan-line" aria-hidden="true" />

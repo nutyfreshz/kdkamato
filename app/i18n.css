@@ -1,0 +1,7 @@
+.language-switch{display:flex;align-items:center;gap:4px;margin-left:14px;padding-left:14px;border-left:1px solid rgba(255,255,255,.11)}
+.language-switch button{appearance:none;border:0;background:transparent;color:#727a7d;padding:6px 7px;font-size:10px;font-weight:800;letter-spacing:.12em;cursor:pointer}
+.language-switch button.is-active{color:#48dce8}
+.mobile-language-switch{display:flex;gap:8px;margin-top:12px}
+.mobile-language-switch button{appearance:none;border:1px solid rgba(255,255,255,.12);background:#0d1113;color:#8f989b;padding:10px 16px;font-size:12px;font-weight:800;letter-spacing:.12em}
+.mobile-language-switch button.is-active{border-color:#48dce8;color:#071012;background:#48dce8}
+@media(max-width:900px){.language-switch{display:none}}

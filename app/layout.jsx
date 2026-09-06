@@ -1,4 +1,7 @@
 import './globals.css';
+import './i18n.css';
+import './lab-ui.css';
+import { getLanguage } from '../lib/language';
 
 export const metadata = {
   title: {
@@ -14,9 +17,10 @@ export const metadata = {
   }
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const language = await getLanguage();
   return (
-    <html lang="th">
+    <html lang={language}>
       <body>{children}</body>
     </html>
   );
