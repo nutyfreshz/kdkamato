@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./program-app.module.css";
 
 const nav = [
   ["Home", "/home"],
@@ -10,13 +11,13 @@ const nav = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="shell">
-      <aside className="sidebar">
-        <Link className="brand" href="/home">KDKAMATO <span>PROGRAM</span></Link>
-        <nav className="nav">{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
+    <div className={styles.root}>
+      <aside className={styles.sidebar}>
+        <Link className={styles.brand} href="/home">KDKAMATO <span>PROGRAM</span></Link>
+        <nav className={styles.nav}>{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
       </aside>
-      <main className="main">{children}</main>
-      <nav className="bottom-nav">{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
+      <main className={styles.main}>{children}</main>
+      <nav className={styles.bottomNav}>{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
     </div>
   );
 }

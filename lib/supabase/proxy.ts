@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasSupabaseEnv, getSupabaseEnv } from "./config";
 
-const protectedPrefixes = ["/home", "/program", "/progress", "/lab", "/account"];
+const protectedPrefixes = ["/home", "/program", "/progress", "/account"];
 
 export async function updateSession(request: NextRequest) {
   if (!hasSupabaseEnv()) return NextResponse.next({ request });

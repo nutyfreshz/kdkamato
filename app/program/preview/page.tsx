@@ -63,7 +63,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
 
   return <AppShell>
     <div className="topline">Free Program Preview</div>
-    <h1 style={{ fontSize: "3.4rem" }}>{preview.family}</h1>
+    <h1>{preview.family}</h1>
     {params.error && <div className="notice warning" style={{ marginBottom: 16 }}>Activation failed: {decodeURIComponent(params.error)}</div>}
     <div className="grid">
       <div className="card"><div className="kicker">Protein starting range</div><div className="metric cyan">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>

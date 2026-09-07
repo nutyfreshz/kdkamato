@@ -27,7 +27,7 @@ export default async function ProgressPage(){
   ]);
   const summary = (summaryRaw ?? {}) as Summary;
   return <AppShell>
-    <div className="topline">Progress · 30 days</div><h1 style={{fontSize:"3.4rem"}}>Low-friction by default</h1>
+    <div className="topline">Progress · 30 days</div><h1>Low-friction by default</h1>
     <div className="grid">
       <div className="card"><div className="kicker">Latest Weight</div><div className="metric">{summary.latest_weight_kg ?? "–"} {summary.latest_weight_kg ? "kg" : ""}</div><p>Change: {summary.weight_change_kg ?? "–"} kg</p></div>
       <div className="card"><div className="kicker">Training Done</div><div className="metric cyan">{summary.training_completed_count ?? 0}</div><p>Better {summary.training_better_count ?? 0} · Same {summary.training_same_count ?? 0} · Worse {summary.training_worse_count ?? 0}</p></div>

@@ -29,7 +29,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     .eq("user_id", userId).eq("status", "ACTIVE").maybeSingle();
 
   if (!program) return <AppShell>
-    <div className="topline">Program</div><h1 style={{ fontSize: "3.4rem" }}>Training + Nutrition</h1>
+    <div className="topline">Program</div><h1>Training + Nutrition</h1>
     <div className="card"><h2>No active program yet</h2><p>Preview จะถูกสร้างจาก Foundation inputs ฝั่ง server และเมื่อ Activate จะสร้าง immutable Program Version.</p><div className="cta-row"><Link className="btn primary" href="/program/preview">Open Program Preview</Link><Link className="btn" href="/program/start">Edit Foundation Inputs</Link></div></div>
   </AppShell>;
 
@@ -48,7 +48,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
-    <h1 style={{ fontSize: "3.4rem" }}>Active Program</h1>
+    <h1>Active Program</h1>
     {params.activated && <div className="notice" style={{ marginBottom: 16 }}>Program activated successfully. History เดิมถูกเก็บไว้เป็น version ก่อนหน้า.</div>}
     <div className="grid">
       <div className="card"><div className="kicker">Status</div><div className="metric cyan">{program.status}</div></div>

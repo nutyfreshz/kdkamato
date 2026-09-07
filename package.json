@@ -1,13 +1,13 @@
 {
-  "name": "kdkamato-program-app",
-  "version": "0.2.0",
+  "name": "kdkamato-web",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "test:engine": "node --import ts-node/register/transpile-only lib/program/engine.test.ts"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.0",
