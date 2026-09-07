@@ -3,6 +3,19 @@ import { AppShell } from "@/components/app-shell";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
+type TrainingProgramItem = {
+  item_id: string;
+  training_day: number;
+  movement_slot: string;
+  exercise_key: string;
+  sets: number;
+  rep_min: number;
+  rep_max: number;
+  target_rir: number | string;
+  display_order: number;
+  metadata: { display_name?: string } | null;
+};
+
 export default async function ProgramPage({ searchParams }: { searchParams: Promise<{ activated?: string }> }) {
   const params = await searchParams;
   if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
@@ -24,10 +37,14 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     supabase.from("training_program_items").select("*").eq("program_id", program.program_id).order("training_day").order("display_order"),
     supabase.from("nutrition_targets").select("*").eq("program_id", program.program_id).maybeSingle(),
   ]);
-  const byDay = (items ?? []).reduce((acc, item) => {
+
+  const typedItems = (items ?? []) as TrainingProgramItem[];
+  const byDay = typedItems.reduce<Map<number, TrainingProgramItem[]>>((acc, item) => {
     const list = acc.get(item.training_day) ?? [];
-    list.push(item); acc.set(item.training_day, list); return acc;
-  }, new Map<number, NonNullable<typeof items>>());
+    list.push(item);
+    acc.set(item.training_day, list);
+    return acc;
+  }, new Map<number, TrainingProgramItem[]>());
 
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
@@ -38,7 +55,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       <div className="card"><div className="kicker">Protein</div><div className="metric">{nutrition?.protein_low_g ?? "–"}–{nutrition?.protein_high_g ?? "–"} g</div></div>
       <div className="card"><div className="kicker">Calories</div><div className="metric">{nutrition?.calorie_low ?? "–"} {nutrition?.calorie_high ? `–${nutrition.calorie_high}` : ""}</div><p>{nutrition?.calorie_low == null ? "ยังไม่เดาจากข้อมูลไม่พอ" : "Current starting range"}</p></div>
     </div>
-    {Array.from(byDay.entries()).map(([day, dayItems]) => <section className="card day" key={day}><h2>Day {day}</h2>{dayItems.map((x) => <div className="exercise" key={x.item_id}><div><strong>{(x.metadata as {display_name?:string} | null)?.display_name ?? x.exercise_key}</strong><br/><small>{x.movement_slot}</small></div><div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div></div>)}</section>)}
+    {Array.from(byDay.entries()).map(([day, dayItems]) => <section className="card day" key={day}><h2>Day {day}</h2>{dayItems.map((x) => <div className="exercise" key={x.item_id}><div><strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/><small>{x.movement_slot}</small></div><div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div></div>)}</section>)}
     <div className="cta-row"><Link className="btn" href="/program/start">Update Foundation Inputs</Link><Link className="btn" href="/progress">Log Progress</Link></div>
   </AppShell>;
 }
