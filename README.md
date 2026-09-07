@@ -1,70 +1,35 @@
-# KDKAMATO Website v0.2
+# KDKAMATO Program App
 
-Custom Next.js web app prepared for Vercel.
+Application Build vertical slice on top of the existing Supabase foundation.
 
-## What is already wired
+## Implemented in this slice
 
-- Approved A01–A11 homepage visuals are bundled locally in `/public/assets`.
-- Homepage, Manga library/reader, Knowledge library/article page, LAB shell, Training shell.
-- `MANGA_WEB` and `ARTICLES_WEB` are read server-side from `KDKAMATO_Web_Content`.
-- Manga page images are read from the Google Drive folder in `Final_Asset_Folder` and served through a private server-side image proxy.
-- The browser never receives Google service-account credentials.
+- Next.js 16 App Router shell
+- Supabase SSR cookie clients + `proxy.ts`
+- Google OAuth + email/password login UI
+- Client-safe minimum onboarding writing only to `user_baseline` + `nutrition_profiles`
+- Deterministic Free training program preview
+- Home / Program / Lab / Progress / Account mobile-first information architecture
+- No client write to `user_access`, generated program tables, consult reports, or private schema
 
-## One-time Google setup
+## Required runtime env
 
-The website must be able to read the private Google Sheet and the `WEBSITE_PUBLISH` Drive folder.
+Copy `.env.example` to `.env.local` and use the project's public values:
 
-1. Create a Google Cloud service account.
-2. Enable **Google Sheets API** and **Google Drive API** in that Google Cloud project.
-3. Copy the service-account email.
-4. Share these two items with that email as **Viewer**:
-   - `KDKAMATO_Web_Content`
-   - `WEBSITE_PUBLISH` folder (sharing the parent gives access to episode subfolders)
-5. Add the environment variables from `.env.example` in Vercel.
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
-No daily service-account work is needed after that.
+Never expose a secret/service-role key to the browser.
 
-## Daily Manga workflow
+## Boundary intentionally preserved
 
-1. Run the existing `01 → 05` workflow.
-2. If the 05 final images are truly final, place/copy them into an episode folder under `WEBSITE_PUBLISH/MANGA_FINAL/EPxx`.
-3. If images were edited externally, upload those corrected final images instead.
-4. Add/update one row in `MANGA_WEB`:
-   - `Episode_ID`
-   - `Title`
-   - `Slug`
-   - `Topic`
-   - `Publish_Date`
-   - `Status`
-   - `Asset_Source`
-   - `Final_Asset_Folder`
-   - `Cover_File` (optional; first image is used if blank)
-   - `Page_Count`
-   - `Short_Description`
-   - `Caption`
-   - `Featured`
-5. Set `Status = PUBLISHED` when it should appear live.
+This slice does **not** activate/write an authoritative program version yet. The Supabase implementation spec says generated program structure is a privileged write, and the documented function names are conceptual. Live foundation introspection must resolve the actual privileged function/RPC contract before activation is wired.
 
-The site refreshes content at most every ~5 minutes by default (`revalidate = 300`). No rebuild is required for each episode.
+## Next deterministic build step
 
-## Article workflow
+After live function contract readback:
 
-The separate Article chat can consolidate one or many episodes, then upsert one row into `ARTICLES_WEB`. Set `Status = PUBLISHED` when ready. Daily Manga does not require an article.
-
-## Development
-
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
-
-Open `http://localhost:3000`.
-
-## Vercel
-
-Import the folder/repository into Vercel, add environment variables, then deploy. No custom build configuration is required for a standard Next.js project.
-
-## Content safety boundary
-
-The LAB frame score on the homepage is explicitly a UI preview only. The public Frame Analyzer calculation is intentionally not implemented until its scientific scoring logic is validated.
+1. wire `Activate Program` to the actual privileged server/Edge function;
+2. read the returned active `programs` + `training_program_items` + `nutrition_targets` version;
+3. replace preview-only Program page with active program rendering;
+4. implement lightweight `progress_entries` write path.
