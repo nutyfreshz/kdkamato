@@ -3,9 +3,15 @@ import { ActivateProgramButton } from "@/components/activate-program-button";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
+type ProgressionRule = {
+  trigger?: string;
+  action?: string;
+  increment_pct_low?: number | null;
+  increment_pct_high?: number | null;
+};
+
 type PreviewItem = {
   training_day: number;
-  movement_slot: string;
   exercise_key: string;
   sets: number;
   rep_min: number;
@@ -14,23 +20,24 @@ type PreviewItem = {
   display_order: number;
   metadata?: {
     display_name?: string;
-    focus_label?: string;
+    day_label?: string;
+    target_label?: string;
+    primary_muscle?: string;
+    focus_boost?: boolean;
     alternative_name?: string | null;
+    progression?: ProgressionRule;
   } | null;
 };
 
 type PreviewData = {
-  engine_version?: string;
   family: string;
+  focus?: string;
+  focus_label?: string;
   days: number;
+  session_duration_min?: number;
   training_items: PreviewItem[];
   weekly_volume?: Record<string, number>;
-  program_rationale?: string[];
-  energy_estimate?: {
-    confidence?: string | null;
-    basis?: string | null;
-    missing_inputs?: string[];
-  };
+  energy_estimate?: { confidence?: string | null; basis?: string | null; missing_inputs?: string[] };
   nutrition_target: {
     maintenance_low: number | null;
     maintenance_high: number | null;
@@ -40,20 +47,18 @@ type PreviewData = {
     protein_high_g: number | null;
     estimate_confidence: string | null;
   };
-  guardrails: string[];
 };
 
 const muscleLabel: Record<string, string> = {
-  CHEST: "Chest",
-  BACK: "Back",
-  QUADS: "Quads",
-  HAMSTRINGS: "Hamstrings",
-  SHOULDERS: "Shoulders",
-  BICEPS: "Biceps",
-  TRICEPS: "Triceps",
-  CALVES: "Calves",
-  CORE: "Core",
+  CHEST: "Chest", BACK: "Back", QUADS: "Quads", HAMSTRINGS: "Hamstrings", SHOULDERS: "Shoulders",
+  BICEPS: "Biceps", TRICEPS: "Triceps", CALVES: "Calves", CORE: "Core", ROTATOR_CUFF: "Rotator Cuff", LOWER_TRAP: "Lower Trap / Scapular",
 };
+
+function progressionText(item: PreviewItem) {
+  const p = item.metadata?.progression;
+  if (!p?.trigger || !p.action) return null;
+  return `${p.trigger} → ${p.action}`;
+}
 
 export default async function ProgramPreviewPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const params = await searchParams;
@@ -89,51 +94,45 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
   const volumeEntries = Object.entries(preview.weekly_volume ?? {});
 
   return <AppShell>
-    <div className="topline">Free Program Preview {preview.engine_version ? `· ${preview.engine_version}` : ""}</div>
+    <div className="topline">Free Program Preview</div>
     <h1>{preview.family}</h1>
     {params.error && <div className="notice warning" style={{ marginBottom: 16 }}>Activation failed: {decodeURIComponent(params.error)}</div>}
 
     <div className="grid">
-      <div className="card"><div className="kicker">Protein starting range</div><div className="metric cyan">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
-      <div className="card"><div className="kicker">Frequency</div><div className="metric">{preview.days} days</div></div>
-      <div className="card">
-        <div className="kicker">Initial maintenance estimate</div>
-        <div className="metric" style={{ fontSize: "1.2rem" }}>{energyReady ? `${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high} kcal` : "Needs more data"}</div>
-        <p>Confidence: {preview.nutrition_target.estimate_confidence ?? "LIMITED"}</p>
-      </div>
-      <div className="card">
-        <div className="kicker">Goal calorie range</div>
-        <div className="metric" style={{ fontSize: "1.2rem" }}>{preview.nutrition_target.calorie_low != null ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "Not shown yet"}</div>
-        <p>{preview.energy_estimate?.basis ?? "ไม่เดาจาก subjective activity multiplier"}</p>
-      </div>
+      <div className="card"><div className="kicker">Training Focus</div><div className="metric cyan">{preview.focus_label ?? "Balanced"}</div></div>
+      <div className="card"><div className="kicker">Schedule</div><div className="metric">{preview.days} days</div><p>{preview.session_duration_min ?? 60} min / session</p></div>
+      <div className="card"><div className="kicker">Protein</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
+      <div className="card"><div className="kicker">Energy</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "Calibrating"}</div><p>{energyReady ? `Maintenance ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "ยังไม่แสดงจน measurable inputs พอ"}</p></div>
     </div>
 
-    {preview.program_rationale?.length ? <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">Why this foundation</div>
-      <h2>ไม่ได้สุ่ม และไม่ได้เลือกจาก template เดียว</h2>
-      {preview.program_rationale.map((reason) => <p key={reason}>• {reason}</p>)}
-    </section> : null}
-
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">Starting weekly hard sets</div>
-      <h2>Weekly Volume</h2>
+      <div className="kicker">Direct hard sets / week</div>
+      <h2>Weekly Training Budget</h2>
       <p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p>
-      <small>เป็น starting prescription ไม่ใช่ claim ว่านี่คือ individual optimal volume. Progress + recovery จะเป็น authority สำหรับการปรับภายหลัง.</small>
     </section> : null}
 
-    {Array.from(byDay.entries()).map(([day, items]) => <section className="card day" key={day}>
-      <h2>Day {day}</h2>
-      {items.sort((a,b) => a.display_order - b.display_order).map((x) => <div className="exercise" key={`${x.training_day}-${x.display_order}`}>
-        <div>
-          <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
-          <small>{x.metadata?.focus_label ?? "Training movement"}{x.metadata?.alternative_name ? ` · Good alternative: ${x.metadata.alternative_name}` : ""}</small>
-        </div>
-        <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
-      </div>)}
-    </section>)}
+    {Array.from(byDay.entries()).map(([day, items]) => {
+      const sorted = items.sort((a, b) => a.display_order - b.display_order);
+      const dayLabel = sorted[0]?.metadata?.day_label ?? `Day ${day}`;
+      return <section className="card day" key={day}>
+        <div className="kicker">Day {day}</div>
+        <h2>{dayLabel}</h2>
+        {sorted.map((x) => {
+          const next = progressionText(x);
+          return <div className="exercise" key={`${x.training_day}-${x.display_order}`}>
+            <div style={{ minWidth: 0 }}>
+              <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
+              <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
+              {next ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>NEXT:</strong> {next}</p> : null}
+              {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>Alternative: {x.metadata.alternative_name}</p> : null}
+            </div>
+            <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
+          </div>;
+        })}
+      </section>;
+    })}
 
     {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>Energy Estimate ยังไม่เปิดเพราะยังขาด: {preview.energy_estimate.missing_inputs.join(", ")}.</div> : null}
-    <div className="notice warning" style={{ marginTop: 18 }}>{preview.guardrails.join(" • ")}</div>
     <div className="cta-row"><ActivateProgramButton /></div>
   </AppShell>;
 }

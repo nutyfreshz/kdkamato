@@ -1,0 +1,44 @@
+KDKAMATO FREE ENGINE v1.1 — BROWSER-ONLY PATCH
+
+IMPORTANT
+- This v1.1 package SUPERSEDES the previous v1.0 pre-production ZIP. Do not apply both.
+- No local repo is required.
+- Do not replace the whole website/app folder.
+- Replace ONLY the runtime paths listed below in GitHub main.
+- Professional exercise illustrations are intentionally NOT included in this patch.
+- No Supabase database migration is required.
+- Do NOT manually deploy the Supabase Edge Function. ChatGPT will deploy the matching Edge version after the frontend patch is confirmed on GitHub/Vercel.
+
+REPLACE / ADD THESE RUNTIME FILES
+1. components/onboarding-form.tsx
+2. app/program/start/page.tsx
+3. app/program/preview/page.tsx
+4. app/program/page.tsx
+5. supabase/functions/kdk-free-program/index.ts
+6. supabase/functions/kdk-free-program/engine.mjs
+7. supabase/functions/kdk-free-program/exercise-catalog.mjs
+
+OPTIONAL NON-RUNTIME FILE
+8. supabase/functions/kdk-free-program/synthetic-test.mjs
+
+REFERENCE DOCUMENTS — DO NOT NEED TO UPLOAD TO GITHUB
+- IMPLEMENTATION_DESIGN.md
+- SYNTHETIC_VALIDATION.md
+
+GITHUB WEB STEPS
+1. Open repository nutyfreshz/kdkamato.
+2. For each existing file above, open the exact path and replace its contents with the patch file.
+3. Create engine.mjs and exercise-catalog.mjs under supabase/functions/kdk-free-program/ if they do not exist yet.
+4. Commit to main.
+5. Wait for Vercel production deployment to become READY.
+6. Tell ChatGPT that the patch is applied. ChatGPT then deploys the matching Supabase Edge Function and performs E2E validation.
+
+EXPECTED E2E AFTER BACKEND DEPLOY
+/program/start
+→ choose Balanced / Chest / Back / Arms / Legs / Reposture
+→ choose 2–6 days + session duration
+→ Reposture includes posture-support accessory + rotator-cuff + lower-trap roles without replacing the main bodybuilding structure
+→ Program Preview shows weekly training budget and NEXT progression rules
+→ Activate
+→ /program active immutable version
+→ /progress
