@@ -1,2 +1,0 @@
-import { AppShell } from "@/components/app-shell";
-export default function LabPage(){return <AppShell><div className="topline">KDKAMATO Lab</div><h1 style={{fontSize:"3.4rem"}}>Measure → Understand → Try</h1><div className="card"><h2>Reusable Body / Movement Profile</h2><p>Lab results persist by tool key and become context, not a mandatory exercise verdict.</p><div className="notice">Actual Response &gt; Movement Tolerance &gt; Goal Fit &gt; Lab Prediction &gt; Generic Recommendation</div></div></AppShell>}
