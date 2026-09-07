@@ -9,12 +9,24 @@ export function OnboardingForm({ userId }: { userId: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
-    goal: "MUSCLE_GAIN", weightKg: "", heightCm: "", ageYears: "", sex: "", trainingExperience: "INTERMEDIATE", trainingDaysPerWeek: "3", equipmentProfile: "FULL_GYM", averageSteps: "", mealFrequency: "3"
+    goal: "MUSCLE_GAIN",
+    weightKg: "",
+    heightCm: "",
+    ageYears: "",
+    sex: "",
+    trainingExperience: "INTERMEDIATE",
+    trainingDaysPerWeek: "3",
+    equipmentProfile: "FULL_GYM",
+    averageSteps: "",
+    sessionDurationMin: "",
+    cardioMinutesPerWeek: "",
+    mealFrequency: "3",
   });
   const set = (key: string, value: string) => setForm((s) => ({ ...s, [key]: value }));
 
   async function save() {
-    setBusy(true); setError("");
+    setBusy(true);
+    setError("");
     try {
       const supabase = createClient();
       const baseline = {
@@ -31,18 +43,29 @@ export function OnboardingForm({ userId }: { userId: string }) {
       const nutrition = {
         user_id: userId,
         average_steps: form.averageSteps ? Number(form.averageSteps) : null,
+        cardio_minutes_per_week: form.cardioMinutesPerWeek ? Number(form.cardioMinutesPerWeek) : null,
         meal_frequency: form.mealFrequency ? Number(form.mealFrequency) : null,
       };
-      const [b, n] = await Promise.all([
+      const training = {
+        user_id: userId,
+        session_duration_min: form.sessionDurationMin ? Number(form.sessionDurationMin) : null,
+      };
+
+      const [b, n, t] = await Promise.all([
         supabase.from("user_baseline").upsert(baseline, { onConflict: "user_id" }),
         supabase.from("nutrition_profiles").upsert(nutrition, { onConflict: "user_id" }),
+        supabase.from("training_profiles").upsert(training, { onConflict: "user_id" }),
       ]);
       if (b.error) throw b.error;
       if (n.error) throw n.error;
-      router.push("/program/preview"); router.refresh();
+      if (t.error) throw t.error;
+      router.push("/program/preview");
+      router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "บันทึกไม่สำเร็จ");
-    } finally { setBusy(false); }
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -53,15 +76,22 @@ export function OnboardingForm({ userId }: { userId: string }) {
         <label>ประสบการณ์<select value={form.trainingExperience} onChange={(e) => set("trainingExperience", e.target.value)}><option value="BEGINNER">Beginner</option><option value="INTERMEDIATE">Intermediate</option><option value="EXPERIENCED">Experienced</option></select></label>
         <label>ฝึกกี่วัน / สัปดาห์<select value={form.trainingDaysPerWeek} onChange={(e) => set("trainingDaysPerWeek", e.target.value)}><option value="2">2 วัน</option><option value="3">3 วัน</option><option value="4">4+ วัน</option></select></label>
         <label>อุปกรณ์<select value={form.equipmentProfile} onChange={(e) => set("equipmentProfile", e.target.value)}><option value="FULL_GYM">Commercial / Full Gym</option><option value="LIMITED_GYM">Limited Gym</option><option value="HOME_BASIC">Home Basic</option></select></label>
+        <label>เวลาฝึกโดยเฉลี่ย / ครั้ง<select value={form.sessionDurationMin} onChange={(e) => set("sessionDurationMin", e.target.value)}><option value="">ยังไม่ระบุ</option><option value="45">ประมาณ 45 นาที</option><option value="60">ประมาณ 60 นาที</option><option value="75">ประมาณ 75 นาที</option><option value="90">ประมาณ 90 นาที</option></select></label>
         <label>มื้อ / วัน<select value={form.mealFrequency} onChange={(e) => set("mealFrequency", e.target.value)}><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select></label>
       </div>
-      <div className="notice">ข้อมูลด้านล่างเป็น optional. ไม่ตอบก็ยังสร้าง Training Foundation ได้.</div>
+
+      <div className="notice">Foundation ไม่สุ่ม: Goal + Training Days + Experience + Equipment + เวลาที่มี จะเปลี่ยน prescription จริง. ข้อมูลด้านล่างยัง optional.</div>
+
       <div className="form-grid">
         <label>ส่วนสูง (cm)<input inputMode="decimal" value={form.heightCm} onChange={(e) => set("heightCm", e.target.value)} /></label>
         <label>อายุ<input inputMode="numeric" value={form.ageYears} onChange={(e) => set("ageYears", e.target.value)} /></label>
         <label>เพศสำหรับสมการพลังงาน<select value={form.sex} onChange={(e) => set("sex", e.target.value)}><option value="">ยังไม่ระบุ</option><option value="MALE">Male</option><option value="FEMALE">Female</option></select></label>
         <label>Average Steps / day<input inputMode="numeric" value={form.averageSteps} onChange={(e) => set("averageSteps", e.target.value)} placeholder="ถ้ารู้" /></label>
+        <label>Cardio นาที / สัปดาห์<input inputMode="numeric" value={form.cardioMinutesPerWeek} onChange={(e) => set("cardioMinutesPerWeek", e.target.value)} placeholder="ถ้ามี" /></label>
       </div>
+
+      <div className="notice">Initial Energy Estimate จะเปิดเมื่อมีข้อมูลพอ: Weight + Steps + Session Duration และ Height + Age + Sex (หรือ usable BF% ในอนาคต). ระบบไม่ใช้ subjective activity multiplier.</div>
+
       <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังบันทึก..." : "Build My Foundation"}</button>
       {error && <div className="notice warning">{error}</div>}
     </div>
