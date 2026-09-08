@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { trackLabEvent } from '../../lib/labAnalytics';
+import { LabSaveResult } from './LabSaveResult';
 
 export function ToolHeader({ id, title, question, technicalName, role = 'LAB TOOL', language = 'th' }) {
   return <header className="lab-tool-head"><p className="eyebrow cyan">KDKAMATO LAB / {role}</p><p className="meta">{id}{technicalName ? ` · ${technicalName}` : ''}</p><h1>{title}</h1><p className="lab-tool-question">{question}</p></header>;
@@ -29,12 +30,13 @@ export function ResultContract({ result, metric, meaning, use, watch, nextHref, 
     <section className="use"><span>{language === 'en' ? 'USE IT FOR' : 'ใช้ทำอะไร'}</span><p>{use}</p></section>
     <section className="watch"><span>{language === 'en' ? 'WATCH OUT' : 'ควรระวังอะไร'}</span><p>{watch}</p></section>
     {children}
+    <LabSaveResult language={language} result={result} metric={metric} meaning={meaning} use={use} watch={watch} resultCode={resultCode} />
     {nextHref && <Link className="lab-next" href={nextHref}>{nextLabel || (language === 'en' ? 'EXPLORE NEXT' : 'ดูต่อ')} <b>→</b></Link>}
   </div>;
 }
 
 export function PrivacyStrip({ ruleset, language = 'th' }) {
-  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account · No server storage · No AI interpretation' : 'ไม่ต้องมีบัญชี · ไม่เก็บค่าร่างกายบนเซิร์ฟเวอร์ · ไม่มี AI ตีความ'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
+  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account · No AI interpretation' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · เก็บบนเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี · ไม่มี AI ตีความ'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
 }
 
 export function MeasurementCheckNote({ language = 'th' }) {
