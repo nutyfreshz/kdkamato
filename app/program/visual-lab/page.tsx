@@ -4,8 +4,8 @@ import { ExerciseMotionCard } from "@/components/exercise-motion-card";
 export default function ProgramVisualLabPage() {
   return <AppShell>
     <div className="topline">Program Visual Lab</div>
-    <h1>Exercise Motion Card Prototype</h1>
-    <p>Internal visual gate only. ยังไม่ผูกเข้ากับ exercise list จริงจนกว่าจะผ่าน quality review.</p>
+    <h1>Exercise Visual Prototype</h1>
+    <p>Current abstract SVG direction failed the recognition gate and is archived. This page is kept only as an internal record until the replacement visual format is ready.</p>
     <ExerciseMotionCard kind="MACHINE_CHEST_PRESS" />
     <ExerciseMotionCard kind="LAT_PULLDOWN" />
     <ExerciseMotionCard kind="LEG_PRESS" />
