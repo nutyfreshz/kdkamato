@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { ProgramWeek } from "@/components/program-week";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -117,6 +118,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     acc.set(item.training_day, list);
     return acc;
   }, new Map<number, TrainingProgramItem[]>());
+  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, dayItems]) => [day, dayItems[0]?.metadata?.day_label ?? `Day ${day}`]));
   const volumeEntries = Object.entries(snapshot.weekly_volume ?? {});
 
   return <AppShell>
@@ -134,6 +136,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">Direct hard sets / week</div><h2>Weekly Training Budget</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
+
+    <ProgramWeek days={Number(snapshot.training_days_per_week ?? byDay.size)} focus={snapshot.primary_focus ?? "BALANCED"} dayLabels={dayLabels} />
 
     {Array.from(byDay.entries()).map(([day, dayItems]) => {
       const dayLabel = dayItems[0]?.metadata?.day_label ?? `Day ${day}`;
