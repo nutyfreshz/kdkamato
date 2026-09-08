@@ -58,6 +58,16 @@
 .processingSpinner { width:34px; height:34px; border:3px solid #33424b; border-top-color:#ff6b1a; border-radius:50%; animation:processing-spin .8s linear infinite; }
 @keyframes processing-spin { to { transform:rotate(360deg); } }
 
+.weekGrid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:8px; margin-top:16px; }
+.weekCell { min-height:88px; display:flex; flex-direction:column; gap:8px; justify-content:space-between; padding:12px 10px; border:1px solid #253039; border-radius:12px; background:#0b0f12; }
+.weekCell strong { font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:#9aa7af; }
+.weekCell span { font-size:.78rem; line-height:1.25; font-weight:800; }
+.weekTrain { border-color:rgba(255,107,26,.48); background:rgba(255,107,26,.07); }
+.weekTrain span { color:#f5f7f8; }
+.weekRest { background:rgba(73,215,232,.05); }
+.weekRest span { color:#49d7e8; }
+.weekNote { margin:12px 0 0; font-size:.82rem; }
+
 @media(max-width:820px){
   .root { display:block; }
   .sidebar { display:none; }
@@ -67,4 +77,5 @@
   .root :global(.grid), .standalone :global(.grid), .root :global(.form-grid), .standalone :global(.form-grid) { grid-template-columns:1fr; }
   .root :global(.exercise), .standalone :global(.exercise) { display:grid; }
   .standalone { padding:28px 20px 80px; }
+  .weekGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
