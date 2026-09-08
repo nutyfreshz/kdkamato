@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ProcessingOverlay } from "@/components/processing-overlay";
 
 type InitialProgress = {
   body_weight_kg?: number | string | null;
@@ -36,6 +37,7 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
   });
 
   async function save() {
+    if (busy) return;
     setBusy(true); setError(""); setSaved(false);
     try {
       const supabase = createClient();
@@ -76,6 +78,7 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
     <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มี issue ใหม่</label>
     <label>Note (optional)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
     <button className="btn primary" onClick={save} disabled={busy}>{busy ? "Saving..." : "Save Check"}</button>
+    {busy && <ProcessingOverlay title="กำลังบันทึก Progress..." detail="กำลังผูก Daily Check กับ Program version ที่ใช้งานอยู่" />}
     {saved && <div className="notice">Saved. กด Save ซ้ำในวันเดียวกันจะอัปเดต Daily Check เดิม.</div>}
     {error && <div className="notice warning">{error}</div>}
   </div>;
