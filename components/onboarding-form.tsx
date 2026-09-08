@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ProcessingOverlay } from "@/components/processing-overlay";
 
 type InitialFoundation = {
   goal?: string;
@@ -51,6 +52,7 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
   const set = (key: string, value: string) => setForm((s) => ({ ...s, [key]: value }));
 
   async function save() {
+    if (busy) return;
     setBusy(true);
     setError("");
     try {
@@ -75,7 +77,6 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
       router.refresh();
     } catch (e) {
       setError(readableError(e));
-    } finally {
       setBusy(false);
     }
   }
@@ -104,7 +105,8 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
 
       <div className="notice">Energy Estimate เป็น optional layer: ถ้าข้อมูล measurable ยังไม่พอ ระบบจะไม่เดา activity multiplier ให้เป็นเลขสวย ๆ.</div>
 
-      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังบันทึก..." : "Build My Program"}</button>
+      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังประมวลผล..." : "Build My Program"}</button>
+      {busy && <ProcessingOverlay title="กำลังสร้าง Program..." detail="กำลังบันทึก Foundation และคำนวณ Training/Nutrition กรุณารอสักครู่" />}
       {error && <div className="notice warning">{error}</div>}
     </div>
   );
