@@ -36,9 +36,9 @@ function textList(value: unknown) {
 }
 
 export default async function ConsultPage() {
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลยังไม่พร้อม.</div></AppShell>;
   const user = await requireUser();
-  if (!user) return <AppShell><div className="notice warning">Supabase env ยังไม่พร้อม.</div></AppShell>;
+  if (!user) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน.</div></AppShell>;
 
   const supabase = await createClient();
   const userId = user.id;
@@ -49,11 +49,11 @@ export default async function ConsultPage() {
     return <AppShell>
       <div className="topline">PRO Consult</div>
       <h1>Professional Longitudinal Review</h1>
-      <div className="notice warning">Consult เป็น PRO layer. FREE Program และ Progress history ของคุณยังคงอยู่ และสามารถใช้ต่อเมื่อบัญชีได้รับ PRO entitlement.</div>
+      <div className="notice warning">Consult เป็นฟีเจอร์ PRO. FREE Program และ Progress history ของคุณยังคงอยู่ และจะถูกใช้ต่อเมื่อบัญชีได้รับ PRO entitlement.</div>
       <section className="card" style={{ marginTop: 18 }}>
         <div className="kicker">PRO</div>
-        <h2>What unlocks</h2>
-        <p>Biweekly Professional Report · Lab context when relevant · longitudinal Exercise Memory · optional online consult requests.</p>
+        <h2>สิ่งที่เพิ่มขึ้นใน PRO</h2>
+        <p>Biweekly Professional Report · ใช้ Lab context เมื่อเกี่ยวข้อง · longitudinal Exercise Memory · optional Online Consult.</p>
       </section>
     </AppShell>;
   }
@@ -80,36 +80,37 @@ export default async function ConsultPage() {
   return <AppShell>
     <div className="topline">PRO Consult</div>
     <h1>Professional Longitudinal Review</h1>
+    <p>ระบบรวม Progress, Exercise Feedback, Exercise Memory, Lab ที่เกี่ยวข้อง และ Program history เพื่อทำ Review เป็นรอบ โดยจะเปลี่ยน Program เฉพาะเมื่อมี evidence และ approval ที่เหมาะสม.</p>
     <div className="grid">
-      <div className="card"><div className="kicker">Tier</div><div className="metric cyan">PRO</div><p>Same Program history, deeper longitudinal layer.</p></div>
-      <div className="card"><div className="kicker">Online Consult</div><div className="metric">{usedThisMonth}/2</div><p>entitlements used this calendar month</p></div>
-      <div className="card"><div className="kicker">Published Reports</div><div className="metric">{reports.length}</div><p>latest reports visible here</p></div>
+      <div className="card"><div className="kicker">Tier</div><div className="metric cyan">PRO</div><p>ใช้ Program history เดิมต่อ พร้อม longitudinal layer ที่ลึกขึ้น.</p></div>
+      <div className="card"><div className="kicker">Online Consult</div><div className="metric">{usedThisMonth}/2</div><p>สิทธิ์ที่ใช้ไปในเดือนนี้</p></div>
+      <div className="card"><div className="kicker">PRO Reports</div><div className="metric">{reports.length}</div><p>รายงานล่าสุดที่แสดงในหน้านี้</p></div>
     </div>
 
     <div style={{ marginTop: 18 }}><ConsultRequestForm /></div>
 
-    {reports.length === 0 ? <div className="notice" style={{ marginTop: 18 }}>ยังไม่มี PRO Report ที่ publish แล้ว. Pilot report จะปรากฏที่นี่หลัง workflow ที่เกี่ยวข้องเสร็จสมบูรณ์.</div> : reports.map((r) => {
+    {reports.length === 0 ? <div className="notice" style={{ marginTop: 18 }}>ยังไม่มี PRO Report ที่ publish แล้ว เมื่อจบรอบ Review รายงานจะปรากฏที่นี่.</div> : reports.map((r) => {
       const actions = textList(r.next_actions);
       const monitor = textList(r.monitor_items);
       return <section className="card day" key={r.report_id}>
         <div className="kicker">{r.period_start ?? ""} → {r.period_end ?? ""}</div>
         <h2>{r.overall_status ?? "PRO Report"}</h2>
-        {r.what_changed && <p><strong>What changed:</strong> {r.what_changed}</p>}
+        {r.what_changed && <p><strong>สิ่งที่เปลี่ยน:</strong> {r.what_changed}</p>}
         {r.training_review && <p><strong>Training:</strong> {r.training_review}</p>}
         {r.nutrition_review && <p><strong>Nutrition:</strong> {r.nutrition_review}</p>}
         {r.lab_context && <p><strong>Lab context:</strong> {r.lab_context}</p>}
         {r.professional_assessment && <p><strong>Assessment:</strong> {r.professional_assessment}</p>}
         {r.program_update && <p><strong>Program update:</strong> {r.program_update}</p>}
-        {actions.length > 0 && <p><strong>Next:</strong> {actions.join(" · ")}</p>}
-        {monitor.length > 0 && <p><strong>Monitor:</strong> {monitor.join(" · ")}</p>}
-        {r.next_review_date && <small>Next review: {r.next_review_date}</small>}
+        {actions.length > 0 && <p><strong>ทำต่อ:</strong> {actions.join(" · ")}</p>}
+        {monitor.length > 0 && <p><strong>ติดตาม:</strong> {monitor.join(" · ")}</p>}
+        {r.next_review_date && <small>Review ถัดไป: {r.next_review_date}</small>}
       </section>;
     })}
 
     {meetings.length > 0 && <section className="card day">
       <div className="kicker">Online Consult History</div>
-      <h2>Requests</h2>
-      {meetings.map((m) => <div className="exercise" key={m.meeting_id}><div><strong>{m.month_key}</strong><br/><small>{m.user_reason || "No reason added"}</small></div><div>{m.status} · {m.entitlement_consumed ? "USED" : "NOT USED"}</div></div>)}
+      <h2>คำขอ Consult</h2>
+      {meetings.map((m) => <div className="exercise" key={m.meeting_id}><div><strong>{m.month_key}</strong><br/><small>{m.user_reason || "ไม่ได้ระบุเหตุผล"}</small></div><div>{m.status} · {m.entitlement_consumed ? "USED" : "NOT USED"}</div></div>)}
     </section>}
   </AppShell>;
 }
