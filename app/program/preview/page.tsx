@@ -1,7 +1,11 @@
+import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ActivateProgramButton } from "@/components/activate-program-button";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
+
+const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.1";
+const EXPECTED_CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
 
 type ProgressionRule = {
   trigger?: string;
@@ -29,14 +33,28 @@ type PreviewItem = {
   } | null;
 };
 
+type GoalSnapshot = {
+  goal: string;
+  training_experience: string;
+  training_days_per_week: number;
+  equipment_profile: string;
+  primary_focus: string;
+  focus_label: string;
+  session_duration_min: number;
+};
+
 type PreviewData = {
+  contract_version: string;
+  program_fingerprint: string;
+  engine_version: string;
   family: string;
-  focus?: string;
-  focus_label?: string;
+  focus: string;
+  focus_label: string;
   days: number;
-  session_duration_min?: number;
+  session_duration_min: number;
   training_items: PreviewItem[];
-  weekly_volume?: Record<string, number>;
+  weekly_volume: Record<string, number>;
+  goal_snapshot: GoalSnapshot;
   energy_estimate?: { confidence?: string | null; basis?: string | null; missing_inputs?: string[] };
   nutrition_target: {
     maintenance_low: number | null;
@@ -54,10 +72,48 @@ const muscleLabel: Record<string, string> = {
   BICEPS: "Biceps", TRICEPS: "Triceps", CALVES: "Calves", CORE: "Core", ROTATOR_CUFF: "Rotator Cuff", LOWER_TRAP: "Lower Trap / Scapular",
 };
 
+const valueLabel: Record<string, string> = {
+  MUSCLE_GAIN: "Muscle Gain", FAT_LOSS: "Fat Loss", RECOMPOSITION: "Recomposition", GENERAL_FITNESS: "General Fitness",
+  BEGINNER: "Beginner", INTERMEDIATE: "Intermediate", EXPERIENCED: "Experienced",
+  FULL_GYM: "Full Gym", LIMITED_GYM: "Limited Gym", HOME_BASIC: "Home Basic",
+};
+
 function progressionText(item: PreviewItem) {
   const p = item.metadata?.progression;
   if (!p?.trigger || !p.action) return null;
   return `${p.trigger} → ${p.action}`;
+}
+
+
+async function edgeErrorPayload(error: unknown) {
+  if (!error || typeof error !== "object" || !("context" in error)) return null;
+  const context = (error as { context?: unknown }).context;
+  if (!(context instanceof Response)) return null;
+  try {
+    return await context.clone().json() as { error?: string; fields?: string[]; detail?: unknown };
+  } catch {
+    return null;
+  }
+}
+
+function validPreview(data: unknown): data is PreviewData {
+  if (!data || typeof data !== "object") return false;
+  const x = data as Partial<PreviewData>;
+  if (x.contract_version !== EXPECTED_CONTRACT_VERSION) return false;
+  if (x.engine_version !== EXPECTED_ENGINE_VERSION) return false;
+  if (typeof x.program_fingerprint !== "string" || !/^[a-f0-9]{64}$/.test(x.program_fingerprint)) return false;
+  if (typeof x.family !== "string" || typeof x.focus !== "string" || typeof x.focus_label !== "string") return false;
+  if (!Number.isInteger(Number(x.days)) || Number(x.days) < 2 || Number(x.days) > 6) return false;
+  if (![45, 60, 75, 90].includes(Number(x.session_duration_min))) return false;
+  if (!Array.isArray(x.training_items) || x.training_items.length === 0) return false;
+  if (!x.weekly_volume || typeof x.weekly_volume !== "object") return false;
+  if (!x.nutrition_target || typeof x.nutrition_target !== "object") return false;
+  if (!x.goal_snapshot || typeof x.goal_snapshot !== "object") return false;
+  if (x.goal_snapshot.primary_focus !== x.focus) return false;
+  if (x.goal_snapshot.focus_label !== x.focus_label) return false;
+  if (Number(x.goal_snapshot.training_days_per_week) !== Number(x.days)) return false;
+  if (Number(x.goal_snapshot.session_duration_min) !== Number(x.session_duration_min)) return false;
+  return true;
 }
 
 export default async function ProgramPreviewPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
@@ -78,11 +134,37 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  if (error || !data?.training_items) {
-    return <AppShell><div className="notice warning">ยังสร้าง preview ไม่ได้: {error?.message ?? data?.error ?? "UNKNOWN_ERROR"}</div></AppShell>;
+  if (error || !data) {
+    const payload = await edgeErrorPayload(error);
+    const code = payload?.error ?? "UNKNOWN_ERROR";
+    if (code === "BASELINE_REQUIRED" || code === "FOUNDATION_INVALID") {
+      return <AppShell>
+        <div className="topline">Foundation Required</div>
+        <h1>Program Preview ยังสร้างไม่ได้</h1>
+        <div className="notice warning">{code === "BASELINE_REQUIRED" ? "ยังไม่มี Foundation inputs." : `Foundation inputs ไม่ผ่าน validation${payload?.fields?.length ? `: ${payload.fields.join(", ")}` : ""}.`}</div>
+        <div className="cta-row"><Link className="btn primary" href="/program/start">Build / Fix Program Inputs</Link></div>
+      </AppShell>;
+    }
+    if (code === "ENGINE_VERSION_MISMATCH" || code === "PROGRAM_CONTRACT_INCONSISTENT" || code === "PROGRAM_VALIDATION_FAILED") {
+      return <AppShell>
+        <div className="topline">Integration Guard</div>
+        <h1>Program Preview ถูกหยุดไว้</h1>
+        <div className="notice warning">Program Engine validation ไม่ผ่าน ({code}) จึงไม่อนุญาตให้ Activate.</div>
+      </AppShell>;
+    }
+    return <AppShell><div className="notice warning">ยังสร้าง preview ไม่ได้: {code !== "UNKNOWN_ERROR" ? code : error?.message ?? code}</div></AppShell>;
   }
 
-  const preview = data as PreviewData;
+  if (!validPreview(data)) {
+    return <AppShell>
+      <div className="topline">Integration Guard</div>
+      <h1>Program Preview ถูกหยุดไว้</h1>
+      <div className="notice warning">Frontend / Program Engine contract ไม่ตรงกัน จึงไม่ใช้ค่า fallback และไม่อนุญาตให้ Activate.</div>
+      <div className="cta-row"><Link className="btn primary" href="/program/start">Rebuild Program</Link></div>
+    </AppShell>;
+  }
+
+  const preview = data;
   const byDay = preview.training_items.reduce((acc, item) => {
     const items = acc.get(item.training_day) ?? [];
     items.push(item);
@@ -91,16 +173,19 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
   }, new Map<number, PreviewItem[]>());
 
   const energyReady = preview.nutrition_target.maintenance_low != null && preview.nutrition_target.maintenance_high != null;
-  const volumeEntries = Object.entries(preview.weekly_volume ?? {});
+  const volumeEntries = Object.entries(preview.weekly_volume);
+  const snapshot = preview.goal_snapshot;
+  const activationError = params.error ? decodeURIComponent(params.error) : null;
 
   return <AppShell>
     <div className="topline">Free Program Preview</div>
     <h1>{preview.family}</h1>
-    {params.error && <div className="notice warning" style={{ marginBottom: 16 }}>Activation failed: {decodeURIComponent(params.error)}</div>}
+    <p>{valueLabel[snapshot.goal] ?? snapshot.goal} · {valueLabel[snapshot.training_experience] ?? snapshot.training_experience} · {valueLabel[snapshot.equipment_profile] ?? snapshot.equipment_profile} · {preview.focus_label} · {preview.days} days · {preview.session_duration_min} min</p>
+    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "Inputs หรือ Engine เปลี่ยนหลังจาก Preview นี้ กรุณาตรวจ Preview ล่าสุดแล้ว Activate ใหม่." : `Activation failed: ${activationError}`}</div>}
 
     <div className="grid">
-      <div className="card"><div className="kicker">Training Focus</div><div className="metric cyan">{preview.focus_label ?? "Balanced"}</div></div>
-      <div className="card"><div className="kicker">Schedule</div><div className="metric">{preview.days} days</div><p>{preview.session_duration_min ?? 60} min / session</p></div>
+      <div className="card"><div className="kicker">Training Focus</div><div className="metric cyan">{preview.focus_label}</div></div>
+      <div className="card"><div className="kicker">Schedule</div><div className="metric">{preview.days} days</div><p>{preview.session_duration_min} min / session</p></div>
       <div className="card"><div className="kicker">Protein</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
       <div className="card"><div className="kicker">Energy</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "Calibrating"}</div><p>{energyReady ? `Maintenance ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "ยังไม่แสดงจน measurable inputs พอ"}</p></div>
     </div>
@@ -112,7 +197,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     </section> : null}
 
     {Array.from(byDay.entries()).map(([day, items]) => {
-      const sorted = items.sort((a, b) => a.display_order - b.display_order);
+      const sorted = [...items].sort((a, b) => a.display_order - b.display_order);
       const dayLabel = sorted[0]?.metadata?.day_label ?? `Day ${day}`;
       return <section className="card day" key={day}>
         <div className="kicker">Day {day}</div>
@@ -133,6 +218,6 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     })}
 
     {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>Energy Estimate ยังไม่เปิดเพราะยังขาด: {preview.energy_estimate.missing_inputs.join(", ")}.</div> : null}
-    <div className="cta-row"><ActivateProgramButton /></div>
+    <div className="cta-row"><ActivateProgramButton fingerprint={preview.program_fingerprint} /></div>
   </AppShell>;
 }
