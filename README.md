@@ -1,44 +1,14 @@
-# KDKAMATO Website v0.2 + Program Integration v0.2.1
+# KDKAMATO
 
-The existing KDKAMATO website remains the primary application:
-Homepage / Manga / Knowledge / LAB / Training are preserved.
+Scientific Manga Universe
 
-## Program add-on routes
+## Program App status
 
-- `/login`
-- `/home`
-- `/program`
-- `/program/start`
-- `/program/preview`
-- `/progress`
-- `/account`
-- `/auth/callback`
+- FREE engine: `FREE_ENGINE_V1.2`
+- Core UAT: versioning path validated through Program v2
+- Processing UX: global loading/processing overlay added for route transitions and major async actions (Build Program, Activate, Progress save, Login/Signup/Google auth, Logout)
+- Weekly Train/Rest calendar: added to Preview and Active Program with focus-aware 5-day leg placement
+- Professional exercise Motion Card visuals: pending prototype
+- Program/Training language and terminology polish: pending dedicated pass after core stabilization
 
-The existing `/lab` remains the original public LAB and is not replaced by Program.
-
-## Existing website data
-
-- `MANGA_WEB` and `ARTICLES_WEB` continue to come from `KDKAMATO_Web_Content`.
-- Google Drive image proxy and service-account flow remain unchanged.
-
-## Program backend
-
-Supabase project: `KDKAMATO_PROGRAM`
-- Auth + RLS foundation
-- `kdk-free-program` Edge Function is already deployed in Supabase
-- `persist_free_program_version`
-- `get_my_progress_summary`
-- FREE → PRO is admin/server controlled
-
-## Required Vercel public env for Program
-
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-
-Existing Google environment variables must remain unchanged.
-
-## Safety boundary
-
-Do not upload a standalone Program App snapshot over the website root.
-Future Program changes must be delivered as merge-safe patches that preserve:
-`app/page.jsx`, `app/layout.jsx`, `app/globals.css`, existing `/lab`, Manga, Knowledge, and website content integrations.
+Repository also contains Manga, Knowledge, LAB, and Training web surfaces.
