@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/app-shell";
 import { ConsultRequestForm } from "@/components/consult-request-form";
+import { requireUser } from "@/lib/supabase/auth";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -36,11 +37,11 @@ function textList(value: unknown) {
 
 export default async function ConsultPage() {
   if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
-  const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = claims?.claims?.sub as string | undefined;
-  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน.</div></AppShell>;
+  const user = await requireUser();
+  if (!user) return <AppShell><div className="notice warning">Supabase env ยังไม่พร้อม.</div></AppShell>;
 
+  const supabase = await createClient();
+  const userId = user.id;
   const { data: access } = await supabase.from("user_access").select("tier").eq("user_id", userId).maybeSingle();
   const isPro = access?.tier === "PRO";
 
@@ -52,7 +53,7 @@ export default async function ConsultPage() {
       <section className="card" style={{ marginTop: 18 }}>
         <div className="kicker">PRO</div>
         <h2>What unlocks</h2>
-        <p>Biweekly Professional Review · Lab context when available · longitudinal Exercise Memory · optional online consult requests.</p>
+        <p>Biweekly Professional Report · Lab context when relevant · longitudinal Exercise Memory · optional online consult requests.</p>
       </section>
     </AppShell>;
   }
@@ -82,17 +83,17 @@ export default async function ConsultPage() {
     <div className="grid">
       <div className="card"><div className="kicker">Tier</div><div className="metric cyan">PRO</div><p>Same Program history, deeper longitudinal layer.</p></div>
       <div className="card"><div className="kicker">Online Consult</div><div className="metric">{usedThisMonth}/2</div><p>entitlements used this calendar month</p></div>
-      <div className="card"><div className="kicker">Published Reviews</div><div className="metric">{reports.length}</div><p>latest reports visible here</p></div>
+      <div className="card"><div className="kicker">Published Reports</div><div className="metric">{reports.length}</div><p>latest reports visible here</p></div>
     </div>
 
     <div style={{ marginTop: 18 }}><ConsultRequestForm /></div>
 
-    {reports.length === 0 ? <div className="notice" style={{ marginTop: 18 }}>ยังไม่มี Professional Report ที่ publish แล้ว. Pilot review จะปรากฏที่นี่หลังผ่าน Professional Human Gate.</div> : reports.map((r) => {
+    {reports.length === 0 ? <div className="notice" style={{ marginTop: 18 }}>ยังไม่มี PRO Report ที่ publish แล้ว. Pilot report จะปรากฏที่นี่หลัง workflow ที่เกี่ยวข้องเสร็จสมบูรณ์.</div> : reports.map((r) => {
       const actions = textList(r.next_actions);
       const monitor = textList(r.monitor_items);
       return <section className="card day" key={r.report_id}>
         <div className="kicker">{r.period_start ?? ""} → {r.period_end ?? ""}</div>
-        <h2>{r.overall_status ?? "Professional Review"}</h2>
+        <h2>{r.overall_status ?? "PRO Report"}</h2>
         {r.what_changed && <p><strong>What changed:</strong> {r.what_changed}</p>}
         {r.training_review && <p><strong>Training:</strong> {r.training_review}</p>}
         {r.nutrition_review && <p><strong>Nutrition:</strong> {r.nutrition_review}</p>}
