@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ExerciseFeedbackForm } from "@/components/exercise-feedback-form";
 import { ExerciseVisualPair, RepDbAttribution } from "@/components/exercise-visual-pair";
+import { ProExerciseSuggestions, type ProExerciseSuggestionPayload } from "@/components/pro-exercise-suggestions";
 import { ProgramWeek } from "@/components/program-week";
 import { getExerciseVisual } from "@/lib/exercise-visuals";
 import { createClient } from "@/lib/supabase/server";
@@ -143,6 +144,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const baseline = (baselineRaw ?? null) as Baseline | null;
   const training = (trainingRaw ?? null) as TrainingProfile | null;
   const isPro = accessRaw?.tier === "PRO";
+  const proSuggestionResult = isPro ? await supabase.rpc("get_my_pro_exercise_suggestions") : null;
+  const proSuggestions = (proSuggestionResult?.data ?? null) as ProExerciseSuggestionPayload | null;
   const feedbackMap = new Map<string, ExerciseFeedbackRow>(
     ((feedbackRaw ?? []) as ExerciseFeedbackRow[]).map((x) => [x.exercise_key, x]),
   );
@@ -172,6 +175,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">Direct hard sets / week</div><h2>Weekly Training Budget</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
+
+    {isPro && <ProExerciseSuggestions data={proSuggestions} />}
 
     <ProgramWeek days={Number(snapshot.training_days_per_week ?? byDay.size)} focus={snapshot.primary_focus ?? "BALANCED"} dayLabels={dayLabels} />
 
