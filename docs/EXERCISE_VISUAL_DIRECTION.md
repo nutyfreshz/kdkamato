@@ -6,6 +6,12 @@ Abstract SVG Motion Card v0 prototype: **FAILED USER RECOGNITION GATE** on 2026-
 
 RepDB replacement visual quality gate: **ACCEPTED AS GOOD ENOUGH FOR BASE LIBRARY** on 2026-09-08.
 
+Current execution order:
+
+1. Ship a first RepDB batch into the Program UI.
+2. Continue to PRO implementation / validation.
+3. Only after PRO version validation passes, fill the remaining visual gaps.
+
 ## Failure reason for abstract SVG v0
 
 The user could not reliably understand the exercise/movement from the simplified human + equipment abstraction. This format must not be scaled or shipped.
@@ -39,22 +45,23 @@ Important license constraints:
 - do not redistribute RepDB as a dataset,
 - do not use RepDB images as generative-AI reference / conditioning / style-transfer input.
 
-### Secondary gap source — Gym Visual
+### Missing-exercise strategy — deferred until PRO validation passes
 
-Use Gym Visual only for exercise identities not adequately covered by RepDB.
+Do not spend time buying or producing the remaining gap assets before the PRO version has passed validation.
 
-Current search confirms close/direct candidates for the main gap classes, including leverage-machine row/pullover, dumbbell external rotation, cable/band Y-raise variants, cable overhead triceps extension, leverage-machine dip, dumbbell squeeze press, dumbbell rear-delt row, slider leg curl, and multiple band variants such as face pull, straight-arm pulldown, lat pulldown, row, rear-delt fly, high row, leg extension/curl, and lateral raise.
+After PRO validation:
 
-Why it is the preferred secondary source:
-- very broad catalog,
-- consistent visual family,
-- PNG illustration and GIF options,
-- commercial app use is available under its paid royalty-free license.
+1. list the remaining exercise identities not adequately covered by RepDB;
+2. group them into visually compatible generation batches;
+3. generate a large **BEFORE / START sheet** containing multiple exercises;
+4. generate a matching large **AFTER / FINISH sheet** for the same exercise order;
+5. crop the large sheets deterministically into per-exercise assets;
+6. QC every cropped exercise pair;
+7. regenerate only failed groups / exercises until coverage is complete.
 
-Important license constraints:
-- only purchased non-watermarked media may be used commercially,
-- do not redistribute raw media,
-- do not use Gym Visual media as generative-AI input/reference.
+RepDB may be used as the product-format benchmark for consistency (clear pose, framing, recognizable equipment, clean start/finish presentation), but **RepDB images themselves must not be supplied to a generative model as input/reference/conditioning material** because the RepDB free-tier license prohibits generative-AI derivation.
+
+If a non-generated licensed source is later cheaper or materially better for a specific missing exercise, it may still be considered, but it is not required before PRO validation.
 
 ## Format normalization rule
 
@@ -70,7 +77,7 @@ Every exercise visual should be normalized into one Motion Card system:
 - mobile-first sizing,
 - source attribution handled centrally where required.
 
-Do not attempt AI restyling to make RepDB and Gym Visual look identical. Normalize through layout/composition only so licensing stays clean and visual recognition is preserved.
+Do not attempt AI restyling of licensed source images. Normalize licensed assets through layout/composition only so licensing stays clean and visual recognition is preserved.
 
 ## Acceptance gate
 
@@ -81,4 +88,4 @@ A user unfamiliar with the exercise name should be able to identify:
 - start vs finish position,
 within a few seconds.
 
-Bulk production may proceed only from assets that pass this recognition gate.
+Bulk gap-production remains deferred until the PRO version validation gate passes.
