@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ActivateProgramButton } from "@/components/activate-program-button";
+import { ProgramWeek } from "@/components/program-week";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -83,7 +84,6 @@ function progressionText(item: PreviewItem) {
   if (!p?.trigger || !p.action) return null;
   return `${p.trigger} → ${p.action}`;
 }
-
 
 async function edgeErrorPayload(error: unknown) {
   if (!error || typeof error !== "object" || !("context" in error)) return null;
@@ -172,6 +172,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     return acc;
   }, new Map<number, PreviewItem[]>());
 
+  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, items]) => [day, items[0]?.metadata?.day_label ?? `Day ${day}`]));
   const energyReady = preview.nutrition_target.maintenance_low != null && preview.nutrition_target.maintenance_high != null;
   const volumeEntries = Object.entries(preview.weekly_volume);
   const snapshot = preview.goal_snapshot;
@@ -195,6 +196,8 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       <h2>Weekly Training Budget</h2>
       <p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p>
     </section> : null}
+
+    <ProgramWeek days={preview.days} focus={preview.focus} dayLabels={dayLabels} />
 
     {Array.from(byDay.entries()).map(([day, items]) => {
       const sorted = [...items].sort((a, b) => a.display_order - b.display_order);
