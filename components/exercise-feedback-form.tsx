@@ -15,9 +15,9 @@ type InitialFeedback = {
 function errorText(error: unknown) {
   if (error instanceof Error) return error.message;
   if (error && typeof error === "object" && "message" in error) {
-    return String((error as { message?: unknown }).message ?? "Save failed");
+    return String((error as { message?: unknown }).message ?? "บันทึกไม่สำเร็จ");
   }
-  return "Save failed";
+  return "บันทึกไม่สำเร็จ";
 }
 
 export function ExerciseFeedbackForm({
@@ -68,51 +68,51 @@ export function ExerciseFeedbackForm({
   return (
     <div className="form" style={{ marginTop: 12 }}>
       <div className="kicker">PRO Exercise Memory</div>
-      <h3 style={{ margin: "4px 0 8px" }}>Quick feedback · {label}</h3>
-      <p style={{ marginTop: 0 }}>ใส่เฉพาะสิ่งที่สังเกตได้จริง ไม่จำเป็นต้องกรอกทุกช่อง ระบบจะใช้ข้อมูลนี้เป็นหลักฐานประกอบ Program รอบถัดไป</p>
+      <h3 style={{ margin: "4px 0 8px" }}>Feedback สั้น ๆ · {label}</h3>
+      <p style={{ marginTop: 0 }}>ไม่ต้องกรอกทุกท่าหรือทุกสัปดาห์ ใส่เมื่อมีสิ่งที่สังเกตได้จริง เช่น performance เปลี่ยน, ท่ารู้สึกไม่เข้ากับคุณ หรือกำลังลอง candidate ใหม่ ระบบจะสะสมข้อมูลนี้เพื่อใช้ใน PRO review รอบถัดไป.</p>
       <div className="form-grid">
         <label>Performance
           <select value={performance} onChange={(e) => setPerformance(e.target.value)}>
             <option value="">ไม่ระบุ</option>
-            <option value="BETTER">Better</option>
-            <option value="SAME">Same</option>
-            <option value="WORSE">Worse</option>
+            <option value="BETTER">ดีขึ้น</option>
+            <option value="SAME">ใกล้เคียงเดิม</option>
+            <option value="WORSE">แย่ลง</option>
           </select>
         </label>
         <label>Movement tolerance
           <select value={tolerance} onChange={(e) => setTolerance(e.target.value)}>
             <option value="">ไม่ระบุ</option>
-            <option value="GOOD">Good</option>
-            <option value="OK">OK</option>
-            <option value="POOR">Poor</option>
+            <option value="GOOD">ดี</option>
+            <option value="OK">พอใช้</option>
+            <option value="POOR">ไม่ดี</option>
           </select>
         </label>
         <label>Recovery
           <select value={recovery} onChange={(e) => setRecovery(e.target.value)}>
             <option value="">ไม่ระบุ</option>
-            <option value="GOOD">Good</option>
-            <option value="OK">OK</option>
-            <option value="POOR">Poor</option>
+            <option value="GOOD">ดี</option>
+            <option value="OK">พอใช้</option>
+            <option value="POOR">ไม่ดี</option>
           </select>
         </label>
         <label>Preference
           <select value={preference} onChange={(e) => setPreference(e.target.value)}>
             <option value="">ไม่ระบุ</option>
-            <option value="LIKE">Like</option>
-            <option value="NEUTRAL">Neutral</option>
-            <option value="DISLIKE">Dislike</option>
+            <option value="LIKE">ชอบ</option>
+            <option value="NEUTRAL">เฉย ๆ</option>
+            <option value="DISLIKE">ไม่ชอบ</option>
           </select>
         </label>
       </div>
-      <label>Note (optional)
-        <input value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} placeholder="เช่น รู้สึกคุมท่าได้ดีขึ้น หรือเครื่องนี้ไม่เข้ากับช่วงแขน" />
+      <label>Note (ไม่บังคับ)
+        <input value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} placeholder="เช่น คุมท่าได้ดีขึ้น หรือเครื่องนี้ไม่เข้ากับช่วงแขน" />
       </label>
       <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
-        {busy ? "Saving..." : "Save Exercise Feedback"}
+        {busy ? "กำลังบันทึก..." : "บันทึก Exercise Feedback"}
       </button>
-      {saved && <div className="notice">Saved. Exercise Memory ถูก refresh จากข้อมูลล่าสุดแล้ว.</div>}
+      {saved && <div className="notice">บันทึกแล้ว Exercise Memory ถูกอัปเดตจากข้อมูลล่าสุด.</div>}
       {error && <div className="notice warning">{error}</div>}
-      {busy && <ProcessingOverlay title="กำลังบันทึก Exercise Feedback..." detail="กำลังอัปเดต longitudinal Exercise Memory ของท่านี้" />}
+      {busy && <ProcessingOverlay title="กำลังบันทึก Exercise Feedback..." detail="กำลังอัปเดต Exercise Memory ของท่านี้" />}
     </div>
   );
 }
