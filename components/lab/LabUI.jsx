@@ -5,19 +5,149 @@ import { useState } from 'react';
 import { trackLabEvent } from '../../lib/labAnalytics';
 import { LabSaveResult } from './LabSaveResult';
 
+function simpleMeasurementCopy(label, language, guide, mistake, why) {
+  const text = String(label || '').toLowerCase();
+  const th = language !== 'en';
+  const has = (...terms) => terms.some((term) => text.includes(term.toLowerCase()));
+
+  if (has('femur', 'ต้นขา')) return th ? {
+    why: 'ใช้ดูว่าสัดส่วนต้นขาของคุณมีผลต่อท่า Squat อย่างไร',
+    path: 'ปุ่มกระดูกสะโพกด้านข้าง → กึ่งกลางหัวเข่าด้านข้าง',
+    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากสะโพกถึงหัวเข่า หน่วยเป็น cm',
+    mistake: 'อย่าวัดจากขอบกางเกงหรือจุดที่เปลี่ยนตำแหน่งได้ง่าย',
+  } : {
+    why: 'Used to understand how your thigh proportion can affect Squat setup.',
+    path: 'Side hip bone → center of the outside of the knee',
+    guide: 'Stand tall and measure a straight line down the side of the leg from hip to knee in cm.',
+    mistake: 'Do not use clothing edges or landmarks that move between measurements.',
+  };
+
+  if (has('tibia', 'หน้าแข้ง')) return th ? {
+    why: 'ใช้เทียบความยาวหน้าแข้งกับต้นขา เพื่อดูสัดส่วนช่วงขา',
+    path: 'กึ่งกลางหัวเข่าด้านข้าง → ปุ่มกระดูกข้อเท้าด้านนอก',
+    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากหัวเข่าถึงข้อเท้า หน่วยเป็น cm',
+    mistake: 'อย่าวัดเฉียง และใช้จุดหัวเข่า/ข้อเท้าคนละจุดในแต่ละครั้ง',
+  } : {
+    why: 'Used with femur length to describe your leg proportions.',
+    path: 'Center of the outside of the knee → outer ankle bone',
+    guide: 'Stand tall and measure a straight line down the side of the lower leg from knee to ankle in cm.',
+    mistake: 'Do not measure diagonally or change the knee/ankle landmarks.',
+  };
+
+  if (has('torso', 'ลำตัว')) return th ? {
+    why: 'ใช้ประมาณความยาวลำตัวเพื่อช่วยดูตำแหน่งใน Squat',
+    path: 'ปุ่มกระดูกสะโพกด้านข้าง → ปลายหัวไหล่ด้านข้าง',
+    guide: 'ยืนตรง แล้ววัดด้านข้างลำตัวจากสะโพกขึ้นไปถึงปลายหัวไหล่ หน่วยเป็น cm',
+    mistake: 'อย่าวัดอ้อมตามลำตัวหรือเปลี่ยนจุดสะโพก/หัวไหล่ระหว่างครั้ง',
+  } : {
+    why: 'A simple torso estimate used as extra context for Squat geometry.',
+    path: 'Side hip bone → outer tip of the shoulder',
+    guide: 'Stand tall and measure up the side of the torso from hip to shoulder in cm.',
+    mistake: 'Do not wrap the tape around the body or change the landmarks between measurements.',
+  };
+
+  if (has('arm span', 'ช่วงแขน')) return th ? {
+    why: 'ใช้ดูระยะเอื้อมของคุณเทียบกับส่วนสูง',
+    path: 'ปลายนิ้วกลางซ้าย → ปลายนิ้วกลางขวา',
+    guide: 'ยืนชิดผนัง กางแขนตรงระดับไหล่ แล้ววัดจากปลายนิ้วกลางข้างหนึ่งถึงอีกข้าง หน่วยเป็น cm',
+    mistake: 'อย่างอศอก ยกไหล่ หรือวัดตามแนวโค้ง',
+  } : {
+    why: 'Used to compare your reach with your height.',
+    path: 'Left middle fingertip → right middle fingertip',
+    guide: 'Stand against a wall, arms straight at shoulder height, and measure fingertip to fingertip in cm.',
+    mistake: 'Do not bend the elbows, shrug, or measure along a curved path.',
+  };
+
+  if (has('height', 'ส่วนสูง')) return th ? {
+    why: 'ใช้เป็นค่าฐานสำหรับเทียบกับสัดส่วนอื่น',
+    path: 'พื้น → จุดสูงสุดของศีรษะ',
+    guide: 'ถอดรองเท้า ยืนตรงชิดผนัง มองตรง แล้ววัดจากพื้นถึงบนสุดของศีรษะ หน่วยเป็น cm',
+    mistake: 'อย่าวัดทั้งที่ใส่รองเท้าหรือยืนบนพื้นเอียง',
+  } : {
+    why: 'Used as the reference for your other body proportions.',
+    path: 'Floor → top of head',
+    guide: 'Barefoot, stand tall against a wall, look straight ahead, and measure floor to top of head in cm.',
+    mistake: 'Do not measure in shoes or on an uneven floor.',
+  };
+
+  if (has('shoulder', 'ไหล่')) return th ? {
+    why: 'ใช้เทียบขนาดช่วงไหล่กับเอว',
+    path: 'พันสายวัดรอบส่วนที่กว้างที่สุดของหัวไหล่/เดลต์',
+    guide: 'ยืนผ่อนคลาย ให้สายวัดผ่านส่วนที่กว้างที่สุดของหัวไหล่ทั้งสองข้าง แล้วอ่านค่าเป็น cm',
+    mistake: 'อย่าดึงสายวัดแน่นจนกดเนื้อ และอย่าวัดคนละระดับในแต่ละครั้ง',
+  } : {
+    why: 'Used to compare shoulder size with waist size.',
+    path: 'Tape around the widest part of both shoulders/delts',
+    guide: 'Stand relaxed, keep the tape level around the widest shoulder/delt area, and read the circumference in cm.',
+    mistake: 'Do not pull the tape tight enough to compress tissue or change the measuring level.',
+  };
+
+  if (has('waist', 'เอว')) return th ? {
+    why: 'ใช้เทียบกับรอบไหล่และติดตามสัดส่วนเดิมให้สม่ำเสมอ',
+    path: 'พันสายวัดรอบเอวที่ระดับสะดือ',
+    guide: 'ยืนผ่อนคลาย หายใจออกตามปกติ แล้ววัดรอบเอวผ่านระดับสะดือ หน่วยเป็น cm',
+    mistake: 'อย่าแขม่วท้อง และอย่าสลับไปวัดตรงเอวคอดที่สุดในครั้งอื่น',
+  } : {
+    why: 'Used with shoulder circumference and for consistent tracking.',
+    path: 'Tape around the waist at navel level',
+    guide: 'Stand relaxed, exhale normally, and measure the waist circumference at navel level in cm.',
+    mistake: 'Do not suck in your stomach or switch to the narrowest waist point later.',
+  };
+
+  if (has('knee-to-wall', 'เข่าถึงผนัง', 'knee to wall')) return th ? {
+    why: 'ใช้ดูว่าเข่าแต่ละข้างเดินหน้าได้แค่ไหนตอนเท้ายังแนบพื้น',
+    path: 'ปลายนิ้วโป้งเท้า → กำแพง',
+    guide: 'หันหน้าเข้ากำแพง วางเท้าราบ ดันเข่าแตะกำแพงโดยส้นไม่ยก แล้วค่อยๆ เลื่อนเท้าถอยจนได้ระยะไกลสุดที่ยังแตะได้ วัดจากปลายนิ้วโป้งเท้าถึงกำแพง',
+    mistake: 'ถ้าส้นยกหรือเท้าหมุนออกมาก ค่านั้นใช้ไม่ได้',
+  } : {
+    why: 'Shows how far the knee can travel forward while the foot stays flat.',
+    path: 'Big toe → wall',
+    guide: 'Face a wall, keep the foot flat, touch the knee to the wall without lifting the heel, then move the foot back to the farthest repeatable distance. Measure big toe to wall.',
+    mistake: 'The result is not valid if the heel lifts or the foot rotates substantially.',
+  };
+
+  if (has('body fat', 'bodyfat', 'ไขมัน')) return th ? {
+    why: 'ใช้ร่วมกับน้ำหนักเพื่อคำนวณมวลไร้ไขมันและ FFMI',
+    path: 'กรอก % ไขมันจากวิธีที่คุณใช้อยู่จริง',
+    guide: 'ใช้ค่าจากเครื่องหรือวิธีประเมินที่คุณใช้จริง และถ้าจะเทียบครั้งต่อไปควรใช้วิธีเดิม',
+    mistake: 'อย่าคิดว่าค่า % ไขมันเป็นค่าที่แม่นยำ 100%',
+  } : {
+    why: 'Used with body weight to estimate fat-free mass and FFMI.',
+    path: 'Enter the body-fat % from the method you actually use',
+    guide: 'Use your real estimate from your current method, and use the same method for future comparisons.',
+    mistake: 'Do not treat body-fat estimates as perfectly accurate.',
+  };
+
+  if (has('weight', 'น้ำหนัก')) return th ? {
+    why: 'ใช้คำนวณ FFMI และติดตามการเปลี่ยนแปลง',
+    path: 'ชั่งด้วยเครื่องชั่งตามปกติ',
+    guide: 'ถ้าจะติดตาม ให้ชั่งช่วงเวลาและเงื่อนไขใกล้เคียงกัน เช่น ตอนเช้าหลังเข้าห้องน้ำ',
+    mistake: 'อย่าเทียบน้ำหนักที่ชั่งคนละช่วงเวลาและคนละสภาพแล้วตีความมากเกินไป',
+  } : {
+    why: 'Used for FFMI and progress tracking.',
+    path: 'Use a normal body-weight scale',
+    guide: 'For tracking, weigh under similar conditions each time, such as in the morning after using the bathroom.',
+    mistake: 'Avoid overinterpreting readings taken under very different conditions.',
+  };
+
+  return { why, path: null, guide, mistake };
+}
+
 export function ToolHeader({ id, title, question, technicalName, role = 'LAB TOOL', language = 'th' }) {
   return <header className="lab-tool-head"><p className="eyebrow cyan">KDKAMATO LAB / {role}</p><p className="meta">{id}{technicalName ? ` · ${technicalName}` : ''}</p><h1>{title}</h1><p className="lab-tool-question">{question}</p></header>;
 }
 
-export function MeasurementField({ label, unit, value, onChange, step = '0.1', guide, mistake, why, type = 'length', language = 'th' }) {
+export function MeasurementField({ label, unit, value, onChange, step = '0.1', guide, mistake, why, language = 'th' }) {
   const [open, setOpen] = useState(false);
+  const copy = simpleMeasurementCopy(label, language, guide, mistake, why);
   return <div className="measure-field">
-    {why && <p className="measure-why">{why}</p>}
+    {copy.why && <p className="measure-why">{copy.why}</p>}
     <label><span>{label}</span><b>{unit}</b><input inputMode="decimal" type="number" min="0" step={step} value={value} onChange={(e) => onChange(e.target.value)} /></label>
-    <button type="button" className="measure-help" onClick={() => { const next=!open; setOpen(next); if(next) trackLabEvent('lab_measurement_help_open'); }}>{open ? (language === 'en' ? 'HIDE GUIDE' : 'ซ่อนวิธีวัด') : (language === 'en' ? 'HOW TO MEASURE' : 'วิธีวัด')}</button>
+    <button type="button" className="measure-help" onClick={() => { const next=!open; setOpen(next); if(next) trackLabEvent('lab_measurement_help_open'); }}>{open ? (language === 'en' ? 'HIDE GUIDE' : 'ซ่อนวิธีวัด') : (language === 'en' ? 'SIMPLE MEASURING GUIDE' : 'วิธีวัดแบบง่าย')}</button>
     {open && <div className="measure-guide">
-      <div className={`measure-schematic ${type}`} aria-hidden="true"><i/><span>↔</span><i/></div>
-      <p>{guide}</p><small>{language === 'en' ? 'COMMON MISTAKE' : 'จุดที่พลาดบ่อย'}: {mistake}</small>
+      {copy.path && <p><strong>{language === 'en' ? 'MEASURE:' : 'วัดจาก:'}</strong> {copy.path}</p>}
+      <p>{copy.guide}</p>
+      <small><strong>{language === 'en' ? 'AVOID' : 'อย่าทำแบบนี้'}:</strong> {copy.mistake}</small>
     </div>}
   </div>;
 }
