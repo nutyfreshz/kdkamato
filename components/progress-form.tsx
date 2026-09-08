@@ -17,8 +17,8 @@ type InitialProgress = {
 
 function readableError(e: unknown) {
   if (e instanceof Error) return e.message;
-  if (e && typeof e === "object" && "message" in e) return String((e as { message?: unknown }).message ?? "Save failed");
-  return "Save failed";
+  if (e && typeof e === "object" && "message" in e) return String((e as { message?: unknown }).message ?? "บันทึกไม่สำเร็จ");
+  return "บันทึกไม่สำเร็จ";
 }
 
 export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: boolean; initial?: InitialProgress | null }) {
@@ -66,20 +66,20 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
   }
 
   return <div className="card form">
-    <h2>Quick Check · ~30 sec</h2>
-    <p>{hasActiveProgram ? "วันนี้จะผูกกับ Active Program โดย server อัตโนมัติ" : "ยังไม่มี Active Program — บันทึกน้ำหนักได้ แต่ training response จะยังไม่ผูกกับ Program"}</p>
+    <h2>Quick Check · ประมาณ 30 วินาที</h2>
+    <p>{hasActiveProgram ? "ข้อมูลวันนี้จะถูกผูกกับ Active Program ให้อัตโนมัติ" : "ยังไม่มี Active Program — บันทึกน้ำหนักได้ แต่ training response จะยังไม่ผูกกับ Program"}</p>
     <div className="form-grid">
-      <label>น้ำหนักวันนี้ (optional)<input inputMode="decimal" value={form.weight} onChange={(e)=>setForm({...form,weight:e.target.value})} placeholder="kg" /></label>
-      <label>Training<select value={form.trainingStatus} onChange={(e)=>setForm({...form,trainingStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="BETTER">Better</option><option value="SAME">Same</option><option value="WORSE">Worse</option></select></label>
-      <label>Recovery<select value={form.recoveryStatus} onChange={(e)=>setForm({...form,recoveryStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="GOOD">Good</option><option value="OK">OK</option><option value="POOR">Not recovered</option></select></label>
-      <label>Adherence<select value={form.adherenceStatus} onChange={(e)=>setForm({...form,adherenceStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">Almost all</option><option value="MEDIUM">Some</option><option value="LOW">Little</option></select></label>
+      <label>น้ำหนักวันนี้ (ไม่บังคับ)<input inputMode="decimal" value={form.weight} onChange={(e)=>setForm({...form,weight:e.target.value})} placeholder="kg" /></label>
+      <label>Training<select value={form.trainingStatus} onChange={(e)=>setForm({...form,trainingStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="BETTER">ดีขึ้น</option><option value="SAME">ใกล้เคียงเดิม</option><option value="WORSE">แย่ลง</option></select></label>
+      <label>Recovery<select value={form.recoveryStatus} onChange={(e)=>setForm({...form,recoveryStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="GOOD">ดี</option><option value="OK">พอใช้</option><option value="POOR">ยังฟื้นไม่ดี</option></select></label>
+      <label>Adherence<select value={form.adherenceStatus} onChange={(e)=>setForm({...form,adherenceStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ทำได้เกือบครบ</option><option value="MEDIUM">ทำได้บางส่วน</option><option value="LOW">ทำได้น้อย</option></select></label>
     </div>
-    <label className="check"><input type="checkbox" checked={form.trainingCompleted} onChange={(e)=>setForm({...form,trainingCompleted:e.target.checked})}/> Training done</label>
+    <label className="check"><input type="checkbox" checked={form.trainingCompleted} onChange={(e)=>setForm({...form,trainingCompleted:e.target.checked})}/> วันนี้ฝึกแล้ว</label>
     <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มี issue ใหม่</label>
-    <label>Note (optional)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
-    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "Saving..." : "Save Check"}</button>
-    {busy && <ProcessingOverlay title="กำลังบันทึก Progress..." detail="กำลังผูก Daily Check กับ Program version ที่ใช้งานอยู่" />}
-    {saved && <div className="notice">Saved. กด Save ซ้ำในวันเดียวกันจะอัปเดต Daily Check เดิม.</div>}
+    <label>Note (ไม่บังคับ)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
+    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก..." : "บันทึก Check-in"}</button>
+    {busy && <ProcessingOverlay title="กำลังบันทึก Progress..." detail="กำลังผูก Check-in กับ Program version ที่ใช้งานอยู่" />}
+    {saved && <div className="notice">บันทึกแล้ว หากกด Save ซ้ำในวันเดียวกัน ระบบจะอัปเดต Check-in เดิม.</div>}
     {error && <div className="notice warning">{error}</div>}
   </div>;
 }
