@@ -32,7 +32,7 @@ function bangkokDate() {
 }
 
 export default async function ProgressPage(){
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลยังไม่พร้อม.</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
@@ -50,14 +50,14 @@ export default async function ProgressPage(){
   const todayRow = latest.find((x) => x.entry_date === today) ?? null;
 
   return <AppShell>
-    <div className="topline">Progress · 30 days</div><h1>Low-friction by default</h1>
+    <div className="topline">Progress · 30 วัน</div><h1>เช็กอินสั้น ๆ เพื่อให้ระบบเรียนรู้จากการฝึกจริง</h1>
     <div className="grid">
-      <div className="card"><div className="kicker">Latest Weight</div><div className="metric">{summary.latest_weight_kg ?? "–"} {summary.latest_weight_kg ? "kg" : ""}</div><p>Change: {summary.weight_change_kg ?? "–"} kg</p></div>
-      <div className="card"><div className="kicker">Training Done</div><div className="metric cyan">{summary.training_completed_count ?? 0}</div><p>Better {summary.training_better_count ?? 0} · Same {summary.training_same_count ?? 0} · Worse {summary.training_worse_count ?? 0}</p></div>
-      <div className="card"><div className="kicker">Program Link</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "–"}</div><p>{activeProgram ? "Server จะผูก Daily Check ใหม่กับ Program นี้." : "Activate a program to build longitudinal program response."}</p></div>
-      <div className="card"><div className="kicker">New Issues</div><div className="metric">{summary.new_issue_count ?? 0}</div><p>{(summary.entries_count ?? 0) < 3 ? "Not enough data to analyze yet." : "Use trend, not one noisy entry."}</p></div>
+      <div className="card"><div className="kicker">น้ำหนักล่าสุด</div><div className="metric">{summary.latest_weight_kg ?? "–"} {summary.latest_weight_kg ? "kg" : ""}</div><p>เปลี่ยนแปลง: {summary.weight_change_kg ?? "–"} kg</p></div>
+      <div className="card"><div className="kicker">จำนวนครั้งที่ฝึก</div><div className="metric cyan">{summary.training_completed_count ?? 0}</div><p>ดีขึ้น {summary.training_better_count ?? 0} · เท่าเดิม {summary.training_same_count ?? 0} · แย่ลง {summary.training_worse_count ?? 0}</p></div>
+      <div className="card"><div className="kicker">Program ที่ใช้อยู่</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "–"}</div><p>{activeProgram ? "Check-in ใหม่จะผูกกับ Program version นี้อัตโนมัติ." : "Activate Program ก่อนเพื่อเริ่มเก็บ longitudinal response."}</p></div>
+      <div className="card"><div className="kicker">Issue ใหม่</div><div className="metric">{summary.new_issue_count ?? 0}</div><p>{(summary.entries_count ?? 0) < 3 ? "ข้อมูลยังน้อยเกินไปสำหรับดูแนวโน้ม." : "ดูแนวโน้มหลายครั้ง ไม่ตัดสินจาก Check-in เดียว."}</p></div>
     </div>
     <div style={{marginTop:18}}><ProgressForm hasActiveProgram={Boolean(activeProgram)} initial={todayRow}/></div>
-    {latest.length > 0 && <section className="card day"><h2>Recent checks</h2>{latest.map((x, i)=><div className="exercise" key={`${x.entry_date}-${i}`}><div><strong>{x.entry_date}</strong><br/><small>{x.training_status ?? "No training signal"}</small></div><div>{x.body_weight_kg ? `${x.body_weight_kg} kg` : "–"} · {x.recovery_status ?? "–"} · {x.adherence_status ?? "–"}</div></div>)}</section>}
+    {latest.length > 0 && <section className="card day"><h2>Check-in ล่าสุด</h2>{latest.map((x, i)=><div className="exercise" key={`${x.entry_date}-${i}`}><div><strong>{x.entry_date}</strong><br/><small>{x.training_status ?? "ไม่มี Training signal"}</small></div><div>{x.body_weight_kg ? `${x.body_weight_kg} kg` : "–"} · {x.recovery_status ?? "–"} · {x.adherence_status ?? "–"}</div></div>)}</section>}
   </AppShell>;
 }
