@@ -1,14 +1,15 @@
 # KDKAMATO
 
-Scientific Manga Universe
+Current Program implementation status:
 
-## Program App status
-
-- FREE engine: `FREE_ENGINE_V1.2`
-- Core UAT: versioning path validated through Program v2
-- Processing UX: global loading/processing overlay added for route transitions and major async actions (Build Program, Activate, Progress save, Login/Signup/Google auth, Logout)
-- Weekly Train/Rest calendar: added to Preview and Active Program with focus-aware 5-day leg placement
-- Professional exercise Motion Card visuals: pending prototype
-- Program/Training language and terminology polish: pending dedicated pass after core stabilization
-
-Repository also contains Manga, Knowledge, LAB, and Training web surfaces.
+- FREE Engine: `FREE_ENGINE_V1.2`
+- FREE core UAT: versioning validated through Active v2
+- Program async processing feedback: live
+- Weekly Train / Rest calendar: live
+- RepDB exercise visual Batch 01: live and integrated into Active Program exercise details
+- PRO Consult route + request flow: implemented and protected
+- PRO Exercise Feedback / Exercise Memory frontend: implemented and PRO-gated
+- PRO backend bridge / human-gate / versioning / report architecture: technical validation passed
+- Real PRO pilot: pending explicit entitlement upgrade approval
+- Missing exercise visual generation: deferred until real PRO pilot/version validation passes
+- Program/Training language polish: pending after core/PRO stability
