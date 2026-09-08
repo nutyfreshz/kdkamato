@@ -19,7 +19,7 @@ function text(value: unknown) {
 
 export default async function ProgramStartPage() {
   const user = await requireUser();
-  if (!user) return <AppShell><div className="notice warning">ต้องใส่ Supabase public env เพื่อเปิด live onboarding ใน runtime นี้.</div></AppShell>;
+  if (!user) return <AppShell><div className="notice warning">ระบบเชื่อมต่อบัญชียังไม่พร้อมใน runtime นี้.</div></AppShell>;
 
   const supabase = await createClient();
   const [{ data: baseline }, { data: training }, { data: nutrition }] = await Promise.all([
@@ -44,9 +44,9 @@ export default async function ProgramStartPage() {
   } : undefined;
 
   return <AppShell>
-    <div className="topline">Free Bodybuilding Program</div>
-    <h1>เลือก Focus แล้วให้ระบบจัด Training Budget</h1>
-    <p>Chest / Back / Arms / Legs / Balanced / Reposture จะเปลี่ยน weekly sets และ exercise allocation จริง โดยคุมจำนวนวัน เวลาต่อครั้ง ประสบการณ์ และอุปกรณ์ที่มี.</p>
+    <div className="topline">Program Setup</div>
+    <h1>ตั้งค่า Program ให้ตรงกับเป้าหมายและเวลาฝึก</h1>
+    <p>ระบบจะใช้ Goal, Focus, Training Days, Experience, Equipment และ Session Time เพื่อจัด weekly training budget และเลือกท่าให้เหมาะกับเงื่อนไขของคุณ.</p>
     <OnboardingForm initial={initial} />
   </AppShell>;
 }
