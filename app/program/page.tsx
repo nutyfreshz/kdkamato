@@ -102,7 +102,7 @@ function bangkokDate() {
 
 export default async function ProgramPage({ searchParams }: { searchParams: Promise<{ activated?: string }> }) {
   const params = await searchParams;
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลยังไม่พร้อม.</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
@@ -114,7 +114,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   if (!program) return <AppShell>
     <div className="topline">Program</div><h1>Training + Nutrition</h1>
-    <div className="card"><h2>No active program yet</h2><p>สร้าง Program Preview จาก Focus, Training Days, Experience, Equipment และ Session Time แล้ว Activate เพื่อเริ่ม version แรก.</p><div className="cta-row"><Link className="btn primary" href="/program/preview">Open Program Preview</Link><Link className="btn" href="/program/start">Build Program</Link></div></div>
+    <div className="card"><h2>ยังไม่มี Active Program</h2><p>ตั้งค่า Goal, Focus, Training Days, Experience, Equipment และ Session Time แล้ว Preview ก่อน Activate Program version แรก.</p><div className="cta-row"><Link className="btn primary" href="/program/start">สร้าง Program</Link></div></div>
   </AppShell>;
 
   const today = bangkokDate();
@@ -160,15 +160,15 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
     <h1>{snapshot.program_family ?? "Active Program"}</h1>
-    <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {snapshot.focus_label ?? "–"} · {snapshot.training_days_per_week ?? "–"} days · {snapshot.session_duration_min ?? "–"} min</p>
-    {params.activated && <div className="notice" style={{ marginBottom: 16 }}>Program activated successfully. Version ก่อนหน้าจะถูกเก็บเป็น history เมื่อมีการสร้าง version ใหม่.</div>}
-    {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>Foundation inputs ปัจจุบันต่างจาก Active Program v{program.program_version}. Active Program จะยังไม่เปลี่ยนจนกว่าคุณจะ Preview และ Activate version ใหม่.</div>}
+    <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {snapshot.focus_label ?? "–"} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
+    {params.activated && <div className="notice" style={{ marginBottom: 16 }}>Activate Program สำเร็จ Version ก่อนหน้าจะถูกเก็บไว้เป็น history เมื่อมี version ใหม่.</div>}
+    {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูล Program Setup ปัจจุบันต่างจาก Active Program v{program.program_version}. Program ที่ใช้อยู่จะยังไม่เปลี่ยนจนกว่าคุณจะ Preview และ Activate version ใหม่.</div>}
 
     <div className="grid">
       <div className="card"><div className="kicker">Focus</div><div className="metric cyan">{snapshot.focus_label ?? "–"}</div></div>
-      <div className="card"><div className="kicker">Session</div><div className="metric">{snapshot.session_duration_min ?? "–"} min</div></div>
+      <div className="card"><div className="kicker">เวลาต่อครั้ง</div><div className="metric">{snapshot.session_duration_min ?? "–"} min</div></div>
       <div className="card"><div className="kicker">Protein</div><div className="metric">{nutrition?.protein_low_g ?? "–"}–{nutrition?.protein_high_g ?? "–"} g</div></div>
-      <div className="card"><div className="kicker">Calories</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "Calibrating"}</div><p>{nutrition?.maintenance_low != null ? `Maintenance ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับ initial estimate"}</p></div>
+      <div className="card"><div className="kicker">Calories</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "กำลังปรับเทียบ"}</div><p>{nutrition?.maintenance_low != null ? `Maintenance ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับ initial estimate"}</p></div>
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">Direct hard sets / week</div><h2>Weekly Training Budget</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
@@ -187,14 +187,14 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
               <div style={{ minWidth: 0 }}>
                 <strong>{label}</strong><br/>
                 <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
-                {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>NEXT:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
-                {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>Alternative: {x.metadata.alternative_name}</p> : null}
+                {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
+                {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>ทางเลือก: {x.metadata.alternative_name}</p> : null}
               </div>
               <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
             </div>
             {(hasVisual || isPro) && <details style={{ margin: "2px 0 8px" }}>
               <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>
-                {hasVisual && isPro ? "Exercise visual · PRO feedback" : hasVisual ? "Exercise visual" : "PRO feedback"}
+                {hasVisual && isPro ? "ดูท่า · PRO Feedback" : hasVisual ? "ดูท่า" : "PRO Feedback"}
               </summary>
               {hasVisual && <ExerciseVisualPair exerciseKey={x.exercise_key} label={label} />}
               {isPro && <ExerciseFeedbackForm exerciseKey={x.exercise_key} label={label} initial={feedbackMap.get(x.exercise_key) ?? null} />}
@@ -205,6 +205,6 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     })}
 
     {hasRepDbVisuals && <RepDbAttribution />}
-    <div className="cta-row"><Link className="btn" href="/program/start">Update Program Inputs</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">Preview New Version</Link>}<Link className="btn" href="/progress">Log Progress</Link>{isPro && <Link className="btn" href="/consult">Open PRO Consult</Link>}</div>
+    <div className="cta-row"><Link className="btn" href="/program/start">แก้ Program Setup</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">Preview Version ใหม่</Link>}<Link className="btn" href="/progress">บันทึก Progress</Link>{isPro && <Link className="btn" href="/consult">เปิด PRO Consult</Link>}</div>
   </AppShell>;
 }
