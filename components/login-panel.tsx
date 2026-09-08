@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ProcessingOverlay } from "@/components/processing-overlay";
 
 export function LoginPanel() {
   const router = useRouter();
@@ -11,8 +12,11 @@ export function LoginPanel() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [busyLabel, setBusyLabel] = useState("กำลังเข้าสู่ระบบ...");
 
   async function submit() {
+    if (busy) return;
+    setBusyLabel(mode === "login" ? "กำลังเข้าสู่ระบบ..." : "กำลังสร้างบัญชี...");
     setBusy(true); setMessage("");
     try {
       const supabase = createClient();
@@ -22,15 +26,19 @@ export function LoginPanel() {
       if (result.error) throw result.error;
       if (mode === "signup" && !result.data.session) {
         setMessage("สร้างบัญชีแล้ว กรุณาตรวจอีเมลเพื่อยืนยันบัญชีก่อนเข้าสู่ระบบ");
+        setBusy(false);
       } else {
         router.push("/home"); router.refresh();
       }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "ไม่สามารถเข้าสู่ระบบได้");
-    } finally { setBusy(false); }
+      setBusy(false);
+    }
   }
 
   async function google() {
+    if (busy) return;
+    setBusyLabel("กำลังเชื่อมต่อ Google...");
     setBusy(true); setMessage("");
     try {
       const supabase = createClient();
@@ -52,7 +60,8 @@ export function LoginPanel() {
       <label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
       <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "login" ? "current-password" : "new-password"} /></label>
       <button className="btn primary" onClick={submit} disabled={busy || !email || password.length < 6}>{busy ? "กำลังดำเนินการ..." : mode === "login" ? "เข้าสู่ระบบ" : "สร้างบัญชี"}</button>
-      <button className="btn ghost" onClick={() => setMode(mode === "login" ? "signup" : "login")}>{mode === "login" ? "ยังไม่มีบัญชี? สร้างบัญชี" : "มีบัญชีแล้ว? เข้าสู่ระบบ"}</button>
+      <button className="btn ghost" disabled={busy} onClick={() => setMode(mode === "login" ? "signup" : "login")}>{mode === "login" ? "ยังไม่มีบัญชี? สร้างบัญชี" : "มีบัญชีแล้ว? เข้าสู่ระบบ"}</button>
+      {busy && <ProcessingOverlay title={busyLabel} detail="กรุณารอสักครู่ และไม่ต้องกดปุ่มซ้ำ" />}
       {message && <div className="notice warning">{message}</div>}
     </div>
   );
