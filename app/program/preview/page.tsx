@@ -4,7 +4,7 @@ import { ActivateProgramButton } from "@/components/activate-program-button";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
-const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.1";
+const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.2";
 const EXPECTED_CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
 
 type ProgressionRule = {

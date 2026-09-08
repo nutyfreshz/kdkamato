@@ -1,6 +1,6 @@
 import { EXERCISE_POOLS } from "./exercise-catalog.mjs";
 
-export const ENGINE_VERSION = "FREE_ENGINE_V1.1";
+export const ENGINE_VERSION = "FREE_ENGINE_V1.2";
 
 const FOCUS_LABELS = {
   BALANCED: "Balanced",
@@ -40,11 +40,11 @@ const TEMPLATES = {
   FB2: [
     { label: "Full Body A", slots: [
       S("QUAD_COMPOUND", "QUADS", 1), S("CHEST_FLAT", "CHEST", 1), S("BACK_VERTICAL", "BACK", 1),
-      S("HAMSTRING_CURL", "HAMSTRINGS", 2), S("BACK_HORIZONTAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("TRICEPS", "TRICEPS", 4),
+      S("HAMSTRING_CURL", "HAMSTRINGS", 2), S("BACK_HORIZONTAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("TRICEPS", "TRICEPS", 3), S("CALVES", "CALVES", 4),
     ] },
     { label: "Full Body B", slots: [
       S("HIP_HINGE", "HAMSTRINGS", 1), S("CHEST_INCLINE", "CHEST", 1), S("BACK_HORIZONTAL", "BACK", 1),
-      S("QUAD_COMPOUND", "QUADS", 2), S("BACK_VERTICAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("BICEPS", "BICEPS", 4),
+      S("QUAD_COMPOUND", "QUADS", 2), S("BACK_VERTICAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("BICEPS", "BICEPS", 3), S("CORE", "CORE", 4),
     ] },
   ],
   FB3: [
@@ -58,7 +58,7 @@ const TEMPLATES = {
     ] },
     { label: "Full Body C", slots: [
       S("QUAD_COMPOUND", "QUADS", 1), S("BACK_VERTICAL", "BACK", 1), S("CHEST_FLAT", "CHEST", 1),
-      S("HAMSTRING_CURL", "HAMSTRINGS", 2), S("BACK_HORIZONTAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("TRICEPS", "TRICEPS", 4),
+      S("HAMSTRING_CURL", "HAMSTRINGS", 2), S("BACK_HORIZONTAL", "BACK", 2), S("SHOULDER_LATERAL", "SHOULDERS", 3), S("TRICEPS", "TRICEPS", 3), S("CALVES", "CALVES", 4),
     ] },
   ],
   UL4: [
@@ -91,7 +91,7 @@ const TEMPLATES = {
     ] },
     { label: "Legs A", slots: [
       S("QUAD_COMPOUND", "QUADS", 1), S("HAMSTRING_CURL", "HAMSTRINGS", 1), S("HIP_HINGE", "HAMSTRINGS", 2),
-      S("QUAD_ISOLATION", "QUADS", 2), S("CALVES", "CALVES", 3),
+      S("QUAD_ISOLATION", "QUADS", 2), S("CALVES", "CALVES", 3), S("CORE", "CORE", 4),
     ] },
     { label: "Push B", slots: [
       S("CHEST_INCLINE", "CHEST", 1), S("CHEST_FLAT", "CHEST", 1), S("SHOULDER_LATERAL", "SHOULDERS", 2),
@@ -103,7 +103,7 @@ const TEMPLATES = {
     ] },
     { label: "Legs B", slots: [
       S("HIP_HINGE", "HAMSTRINGS", 1), S("QUAD_COMPOUND", "QUADS", 1), S("HAMSTRING_CURL", "HAMSTRINGS", 2),
-      S("QUAD_ISOLATION", "QUADS", 2), S("CALVES", "CALVES", 3),
+      S("QUAD_ISOLATION", "QUADS", 2), S("CALVES", "CALVES", 3), S("CORE", "CORE", 4),
     ] },
   ],
 };
@@ -206,60 +206,63 @@ function markFocusSlots(template, focus) {
   }));
 }
 
-function injectFocus(template, focus, family) {
+function countMuscleOccurrences(days, muscle) {
+  return days.reduce((sum, day) => sum + day.slots.filter((slot) => slot.muscle === muscle).length, 0);
+}
+
+function countSlotOccurrences(days, slotName) {
+  return days.reduce((sum, day) => sum + day.slots.filter((slot) => slot.slot === slotName).length, 0);
+}
+
+function addToLeastLoaded(days, dayIndexes, spec, count = 1) {
+  for (let n = 0; n < count; n += 1) {
+    const choices = dayIndexes
+      .filter((index) => days[index])
+      .map((index) => ({ index, length: days[index].slots.length, sameSlot: days[index].slots.some((slot) => slot.slot === spec.slot) ? 1 : 0 }))
+      .sort((a, b) => a.sameSlot - b.sameSlot || a.length - b.length || a.index - b.index);
+    if (!choices.length) return;
+    days[choices[0].index].slots.push({ ...spec, focusBoost: true, importance: 1 });
+  }
+}
+
+function injectFocus(template, focus, family, targetVolume) {
   const days = markFocusSlots(template, focus);
   if (focus === "BALANCED" || family === "ULF5") return days;
 
-  const add = (dayIndexes, slots) => {
-    dayIndexes.forEach((index, i) => {
-      if (!days[index]) return;
-      const spec = slots[i % slots.length];
-      days[index].slots.push({ ...spec, focusBoost: true, importance: 1 });
-    });
-  };
-
   const upperOrFull = days.map((d, i) => ({ d, i })).filter(({ d }) => /Upper|Full Body|Push|Pull/.test(d.label));
   const lowerOrFull = days.map((d, i) => ({ d, i })).filter(({ d }) => /Lower|Full Body|Legs/.test(d.label));
+  const pushLike = upperOrFull.filter(({ d }) => !/Pull/.test(d.label)).map(({ i }) => i);
+  const pullLike = upperOrFull.filter(({ d }) => !/Push/.test(d.label)).map(({ i }) => i);
+  const lowerLike = lowerOrFull.map(({ i }) => i);
+
+  const addForTarget = (muscle, slot, indexes) => {
+    const current = countMuscleOccurrences(days, muscle);
+    const desired = Math.ceil((targetVolume[muscle] ?? 0) / 4);
+    const deficit = Math.max(0, desired - current);
+    addToLeastLoaded(days, indexes, S(slot, muscle, 1, true), deficit);
+  };
 
   if (focus === "CHEST") {
-    const idx = upperOrFull.filter(({ d }) => !/Pull/.test(d.label)).map(({ i }) => i);
-    add(idx.slice(0, Math.min(3, idx.length)), [S("CHEST_ISOLATION", "CHEST", 1, true)]);
+    addForTarget("CHEST", "CHEST_ISOLATION", pushLike);
   } else if (focus === "BACK") {
-    const idx = upperOrFull.filter(({ d }) => !/Push/.test(d.label)).map(({ i }) => i);
-    add(idx.slice(0, Math.min(3, idx.length)), [S("LAT_ISOLATION", "BACK", 1, true)]);
+    addForTarget("BACK", "LAT_ISOLATION", pullLike);
   } else if (focus === "ARMS") {
-    const pushDays = days.map((d, i) => ({ d, i })).filter(({ d }) => /Push/.test(d.label)).map(({ i }) => i);
-    const pullDays = days.map((d, i) => ({ d, i })).filter(({ d }) => /Pull/.test(d.label)).map(({ i }) => i);
-    if (pushDays.length || pullDays.length) {
-      pushDays.forEach((dayIndex) => days[dayIndex].slots.push(S("TRICEPS", "TRICEPS", 1, true)));
-      pullDays.forEach((dayIndex) => days[dayIndex].slots.push(S("BICEPS", "BICEPS", 1, true)));
-    } else {
-      const idx = upperOrFull.map(({ i }) => i);
-      idx.slice(0, Math.min(4, idx.length)).forEach((dayIndex, j) => {
-        days[dayIndex].slots.push(j % 2 === 0 ? S("BICEPS", "BICEPS", 1, true) : S("TRICEPS", "TRICEPS", 1, true));
-      });
-    }
+    addForTarget("BICEPS", "BICEPS", pullLike.length ? pullLike : upperOrFull.map(({ i }) => i));
+    addForTarget("TRICEPS", "TRICEPS", pushLike.length ? pushLike : upperOrFull.map(({ i }) => i));
   } else if (focus === "LEGS") {
-    const idx = lowerOrFull.map(({ i }) => i);
-    idx.slice(0, Math.min(4, idx.length)).forEach((dayIndex, j) => {
-      days[dayIndex].slots.push(j % 2 === 0 ? S("QUAD_ISOLATION", "QUADS", 1, true) : S("HAMSTRING_CURL", "HAMSTRINGS", 1, true));
-    });
+    addForTarget("QUADS", "QUAD_ISOLATION", lowerLike);
+    addForTarget("HAMSTRINGS", "HAMSTRING_CURL", lowerLike);
+    addForTarget("CALVES", "CALVES", lowerLike);
   } else if (focus === "REPOSTURE") {
-    let idx = days.map((d, i) => ({ d, i })).filter(({ d }) => /Upper|Full Body|Pull/.test(d.label)).map(({ i }) => i);
-    if (!idx.length) idx = upperOrFull.map(({ i }) => i);
-    if (idx.length === 1) {
-      days[idx[0]].slots.push(S("POSTURE_ACCESSORY", "SHOULDERS", 1, true));
-      days[idx[0]].slots.push(S("EXTERNAL_ROTATION", "ROTATOR_CUFF", 1, true));
-      days[idx[0]].slots.push(S("LOWER_TRAP", "LOWER_TRAP", 1, true));
-    } else if (idx.length === 2) {
-      days[idx[0]].slots.push(S("POSTURE_ACCESSORY", "SHOULDERS", 1, true));
-      days[idx[0]].slots.push(S("EXTERNAL_ROTATION", "ROTATOR_CUFF", 1, true));
-      days[idx[1]].slots.push(S("LOWER_TRAP", "LOWER_TRAP", 1, true));
-    } else {
-      days[idx[0]].slots.push(S("POSTURE_ACCESSORY", "SHOULDERS", 1, true));
-      days[idx[1]].slots.push(S("LOWER_TRAP", "LOWER_TRAP", 1, true));
-      days[idx[2]].slots.push(S("EXTERNAL_ROTATION", "ROTATOR_CUFF", 1, true));
-    }
+    let postureIdx = days.map((d, i) => ({ d, i })).filter(({ d }) => /Upper|Full Body|Pull/.test(d.label)).map(({ i }) => i);
+    if (!postureIdx.length) postureIdx = upperOrFull.map(({ i }) => i);
+    if (!postureIdx.length) postureIdx = days.map((_, i) => i);
+    const supportIdx = days.map((_, i) => i);
+
+    if (!countSlotOccurrences(days, "POSTURE_ACCESSORY")) addToLeastLoaded(days, postureIdx, S("POSTURE_ACCESSORY", "SHOULDERS", 1, true), 1);
+    addForTarget("ROTATOR_CUFF", "EXTERNAL_ROTATION", supportIdx);
+    addForTarget("LOWER_TRAP", "LOWER_TRAP", supportIdx);
+    addForTarget("BACK", "LAT_ISOLATION", pullLike.length ? pullLike : postureIdx);
   }
 
   return days;
@@ -298,24 +301,158 @@ function volumeTargets(experience, focus) {
   return t;
 }
 
-function trimToSession(template, duration) {
+
+function capacityAdjustedTargets(rawTargets, focus, duration, days) {
+  const raw = { ...rawTargets };
+  const positiveMuscles = Object.keys(raw).filter((muscle) => (raw[muscle] ?? 0) > 0);
+  const rawTotal = positiveMuscles.reduce((sum, muscle) => sum + raw[muscle], 0);
+  const budget = Math.min(rawTotal, SESSION_LIMITS[duration].sets * days);
+  if (budget >= rawTotal) return raw;
+
+  const major = new Set(["CHEST", "BACK", "QUADS", "HAMSTRINGS"]);
+  const support = new Set(["SHOULDERS", "BICEPS", "TRICEPS"]);
+  const planned = {};
+  for (const muscle of Object.keys(raw)) {
+    const target = raw[muscle] ?? 0;
+    if (!(target > 0)) { planned[muscle] = 0; continue; }
+    let floor = 0;
+    if (major.has(muscle)) floor = 4;
+    else if (support.has(muscle)) floor = 2;
+    else if (muscle === "CALVES" || muscle === "CORE") floor = 2;
+    else if (muscle === "ROTATOR_CUFF" || muscle === "LOWER_TRAP") floor = 2;
+    if (focus === "REPOSTURE" && (muscle === "CALVES" || muscle === "CORE")) floor = 0;
+    planned[muscle] = Math.min(target, floor);
+  }
+
+  let used = Object.values(planned).reduce((sum, value) => sum + value, 0);
+  let remaining = Math.max(0, budget - used);
+
+  const focusOrder = focus === "CHEST" ? ["CHEST"]
+    : focus === "BACK" ? ["BACK"]
+    : focus === "ARMS" ? ["BICEPS", "TRICEPS"]
+    : focus === "LEGS" ? ["QUADS", "HAMSTRINGS", "CALVES"]
+    : focus === "REPOSTURE" ? ["ROTATOR_CUFF", "LOWER_TRAP", "BACK", "SHOULDERS"]
+    : [];
+
+  const fillRoundRobin = (order) => {
+    let progressed = true;
+    while (remaining > 0 && progressed) {
+      progressed = false;
+      for (const muscle of order) {
+        if (remaining <= 0) break;
+        if ((planned[muscle] ?? 0) < (raw[muscle] ?? 0)) {
+          planned[muscle] = (planned[muscle] ?? 0) + 1;
+          remaining -= 1;
+          progressed = true;
+        }
+      }
+    }
+  };
+
+  fillRoundRobin(focusOrder);
+  const generalOrder = ["BACK", "CHEST", "QUADS", "HAMSTRINGS", "SHOULDERS", "BICEPS", "TRICEPS", "CALVES", "CORE", "ROTATOR_CUFF", "LOWER_TRAP"]
+    .filter((muscle) => positiveMuscles.includes(muscle) && !focusOrder.includes(muscle));
+  fillRoundRobin(generalOrder);
+  if (remaining > 0) fillRoundRobin(positiveMuscles);
+
+  return planned;
+}
+
+function trimExcessFrequency(template, targets, focus) {
+  const days = cloneTemplate(template);
+  const protectedSlots = focus === "REPOSTURE" ? new Set(["POSTURE_ACCESSORY", "EXTERNAL_ROTATION", "LOWER_TRAP"]) : new Set();
+
+  const countMuscle = (muscle) => days.reduce((sum, day) => sum + day.slots.filter((slot) => slot.muscle === muscle).length, 0);
+  const countSlot = (slotName) => days.reduce((sum, day) => sum + day.slots.filter((slot) => slot.slot === slotName).length, 0);
+
+  for (const [muscle, target] of Object.entries(targets)) {
+    const maxOccurrences = target > 0 ? Math.max(1, Math.floor(target / 2)) : 0;
+    while (countMuscle(muscle) > maxOccurrences) {
+      const candidates = [];
+      days.forEach((day, dayIndex) => {
+        day.slots.forEach((slot, slotIndex) => {
+          if (slot.muscle !== muscle) return;
+          if (protectedSlots.has(slot.slot) && countSlot(slot.slot) <= 1) return;
+          candidates.push({ dayIndex, slotIndex, slot, dayLength: day.slots.length });
+        });
+      });
+      if (!candidates.length) break;
+      candidates.sort((a, b) => {
+        if (a.slot.focusBoost !== b.slot.focusBoost) return Number(a.slot.focusBoost) - Number(b.slot.focusBoost);
+        if (a.slot.importance !== b.slot.importance) return b.slot.importance - a.slot.importance;
+        if (a.dayLength !== b.dayLength) return b.dayLength - a.dayLength;
+        return b.slotIndex - a.slotIndex;
+      });
+      days[candidates[0].dayIndex].slots.splice(candidates[0].slotIndex, 1);
+    }
+  }
+  return days;
+}
+
+function trimToSession(template, duration, focus) {
   const { exercises } = SESSION_LIMITS[duration];
-  return template.map((day) => {
-    if (day.slots.length <= exercises) return day;
-    const selected = day.slots
-      .map((slot, index) => ({ slot, index }))
-      .sort((a, b) => {
-        const boost = Number(b.slot.focusBoost) - Number(a.slot.focusBoost);
-        if (boost) return boost;
-        const importance = a.slot.importance - b.slot.importance;
-        if (importance) return importance;
-        return a.index - b.index;
-      })
-      .slice(0, exercises)
-      .sort((a, b) => a.index - b.index)
-      .map((x) => x.slot);
-    return { ...day, slots: selected };
-  });
+  const days = cloneTemplate(template);
+  const dayCount = days.length;
+  const focusSet = focusMuscles(focus);
+  const major = new Set(["CHEST", "BACK", "QUADS", "HAMSTRINGS"]);
+  const support = new Set(["SHOULDERS", "BICEPS", "TRICEPS"]);
+  const optional = new Set(["CALVES", "CORE"]);
+  const requiredSlots = focus === "REPOSTURE" ? new Set(["POSTURE_ACCESSORY", "EXTERNAL_ROTATION", "LOWER_TRAP"]) : new Set();
+
+  const muscleCounts = () => {
+    const counts = new Map();
+    days.flatMap((day) => day.slots).forEach((slot) => counts.set(slot.muscle, (counts.get(slot.muscle) ?? 0) + 1));
+    return counts;
+  };
+  const slotCounts = () => {
+    const counts = new Map();
+    days.flatMap((day) => day.slots).forEach((slot) => counts.set(slot.slot, (counts.get(slot.slot) ?? 0) + 1));
+    return counts;
+  };
+
+  const baseMin = (muscle, current) => {
+    let minimum = 0;
+    if (major.has(muscle)) minimum = dayCount === 2 ? 1 : 2;
+    else if (support.has(muscle)) minimum = 1;
+    else if (optional.has(muscle)) minimum = dayCount >= 3 ? 1 : 0;
+    else if (muscle === "ROTATOR_CUFF" || muscle === "LOWER_TRAP") minimum = focus === "REPOSTURE" ? 1 : 0;
+
+    if (focusSet.has(muscle)) {
+      if (focus === "CHEST" && muscle === "CHEST") minimum += 1;
+      else if (focus === "BACK" && muscle === "BACK") minimum += 1;
+      else if (focus === "ARMS" && (muscle === "BICEPS" || muscle === "TRICEPS")) minimum += 1;
+      else if (focus === "LEGS" && (muscle === "QUADS" || muscle === "HAMSTRINGS")) minimum += 1;
+      else if (focus === "LEGS" && muscle === "CALVES") minimum = Math.max(minimum, 1);
+      else if (focus === "REPOSTURE" && muscle === "BACK") minimum += 1;
+    }
+    return Math.min(current, minimum);
+  };
+
+  for (let dayIndex = 0; dayIndex < days.length; dayIndex += 1) {
+    while (days[dayIndex].slots.length > exercises) {
+      const mCounts = muscleCounts();
+      const sCounts = slotCounts();
+      const candidates = days[dayIndex].slots.map((slot, index) => {
+        const current = mCounts.get(slot.muscle) ?? 0;
+        const minimum = baseMin(slot.muscle, current);
+        const breaksMuscleFloor = current - 1 < minimum;
+        const breaksRoleFloor = requiredSlots.has(slot.slot) && (sCounts.get(slot.slot) ?? 0) <= 1;
+        const protectedFloor = breaksMuscleFloor || breaksRoleFloor;
+        const focusPenalty = slot.focusBoost || focusSet.has(slot.muscle) ? 1 : 0;
+        const redundancy = Math.max(0, current - minimum);
+        return { slot, index, protectedFloor, focusPenalty, redundancy };
+      }).sort((a, b) => {
+        if (a.protectedFloor !== b.protectedFloor) return Number(a.protectedFloor) - Number(b.protectedFloor);
+        if (a.focusPenalty !== b.focusPenalty) return a.focusPenalty - b.focusPenalty;
+        if (a.redundancy !== b.redundancy) return b.redundancy - a.redundancy;
+        if (a.slot.importance !== b.slot.importance) return b.slot.importance - a.slot.importance;
+        return b.index - a.index;
+      });
+      if (!candidates.length) break;
+      days[dayIndex].slots.splice(candidates[0].index, 1);
+    }
+  }
+  return days;
 }
 
 function prescription(experience, slot, sets) {
@@ -333,12 +470,13 @@ function prescription(experience, slot, sets) {
   return { sets, rep_min: repMin, rep_max: repMax, target_rir: targetRir };
 }
 
-function selectExercise(pool, slot, occurrence) {
+function selectExercise(pool, slot, occurrence, avoidKeys = new Set()) {
   const options = pool[slot];
   if (!options?.length) throw new Error(`NO_EXERCISE_POOL:${slot}`);
-  const index = occurrence % options.length;
-  const exercise = options[index];
-  const alternatives = options.filter((_, i) => i !== index).slice(0, 2);
+  const start = occurrence % options.length;
+  const ordered = options.map((_, offset) => options[(start + offset) % options.length]);
+  const exercise = ordered.find((option) => !avoidKeys.has(option.key)) ?? ordered[0];
+  const alternatives = ordered.filter((option) => option.key !== exercise.key).slice(0, 2);
   return { exercise, alternatives };
 }
 
@@ -457,14 +595,15 @@ function nextRule(exercise, repMax, targetRir) {
   };
 }
 
-function buildDecisionTrace({ days, focus, duration, family, targetVolume, actualVolume }) {
+function buildDecisionTrace({ days, focus, duration, family, guideTargetVolume, targetVolume, actualVolume }) {
   return {
     engine_version: ENGINE_VERSION,
     family,
     training_days: days,
     primary_focus: focus,
     session_duration_min: duration,
-    target_direct_sets: targetVolume,
+    guide_target_direct_sets: guideTargetVolume,
+    planned_direct_sets: targetVolume,
     actual_direct_sets: actualVolume,
     policy: "DETERMINISTIC_FREE_FOUNDATION",
     pro_extension_ready: true,
@@ -476,11 +615,12 @@ export function buildFreeProgram(b, n = null, t = null) {
   const duration = normalizeDuration(t?.session_duration_min);
   const focus = normalizeFocus(t);
   const fKey = familyKey(days);
+  const guideTargetVolume = volumeTargets(b.training_experience, focus);
+  const targetVolume = capacityAdjustedTargets(guideTargetVolume, focus, duration, days);
   let template = fKey === "ULF5" ? buildFiveDayTemplate(focus) : cloneTemplate(TEMPLATES[fKey]);
-  template = injectFocus(template, focus, fKey);
-  template = trimToSession(template, duration);
-
-  const targetVolume = volumeTargets(b.training_experience, focus);
+  template = injectFocus(template, focus, fKey, targetVolume);
+  template = trimExcessFrequency(template, targetVolume, focus);
+  template = trimToSession(template, duration, focus);
   template = allocateSets(template, targetVolume);
   template = enforceDailySetCap(template, duration);
 
@@ -488,10 +628,12 @@ export function buildFreeProgram(b, n = null, t = null) {
   const slotSeen = new Map();
   const trainingItems = [];
   template.forEach((day, dayIndex) => {
+    const usedExerciseKeys = new Set();
     day.slots.forEach((spec, order) => {
       const occurrence = slotSeen.get(spec.slot) ?? 0;
-      const { exercise, alternatives } = selectExercise(pool, spec.slot, occurrence);
+      const { exercise, alternatives } = selectExercise(pool, spec.slot, occurrence, usedExerciseKeys);
       slotSeen.set(spec.slot, occurrence + 1);
+      usedExerciseKeys.add(exercise.key);
       const rx = prescription(b.training_experience, spec.slot, spec.sets);
       const progression = nextRule(exercise, rx.rep_max, rx.target_rir);
       trainingItems.push({
@@ -546,7 +688,7 @@ export function buildFreeProgram(b, n = null, t = null) {
     estimate_confidence: energy.estimate_confidence,
   };
 
-  const decisionTrace = buildDecisionTrace({ days, focus, duration, family, targetVolume, actualVolume: weeklyVolume });
+  const decisionTrace = buildDecisionTrace({ days, focus, duration, family, guideTargetVolume, targetVolume, actualVolume: weeklyVolume });
   const goalSnapshot = {
     goal: b.goal,
     weight_kg: Number.isFinite(weightKg) ? weightKg : null,

@@ -2,7 +2,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.115.0";
 import { buildFreeProgram, validateFreeProgram } from "./engine.mjs";
 
 const CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
-const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.1";
+const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
