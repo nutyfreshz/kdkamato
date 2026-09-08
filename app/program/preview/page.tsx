@@ -118,7 +118,7 @@ function validPreview(data: unknown): data is PreviewData {
 
 export default async function ProgramPreviewPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const params = await searchParams;
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject จึงยังอ่าน baseline จริงไม่ได้.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลยังไม่พร้อม จึงยังสร้าง Preview จากข้อมูลจริงไม่ได้.</div></AppShell>;
 
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
@@ -139,28 +139,28 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     const code = payload?.error ?? "UNKNOWN_ERROR";
     if (code === "BASELINE_REQUIRED" || code === "FOUNDATION_INVALID") {
       return <AppShell>
-        <div className="topline">Foundation Required</div>
-        <h1>Program Preview ยังสร้างไม่ได้</h1>
-        <div className="notice warning">{code === "BASELINE_REQUIRED" ? "ยังไม่มี Foundation inputs." : `Foundation inputs ไม่ผ่าน validation${payload?.fields?.length ? `: ${payload.fields.join(", ")}` : ""}.`}</div>
-        <div className="cta-row"><Link className="btn primary" href="/program/start">Build / Fix Program Inputs</Link></div>
+        <div className="topline">Program Setup Required</div>
+        <h1>ยังสร้าง Program Preview ไม่ได้</h1>
+        <div className="notice warning">{code === "BASELINE_REQUIRED" ? "ยังไม่มีข้อมูล Program Setup." : `ข้อมูล Program Setup ไม่ผ่าน validation${payload?.fields?.length ? `: ${payload.fields.join(", ")}` : ""}.`}</div>
+        <div className="cta-row"><Link className="btn primary" href="/program/start">กลับไปแก้ Program Setup</Link></div>
       </AppShell>;
     }
     if (code === "ENGINE_VERSION_MISMATCH" || code === "PROGRAM_CONTRACT_INCONSISTENT" || code === "PROGRAM_VALIDATION_FAILED") {
       return <AppShell>
         <div className="topline">Integration Guard</div>
         <h1>Program Preview ถูกหยุดไว้</h1>
-        <div className="notice warning">Program Engine validation ไม่ผ่าน ({code}) จึงไม่อนุญาตให้ Activate.</div>
+        <div className="notice warning">Program Engine validation ไม่ผ่าน ({code}) จึงยังไม่อนุญาตให้ Activate.</div>
       </AppShell>;
     }
-    return <AppShell><div className="notice warning">ยังสร้าง preview ไม่ได้: {code !== "UNKNOWN_ERROR" ? code : error?.message ?? code}</div></AppShell>;
+    return <AppShell><div className="notice warning">ยังสร้าง Preview ไม่ได้: {code !== "UNKNOWN_ERROR" ? code : error?.message ?? code}</div></AppShell>;
   }
 
   if (!validPreview(data)) {
     return <AppShell>
       <div className="topline">Integration Guard</div>
       <h1>Program Preview ถูกหยุดไว้</h1>
-      <div className="notice warning">Frontend / Program Engine contract ไม่ตรงกัน จึงไม่ใช้ค่า fallback และไม่อนุญาตให้ Activate.</div>
-      <div className="cta-row"><Link className="btn primary" href="/program/start">Rebuild Program</Link></div>
+      <div className="notice warning">Frontend และ Program Engine contract ไม่ตรงกัน ระบบจะไม่ใช้ fallback และยังไม่อนุญาตให้ Activate.</div>
+      <div className="cta-row"><Link className="btn primary" href="/program/start">สร้าง Program ใหม่</Link></div>
     </AppShell>;
   }
 
@@ -179,16 +179,16 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
   const activationError = params.error ? decodeURIComponent(params.error) : null;
 
   return <AppShell>
-    <div className="topline">Free Program Preview</div>
+    <div className="topline">Program Preview</div>
     <h1>{preview.family}</h1>
-    <p>{valueLabel[snapshot.goal] ?? snapshot.goal} · {valueLabel[snapshot.training_experience] ?? snapshot.training_experience} · {valueLabel[snapshot.equipment_profile] ?? snapshot.equipment_profile} · {preview.focus_label} · {preview.days} days · {preview.session_duration_min} min</p>
-    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "Inputs หรือ Engine เปลี่ยนหลังจาก Preview นี้ กรุณาตรวจ Preview ล่าสุดแล้ว Activate ใหม่." : `Activation failed: ${activationError}`}</div>}
+    <p>{valueLabel[snapshot.goal] ?? snapshot.goal} · {valueLabel[snapshot.training_experience] ?? snapshot.training_experience} · {valueLabel[snapshot.equipment_profile] ?? snapshot.equipment_profile} · {preview.focus_label} · {preview.days} วัน · {preview.session_duration_min} นาที</p>
+    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "ข้อมูลหรือ Engine เปลี่ยนหลังจาก Preview นี้ กรุณาตรวจ Preview ล่าสุดแล้ว Activate ใหม่." : `Activate ไม่สำเร็จ: ${activationError}`}</div>}
 
     <div className="grid">
-      <div className="card"><div className="kicker">Training Focus</div><div className="metric cyan">{preview.focus_label}</div></div>
-      <div className="card"><div className="kicker">Schedule</div><div className="metric">{preview.days} days</div><p>{preview.session_duration_min} min / session</p></div>
+      <div className="card"><div className="kicker">Focus</div><div className="metric cyan">{preview.focus_label}</div></div>
+      <div className="card"><div className="kicker">ตารางฝึก</div><div className="metric">{preview.days} วัน</div><p>{preview.session_duration_min} นาที / ครั้ง</p></div>
       <div className="card"><div className="kicker">Protein</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
-      <div className="card"><div className="kicker">Energy</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "Calibrating"}</div><p>{energyReady ? `Maintenance ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "ยังไม่แสดงจน measurable inputs พอ"}</p></div>
+      <div className="card"><div className="kicker">Energy</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `Maintenance ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "ยังไม่แสดงจน measurable inputs เพียงพอ"}</p></div>
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}>
@@ -211,8 +211,8 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
             <div style={{ minWidth: 0 }}>
               <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
               <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
-              {next ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>NEXT:</strong> {next}</p> : null}
-              {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>Alternative: {x.metadata.alternative_name}</p> : null}
+              {next ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {next}</p> : null}
+              {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>ทางเลือก: {x.metadata.alternative_name}</p> : null}
             </div>
             <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
           </div>;
