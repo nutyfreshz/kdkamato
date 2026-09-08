@@ -6,11 +6,9 @@ Abstract SVG Motion Card v0 prototype: **FAILED USER RECOGNITION GATE** on 2026-
 
 RepDB replacement visual quality gate: **ACCEPTED AS GOOD ENOUGH FOR BASE LIBRARY** on 2026-09-08.
 
-Current execution order:
+RepDB Batch 01: **SHIPPED**. The first reviewed start/finish pairs are integrated into the Program exercise-detail flow when a mapped exercise appears.
 
-1. Ship a first RepDB batch into the Program UI.
-2. Continue to PRO implementation / validation.
-3. Only after PRO version validation passes, fill the remaining visual gaps.
+Remaining missing-exercise visual production is **DEFERRED UNTIL THE REAL PRO PILOT / VERSION VALIDATION PASSES**.
 
 ## Failure reason for abstract SVG v0
 
@@ -45,23 +43,19 @@ Important license constraints:
 - do not redistribute RepDB as a dataset,
 - do not use RepDB images as generative-AI reference / conditioning / style-transfer input.
 
-### Missing-exercise strategy — deferred until PRO validation passes
+### Remaining gaps — grouped original generation after PRO validation
 
-Do not spend time buying or producing the remaining gap assets before the PRO version has passed validation.
+Do not buy or mix another production source by default. After the real PRO pilot/version validation passes, fill remaining gaps with original grouped generation.
 
-After PRO validation:
+Production method:
+1. Group missing exercises by compatible visual/equipment family.
+2. Generate one large BEFORE / START sheet containing multiple exercises.
+3. Generate one matching large AFTER / FINISH sheet for the same exercise order and visual family.
+4. Deterministically crop each exercise frame pair into individual assets.
+5. QC every exercise for identity, equipment, pose correctness, and start/finish consistency.
+6. Regenerate only failed groups/exercises and repeat until the gap set is complete.
 
-1. list the remaining exercise identities not adequately covered by RepDB;
-2. group them into visually compatible generation batches;
-3. generate a large **BEFORE / START sheet** containing multiple exercises;
-4. generate a matching large **AFTER / FINISH sheet** for the same exercise order;
-5. crop the large sheets deterministically into per-exercise assets;
-6. QC every cropped exercise pair;
-7. regenerate only failed groups / exercises until coverage is complete.
-
-RepDB may be used as the product-format benchmark for consistency (clear pose, framing, recognizable equipment, clean start/finish presentation), but **RepDB images themselves must not be supplied to a generative model as input/reference/conditioning material** because the RepDB free-tier license prohibits generative-AI derivation.
-
-If a non-generated licensed source is later cheaper or materially better for a specific missing exercise, it may still be considered, but it is not required before PRO validation.
+RepDB may be used only as a human-facing format benchmark for composition consistency. **Do not feed RepDB imagery into a generative model** because its license prohibits generative-AI derivation/reference use.
 
 ## Format normalization rule
 
@@ -77,8 +71,6 @@ Every exercise visual should be normalized into one Motion Card system:
 - mobile-first sizing,
 - source attribution handled centrally where required.
 
-Do not attempt AI restyling of licensed source images. Normalize licensed assets through layout/composition only so licensing stays clean and visual recognition is preserved.
-
 ## Acceptance gate
 
 A user unfamiliar with the exercise name should be able to identify:
@@ -88,4 +80,4 @@ A user unfamiliar with the exercise name should be able to identify:
 - start vs finish position,
 within a few seconds.
 
-Bulk gap-production remains deferred until the PRO version validation gate passes.
+Bulk missing-exercise production may proceed only after the real PRO pilot/version validation passes and only from assets that pass this recognition gate.
