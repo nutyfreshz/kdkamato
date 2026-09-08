@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { ExerciseFeedbackForm } from "@/components/exercise-feedback-form";
+import { ExerciseVisualPair, RepDbAttribution } from "@/components/exercise-visual-pair";
 import { ProgramWeek } from "@/components/program-week";
+import { getExerciseVisual } from "@/lib/exercise-visuals";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -48,6 +51,14 @@ type Baseline = {
 };
 
 type TrainingProfile = { session_duration_min?: number | null; priority_muscles?: unknown };
+type ExerciseFeedbackRow = {
+  exercise_key: string;
+  performance_status: string | null;
+  tolerance_status: string | null;
+  recovery_status: string | null;
+  preference_status: string | null;
+  optional_note: string | null;
+};
 
 const muscleLabel: Record<string, string> = {
   CHEST: "Chest", BACK: "Back", QUADS: "Quads", HAMSTRINGS: "Hamstrings", SHOULDERS: "Shoulders",
@@ -83,6 +94,12 @@ function inputsChanged(snapshot: GoalSnapshot, baseline: Baseline | null, traini
   );
 }
 
+function bangkokDate() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+}
+
 export default async function ProgramPage({ searchParams }: { searchParams: Promise<{ activated?: string }> }) {
   const params = await searchParams;
   if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
@@ -100,17 +117,35 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     <div className="card"><h2>No active program yet</h2><p>สร้าง Program Preview จาก Focus, Training Days, Experience, Equipment และ Session Time แล้ว Activate เพื่อเริ่ม version แรก.</p><div className="cta-row"><Link className="btn primary" href="/program/preview">Open Program Preview</Link><Link className="btn" href="/program/start">Build Program</Link></div></div>
   </AppShell>;
 
-  const [{ data: items }, { data: nutrition }, { data: baselineRaw }, { data: trainingRaw }] = await Promise.all([
+  const today = bangkokDate();
+  const [
+    { data: items },
+    { data: nutrition },
+    { data: baselineRaw },
+    { data: trainingRaw },
+    { data: accessRaw },
+    { data: feedbackRaw },
+  ] = await Promise.all([
     supabase.from("training_program_items").select("*").eq("program_id", program.program_id).order("training_day").order("display_order"),
     supabase.from("nutrition_targets").select("*").eq("program_id", program.program_id).maybeSingle(),
     supabase.from("user_baseline").select("goal,training_experience,training_days_per_week,equipment_profile").eq("user_id", userId).maybeSingle(),
     supabase.from("training_profiles").select("session_duration_min,priority_muscles").eq("user_id", userId).maybeSingle(),
+    supabase.from("user_access").select("tier").eq("user_id", userId).maybeSingle(),
+    supabase.from("exercise_response_entries")
+      .select("exercise_key,performance_status,tolerance_status,recovery_status,preference_status,optional_note")
+      .eq("user_id", userId)
+      .eq("program_id", program.program_id)
+      .eq("entry_date", today),
   ]);
 
   const typedItems = (items ?? []) as TrainingProgramItem[];
   const snapshot = (program.goal_snapshot ?? {}) as GoalSnapshot;
   const baseline = (baselineRaw ?? null) as Baseline | null;
   const training = (trainingRaw ?? null) as TrainingProfile | null;
+  const isPro = accessRaw?.tier === "PRO";
+  const feedbackMap = new Map<string, ExerciseFeedbackRow>(
+    ((feedbackRaw ?? []) as ExerciseFeedbackRow[]).map((x) => [x.exercise_key, x]),
+  );
   const pendingInputs = inputsChanged(snapshot, baseline, training);
   const byDay = typedItems.reduce<Map<number, TrainingProgramItem[]>>((acc, item) => {
     const list = acc.get(item.training_day) ?? [];
@@ -120,6 +155,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   }, new Map<number, TrainingProgramItem[]>());
   const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, dayItems]) => [day, dayItems[0]?.metadata?.day_label ?? `Day ${day}`]));
   const volumeEntries = Object.entries(snapshot.weekly_volume ?? {});
+  const hasRepDbVisuals = typedItems.some((x) => Boolean(getExerciseVisual(x.exercise_key)));
 
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
@@ -143,18 +179,32 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       const dayLabel = dayItems[0]?.metadata?.day_label ?? `Day ${day}`;
       return <section className="card day" key={day}>
         <div className="kicker">Day {day}</div><h2>{dayLabel}</h2>
-        {dayItems.map((x) => <div className="exercise" key={x.item_id}>
-          <div style={{ minWidth: 0 }}>
-            <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
-            <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
-            {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>NEXT:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
-            {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>Alternative: {x.metadata.alternative_name}</p> : null}
-          </div>
-          <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
-        </div>)}
+        {dayItems.map((x) => {
+          const label = x.metadata?.display_name ?? x.exercise_key;
+          const hasVisual = Boolean(getExerciseVisual(x.exercise_key));
+          return <div key={x.item_id} style={{ borderBottom: "1px solid rgba(255,255,255,.07)", paddingBottom: 10 }}>
+            <div className="exercise" style={{ borderBottom: 0 }}>
+              <div style={{ minWidth: 0 }}>
+                <strong>{label}</strong><br/>
+                <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
+                {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>NEXT:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
+                {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>Alternative: {x.metadata.alternative_name}</p> : null}
+              </div>
+              <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
+            </div>
+            {(hasVisual || isPro) && <details style={{ margin: "2px 0 8px" }}>
+              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>
+                {hasVisual && isPro ? "Exercise visual · PRO feedback" : hasVisual ? "Exercise visual" : "PRO feedback"}
+              </summary>
+              {hasVisual && <ExerciseVisualPair exerciseKey={x.exercise_key} label={label} />}
+              {isPro && <ExerciseFeedbackForm exerciseKey={x.exercise_key} label={label} initial={feedbackMap.get(x.exercise_key) ?? null} />}
+            </details>}
+          </div>;
+        })}
       </section>;
     })}
 
-    <div className="cta-row"><Link className="btn" href="/program/start">Update Program Inputs</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">Preview New Version</Link>}<Link className="btn" href="/progress">Log Progress</Link></div>
+    {hasRepDbVisuals && <RepDbAttribution />}
+    <div className="cta-row"><Link className="btn" href="/program/start">Update Program Inputs</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">Preview New Version</Link>}<Link className="btn" href="/progress">Log Progress</Link>{isPro && <Link className="btn" href="/consult">Open PRO Consult</Link>}</div>
   </AppShell>;
 }
