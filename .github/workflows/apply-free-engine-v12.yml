@@ -6,6 +6,9 @@ on:
     paths:
       - tools/apply_free_engine_v12.py
       - .github/workflows/apply-free-engine-v12.yml
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
