@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { createClient } from '../../lib/supabase/client';
 import { ProcessingOverlay } from '../processing-overlay';
 
@@ -88,6 +88,8 @@ function classifyProgramOutcome(toolKey, resultCode, outcome, beforeItems) {
 
 export function LabSaveResult({ language='th', result, metric, meaning, use, watch, resultCode }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const physicalMode = searchParams?.get('consult') === '1';
   const toolKey = useMemo(() => pathname?.split('/').filter(Boolean).at(-1) || '', [pathname]);
   const [authState, setAuthState] = useState('checking');
   const [busy, setBusy] = useState(false);
@@ -118,7 +120,7 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
 
   if (authState !== 'authenticated') {
     return <div className="lab-save-account">
-      <Link className="lab-next" href="/login">{language === 'en' ? 'LOGIN TO SAVE TO YOUR ACCOUNT' : 'เข้าสู่ระบบเพื่อบันทึกผลไว้ในบัญชี'} <b>→</b></Link>
+      <Link className="lab-next" href={physicalMode ? '/login?physical=1' : '/login'}>{language === 'en' ? 'LOGIN TO SAVE TO YOUR ACCOUNT' : 'เข้าสู่ระบบเพื่อบันทึกผลไว้ในบัญชี'} <b>→</b></Link>
     </div>;
   }
 
@@ -229,6 +231,10 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
     {saved && (programOutcome?.kind === 'CONTEXT_ONLY' || programOutcome?.kind === 'NO_CHANGE') && <small>
       {language === 'en' ? 'This Lab result is saved to your account and can be reused as context. It did not automatically change your Program.' : 'ผล LAB นี้ถูกบันทึกไว้ในบัญชีแล้ว และใช้เป็นข้อมูลประกอบได้ โดยไม่ได้เปลี่ยน Program อัตโนมัติ'}
     </small>}
+
+    {saved && physicalMode && <div className="cta-row" style={{ marginTop: 12 }}>
+      <Link className="btn primary" href="/physical-consult">{language === 'en' ? 'BACK TO PHYSICAL CONSULT' : 'กลับ Physical Consult Session'}</Link>
+    </div>}
 
     {error && <small className="warning">{error}</small>}
     {busy && <ProcessingOverlay title={language === 'en' ? 'Saving result and checking Program…' : 'กำลังบันทึกผลและเช็ก Program…'} detail={language === 'en' ? 'Saving this result, then checking whether the Active Program should change.' : 'กำลังบันทึกผล แล้วตรวจว่ามีเหตุผลพอให้ Active Program เปลี่ยนหรือไม่'} />}
