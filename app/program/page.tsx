@@ -9,9 +9,11 @@ import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
 type ProgressionRule = { trigger?: string; action?: string };
+type ItemAutoUpdate = { kind?: string; source_result_id?: string; result_code?: string; applied_at?: string };
 type TrainingProgramItem = {
   item_id: string;
   training_day: number;
+  movement_slot: string;
   exercise_key: string;
   sets: number;
   rep_min: number;
@@ -26,6 +28,7 @@ type TrainingProgramItem = {
     focus_boost?: boolean;
     alternative_name?: string | null;
     progression?: ProgressionRule;
+    auto_update?: ItemAutoUpdate;
   } | null;
 };
 
@@ -50,6 +53,7 @@ type GoalSnapshot = {
     evidence_family?: string;
     percent_difference?: number;
     movement_slot?: string;
+    previous_program_id?: string;
     previous_program_version?: number;
     applied_at?: string;
     changes?: AutoUpdateChange[];
@@ -111,6 +115,14 @@ function bangkokDate() {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit",
   }).format(new Date());
+}
+
+function itemLabel(item: TrainingProgramItem | undefined) {
+  return item?.metadata?.display_name ?? item?.exercise_key ?? "—";
+}
+
+function itemPositionKey(item: TrainingProgramItem) {
+  return `${item.training_day}:${item.display_order}:${item.movement_slot}`;
 }
 
 export default async function ProgramPage({ searchParams }: { searchParams: Promise<{ activated?: string }> }) {
@@ -176,14 +188,34 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     .map((change) => change.exercise_name ?? change.exercise_key)
     .filter(Boolean);
 
+  let previousItems: TrainingProgramItem[] = [];
+  if (autoUpdate?.previous_program_id) {
+    const { data } = await supabase.from("training_program_items")
+      .select("*")
+      .eq("program_id", autoUpdate.previous_program_id)
+      .order("training_day")
+      .order("display_order");
+    previousItems = (data ?? []) as TrainingProgramItem[];
+  }
+
+  const previousByPosition = new Map(previousItems.map((item) => [itemPositionKey(item), item]));
+  const autoUpdatePairs = autoUpdate ? typedItems
+    .filter((item) => item.metadata?.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" && item.metadata?.auto_update?.source_result_id === autoUpdate.source_result_id)
+    .map((item) => ({ from: itemLabel(previousByPosition.get(itemPositionKey(item))), to: itemLabel(item) }))
+    .filter((pair) => pair.from !== pair.to) : [];
+
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
     <h1>{snapshot.program_family ?? "Active Program"}</h1>
     <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {snapshot.focus_label ?? "–"} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
     {params.activated && <div className="notice" style={{ marginBottom: 16 }}>Activate Program สำเร็จ Version ก่อนหน้าจะถูกเก็บไว้เป็น history เมื่อมี version ใหม่.</div>}
     {autoUpdate && <div className="notice" style={{ marginBottom: 16 }}>
-      <strong>Program อัปเดตอัตโนมัติจาก LAB</strong>
-      <p style={{ marginBottom: 0 }}>Exercise Fit ล่าสุดทำให้ Program v{program.program_version} ปรับเฉพาะกลุ่ม Squat ที่เกี่ยวข้อง{autoUpdatedExercises.length ? ` → ${autoUpdatedExercises.join(", ")}` : ""}. ท่าและส่วนอื่นที่ไม่เกี่ยวข้องคงเดิม และผลตอบสนองจากการฝึกจริงยังมี priority สูงกว่า LAB.</p>
+      <strong>Program อัปเดตจากผล LAB · v{program.program_version}</strong>
+      <p>Exercise Fit ล่าสุดทำให้ระบบปรับเฉพาะกลุ่ม Squat ที่เกี่ยวข้อง เพราะผลวัดมีทิศทางชัดพอและไม่มีข้อมูลจากการฝึกจริงที่มี priority สูงกว่ามาขัดการเปลี่ยนนี้.</p>
+      {autoUpdatePairs.length
+        ? autoUpdatePairs.map((pair, index) => <p key={`${pair.from}-${pair.to}-${index}`} style={{ margin: "4px 0" }}><strong>{pair.from} → {pair.to}</strong></p>)
+        : autoUpdatedExercises.length ? <p style={{ margin: "4px 0" }}><strong>ท่าปัจจุบัน: {autoUpdatedExercises.join(", ")}</strong></p> : null}
+      <p style={{ marginBottom: 0 }}>ท่าอื่น ปริมาณการฝึก และ Nutrition คงเดิม · ผลตอบสนองจากการฝึกจริงยังมี priority สูงกว่า LAB.</p>
     </div>}
     {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูล Program Setup ปัจจุบันต่างจาก Active Program v{program.program_version}. Program ที่ใช้อยู่จะยังไม่เปลี่ยนจนกว่าคุณจะ Preview และ Activate version ใหม่.</div>}
 
@@ -207,9 +239,11 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
         {dayItems.map((x) => {
           const label = x.metadata?.display_name ?? x.exercise_key;
           const hasVisual = Boolean(getExerciseVisual(x.exercise_key));
+          const updatedFromLab = Boolean(autoUpdate && x.metadata?.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" && x.metadata?.auto_update?.source_result_id === autoUpdate.source_result_id);
           return <div key={x.item_id} style={{ borderBottom: "1px solid rgba(255,255,255,.07)", paddingBottom: 10 }}>
             <div className="exercise" style={{ borderBottom: 0 }}>
               <div style={{ minWidth: 0 }}>
+                {updatedFromLab && <small style={{ display: "block", marginBottom: 4 }}><strong>UPDATED FROM LAB</strong></small>}
                 <strong>{label}</strong><br/>
                 <small>{x.metadata?.target_label ?? "Training movement"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
                 {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
