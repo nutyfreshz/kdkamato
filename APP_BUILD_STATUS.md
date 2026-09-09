@@ -63,7 +63,8 @@ Deliberately deferred:
 - native in-app Supabase Cron + transactional email provider; current reviewer notification uses the connected scheduled Gmail automation as MVP
 - calorie/maintenance estimate until measurable-input algorithm is locked; no subjective activity multiplier guess
 - re-enabling Q3/Q5/C2 as independent PRO recommendation evidence until their result codes encode genuinely distinct direction-sensitive information
-- C1 Bench / Deadlift Program auto-refresh until their rules provide sufficiently distinct direction-sensitive evidence rather than generic candidate ordering
+- C1 Bench Program auto-refresh: current C1 only measures height + arm span, both Bench result directions currently map to the same V2 ordering (`MACHINE_CHEST_PRESS → SMITH_BENCH_PRESS → DB_BENCH_PRESS`), and available evidence supports anthropometry affecting Bench performance/biomechanics more strongly than it supports selecting one of those three exercise variants automatically
+- C1 Deadlift Program auto-refresh: current C1 has only one conservative-geometry result and does not measure torso/sitting-height ratio; available evidence shows meaningful technique differences between deadlift variants and some anthropometric association with conventional-vs-sumo performance, but not enough from the current input set to justify auto-swapping `SMITH_RDL / HIP_EXTENSION_45 / ROMANIAN_DEADLIFT`
 - widening `save_my_exercise_response` to accept Physical Consult candidate exercises that are not in the Active Program; after C1 targeted refresh, an automatically inserted C1 Squat candidate becomes part of Active Program and can use the existing response path normally
 - Supabase leaked-password protection because it is available on Pro Plan and above while the current organization remains on Free
 
@@ -81,3 +82,4 @@ Validation note:
 - The Google/OAuth → add Email+Password method is supported by the Supabase Auth contract and the application build is Production READY.
 - A real user's credential was not changed merely to test Physical Consult access; live credential handoff should be exercised during an actual authorized Physical Consult or a dedicated test account.
 - C1 targeted auto-refresh was validated with synthetic users inside transactions that were rolled back; no real user's Program or LAB result was used for acceptance testing.
+- Bench/Deadlift auto-refresh expansion was explicitly evidence-gated after reviewing current V2 rules plus published Bench and Deadlift anthropometry/biomechanics literature; no Program automation was added where the present inputs do not support a distinct direction-sensitive exercise choice.
