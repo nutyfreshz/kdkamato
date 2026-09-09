@@ -1,6 +1,6 @@
 # KDKAMATO PROGRAM APP BUILD STATUS
 
-## v0.3
+## v0.4
 
 Completed:
 - Next.js App Router shell: Home / Program / Lab / Progress / Account
@@ -22,19 +22,28 @@ Completed:
 - PRO Program page reads `get_my_pro_exercise_suggestions` directly; LAB evidence does not auto-swap the Active Program
 - PRO reviewer notification cadence configured for the 1st and 15th at 08:00 Asia/Bangkok
 - Reviewer email recipient configured outside the repository; no address or mail credential is stored in source control
+- LAB UX simplified into Core decision tools + Quick measurement checks with shared measurement reuse
+- LAB result save scope restricted to measurements owned by the current tool/result
+- PRO LAB recommendation evidence deduplicated by biological evidence family (`20260909025335_pro_lab_evidence_family_dedupe`)
+- Preference-only Exercise Feedback guard validated and fixed (`20260909030427_exercise_memory_preference_only_guard`)
+- Controlled PRO Adaptive Loop A–F acceptance PASS using rollback-only synthetic fixtures plus prior real KEEP validation
+- ADAPT writeback/version integrity PASS: immutable vNext, prior Active archived, exactly one ACTIVE Program, atomic invalid-writeback failure
+- Safety/uncertainty routing PASS through Human Review (`CONFLICTING_SIGNALS`)
+- Post-test Production readback confirmed zero synthetic fixture residue
 
 Current operating boundary:
 - PRO cycle generates/surfaces review cases for professional review
 - Email notification is reviewer-facing only and links back to `/consult`
 - Email notification contains case-level operational summary, not full internal AI draft or user-facing final report
 - Professional `APPROVE / MODIFY / REJECT` remains the human gate
-- No automatic user Program change is allowed from the notification path
+- No automatic user Program change is allowed from LAB, Exercise Memory, notification, or screening paths
+- Controlled backend acceptance is complete; real-world adaptations continue to be observed under normal Human Gate operation
 
 Deliberately deferred:
 - automatic payment/subscription lifecycle
 - native in-app Supabase Cron + transactional email provider; current reviewer notification uses the connected scheduled Gmail automation as MVP
-- full real-world ADAPT/writeback acceptance until there is sufficient evidence or a controlled synthetic fixture is approved
 - calorie/maintenance estimate until measurable-input algorithm is locked; no subjective activity multiplier guess
+- re-enabling Q3/Q5/C2 as independent PRO recommendation evidence until their result codes encode genuinely distinct direction-sensitive information
 
 Security boundary:
 - browser cannot self-upgrade tier
