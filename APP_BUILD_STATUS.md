@@ -1,6 +1,6 @@
 # KDKAMATO PROGRAM APP BUILD STATUS
 
-## v0.8
+## v0.9
 
 Completed:
 - Next.js App Router shell: Home / Program / Lab / Progress / Account
@@ -60,6 +60,18 @@ Completed:
 - C3 remains available as `Physique Scenario Explorer`; it explicitly states that hypothetical shoulder/waist deltas are not equivalent in difficulty/time and cannot prescribe muscle gain or waist reduction
 - LAB landing now has 2 Core decision tools, 1 Explore scenario tool, and the existing 5 Quick Checks, reducing overclaim and keeping the decision tools focused on actionable next steps
 - Production frontend build for the C2/C3 product audit passed compile, TypeScript, page-data collection, and static generation; deployment is READY on `kdkamato.vercel.app`
+- Physical Consult candidate-trial evidence path deployed (`20260909091759_physical_consult_candidate_trials`) instead of weakening the existing Active-Program response contract
+- Off-program Physical Consult observations are stored in the private `physical_consult_exercise_trials` context and feed the same Exercise Memory authority model as Program responses
+- `save_my_physical_consult_trial` is PRO-only, binds writes to `auth.uid()`, accepts only a current V2 LAB candidate from the user's latest relevant Exercise Fit result, rejects arbitrary exercise keys, and routes exercises already in Active Program back to standard Program feedback
+- Exercise Memory now evaluates the most recent combined Program responses + Physical Consult trial observations while preserving the preference-only guard; two positive substantive observations can confirm fit, while LIKE-only observations cannot
+- Immediate Physical Consult candidate trial intentionally asks only observable session signals (performance comparison, control/tolerance, preference, optional Trainer note); Recovery is not requested during the same-session trial because it cannot yet be observed
+- Physical Consult now has a dedicated same-account workflow: `/login?physical=1` → `/physical-consult` → LAB C1/C2 → off-program LAB candidate trial → focused Active Program feedback → local-device sign out
+- Dedicated Physical Consult Login is Email + Password only, does not expose Google login or signup, and redirects directly into the consult session on successful login
+- PRO Home and Account surfaces now provide explicit entry points into Physical Consult, while LAB pages opened with `?consult=1` provide a return path to the consult session after saving
+- Focused `/physical-consult/program` displays Active Program exercises with Exercise Feedback directly instead of requiring the Trainer to expand details for each exercise in the full Program view
+- Physical Consult end-session action still uses local Supabase sign-out scope, so the Trainer device session is closed without signing the user out on other devices
+- Physical Consult candidate-trial regression PASS: PRO/current-candidate gate, arbitrary exercise rejection, FREE rejection, positive-response confirmation, and preference-only guard; synthetic fixture residue after rollback is zero
+- Production unauthenticated route checks confirmed HTTP 200 and correct Physical Consult mode for `/login?physical=1` and login-required handling for `/physical-consult`
 
 Current operating boundary:
 - PRO cycle generates/surfaces review cases for professional review
@@ -72,6 +84,8 @@ Current operating boundary:
 - C2 is an evidence-supported trial-priority UX only; it does not claim to identify a uniquely correct Squat variant or setup before real training response
 - C3 is explicitly an optional scenario/math exploration surface, not a Core decision tool and not a Program authority source
 - A Trainer using Physical Consult access is operationally acting within the user's own authenticated session; the backend continues to see the same `auth.uid()` and existing user-owned data paths
+- Physical Consult trial data is a distinct actual-response evidence context, not a fake Active-Program response; it can influence Exercise Memory but does not automatically mutate the Program
+- The Physical Consult trial path is PRO-only and restricted to current LAB-generated candidates; standard Active-Program feedback remains the canonical path for exercises already in the Program
 
 Deliberately deferred:
 - automatic payment/subscription lifecycle
@@ -81,8 +95,8 @@ Deliberately deferred:
 - C1 Bench Program auto-refresh: current C1 only measures height + arm span, both Bench result directions currently map to the same V2 ordering (`MACHINE_CHEST_PRESS → SMITH_BENCH_PRESS → DB_BENCH_PRESS`), and available evidence supports anthropometry affecting Bench performance/biomechanics more strongly than it supports selecting one of those three exercise variants automatically
 - C1 Deadlift Program auto-refresh: current C1 has only one conservative-geometry result and does not measure torso/sitting-height ratio; available evidence shows meaningful technique differences between deadlift variants and some anthropometric association with conventional-vs-sumo performance, but not enough from the current input set to justify auto-swapping `SMITH_RDL / HIP_EXTENSION_45 / ROMANIAN_DEADLIFT`
 - any future promotion of C3 back to Core until it produces a real downstream decision or Program handoff rather than ratio arithmetic alone
-- widening `save_my_exercise_response` to accept Physical Consult candidate exercises that are not in the Active Program; after C1 targeted refresh, an automatically inserted C1 Squat candidate becomes part of Active Program and can use the existing response path normally
 - Supabase leaked-password protection because it is available on Pro Plan and above while the current organization remains on Free
+- authenticated browser/click usability validation of a real Physical Consult handoff until an authorized real consult or a dedicated test account is selected; no real user's credential should be changed merely for acceptance testing
 
 Security boundary:
 - browser cannot self-upgrade tier
@@ -92,6 +106,7 @@ Security boundary:
 - internal AI draft is never exposed directly to customers
 - repository contains no secret/service-role key or reviewer email credential
 - signed-in user SECURITY DEFINER RPCs were reviewed as intentional self-service endpoints and retain `auth.uid()` / tier / ownership / input guards as applicable
+- `save_my_physical_consult_trial` is an intentional fifth authenticated SECURITY DEFINER self-service endpoint; it adds PRO + current-LAB-candidate + same-user guards and does not expose the private trial table directly
 - Physical Consult password setup requires at least 10 characters in the client UI; changing the Supabase plan solely to enable leaked-password protection is not currently justified
 
 Validation note:
@@ -101,3 +116,5 @@ Validation note:
 - Bench/Deadlift auto-refresh expansion was explicitly evidence-gated after reviewing current V2 rules plus published Bench and Deadlift anthropometry/biomechanics literature; no Program automation was added where the present inputs do not support a distinct direction-sensitive exercise choice.
 - LAB → Program UX outcome behavior was validated with synthetic users inside rollback transactions and one post-deploy function readback; no real user's Program was altered for acceptance.
 - C2 v1.2 trial order was constrained to evidence-supported comparisons: stance-width effects interact with anthropometry, heel elevation changes ankle/knee ROM, and neither finding is used to claim one universally best Squat style.
+- Physical Consult candidate-trial backend behavior was validated with rollback-only synthetic fixtures; no real user's Exercise Memory or Program was altered for acceptance testing.
+- Production build and unauthenticated route-level validation pass; authenticated end-to-end trainer interaction with a real account has not yet been click-tested.
