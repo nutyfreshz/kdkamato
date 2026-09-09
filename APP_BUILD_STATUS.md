@@ -1,6 +1,6 @@
 # KDKAMATO PROGRAM APP BUILD STATUS
 
-## v0.7
+## v0.8
 
 Completed:
 - Next.js App Router shell: Home / Program / Lab / Progress / Account
@@ -43,15 +43,23 @@ Completed:
 - Exercise Memory remains higher authority than LAB: a `CONFIRMED_GOOD_FIT` current exercise or `DEPRIORITIZED` proposed exercise blocks the automatic swap
 - Quick Checks, C2 Squat Setup, C3 Physique Goal, C1 Bench, and C1 Deadlift remain suggestion/context only and cannot auto-refresh the Program under this policy
 - LAB → Program UX outcome contract deployed (`20260909064155_lab_program_ux_outcome_contract`)
-- `save_my_lab_result` now records the backend Program decision under reserved `_system.program_outcome` on that LAB result without adding a new table, column, or public RPC
+- `save_my_lab_result` records the backend Program decision under reserved `_system.program_outcome` on that LAB result without adding a new table, column, or public RPC
 - Incoming LAB payloads cannot spoof the reserved `_system` namespace
-- C1 Squat save UX now maps backend outcomes into five user-facing states: `UPDATED`, `ALREADY_FIT`, `NOT_ENOUGH_EVIDENCE`, `REAL_RESPONSE_OVERRIDES`, and `NO_PROGRAM`
+- C1 Squat save UX maps backend outcomes into five user-facing states: `UPDATED`, `ALREADY_FIT`, `NOT_ENOUGH_EVIDENCE`, `REAL_RESPONSE_OVERRIDES`, and `NO_PROGRAM`
 - Non-auto-refresh LAB tools remain a neutral context-only save state instead of implying that the Program should have changed
 - UPDATED UX compares the pre-save Active Program with the new version and displays the actual exercise change as `old exercise → new exercise`
 - Program page compares the current auto-refreshed version with the archived previous version and repeats the actual exercise change, why it changed, what stayed unchanged, and that actual response remains higher authority
 - Exercise cards changed by LAB are marked `UPDATED FROM LAB`
 - Five-state outcome contract passed rollback-only synthetic tests for all five states, followed by a post-deploy Production-function readback test
-- Production frontend build passed compile, TypeScript, page-data collection, and static generation; deployment is READY on `kdkamato.vercel.app`
+- C2 product audit completed: the old four-control scenario explorer was replaced by `Squat Setup Trial` ruleset v1.2, which prioritizes two one-variable-at-a-time comparisons instead of asking the user to interpret multiple setup controls
+- C2 keeps Front / High-Bar / Low-Bar as the user's chosen movement rather than claiming anthropometry can select the best variant automatically
+- For clearly longer femur-to-tibia direction, C2 prioritizes medium-vs-wide stance comparison first, then flat-vs-small heel elevation; otherwise heel comparison comes first and stance comparison is secondary
+- C2 can reuse Knee-to-Wall measurements and flags a left-right difference ≥1.5 cm for repeat measurement before using asymmetry to guide setup; no diagnosis or absolute mobility cutoff is inferred
+- C2 remains suggestion/trial guidance only and does not gain independent PRO voting or Program auto-refresh authority
+- C3 product audit completed: the Physique Goal tool was demoted from Core to `EXPLORE` because its current shoulder/waist scenario is direct math rather than a sufficiently grounded prescription or Program decision
+- C3 remains available as `Physique Scenario Explorer`; it explicitly states that hypothetical shoulder/waist deltas are not equivalent in difficulty/time and cannot prescribe muscle gain or waist reduction
+- LAB landing now has 2 Core decision tools, 1 Explore scenario tool, and the existing 5 Quick Checks, reducing overclaim and keeping the decision tools focused on actionable next steps
+- Production frontend build for the C2/C3 product audit passed compile, TypeScript, page-data collection, and static generation; deployment is READY on `kdkamato.vercel.app`
 
 Current operating boundary:
 - PRO cycle generates/surfaces review cases for professional review
@@ -61,6 +69,8 @@ Current operating boundary:
 - C1 Squat is the only current LAB exception allowed to modify an Active Program automatically, and only through the constrained high-confidence targeted-refresh policy above
 - LAB auto-refresh cannot override higher-authority actual response / Exercise Memory evidence
 - C1 auto-refresh never regenerates unrelated Program components; it creates an immutable targeted vNext with an audit record
+- C2 is an evidence-supported trial-priority UX only; it does not claim to identify a uniquely correct Squat variant or setup before real training response
+- C3 is explicitly an optional scenario/math exploration surface, not a Core decision tool and not a Program authority source
 - A Trainer using Physical Consult access is operationally acting within the user's own authenticated session; the backend continues to see the same `auth.uid()` and existing user-owned data paths
 
 Deliberately deferred:
@@ -70,6 +80,7 @@ Deliberately deferred:
 - re-enabling Q3/Q5/C2 as independent PRO recommendation evidence until their result codes encode genuinely distinct direction-sensitive information
 - C1 Bench Program auto-refresh: current C1 only measures height + arm span, both Bench result directions currently map to the same V2 ordering (`MACHINE_CHEST_PRESS → SMITH_BENCH_PRESS → DB_BENCH_PRESS`), and available evidence supports anthropometry affecting Bench performance/biomechanics more strongly than it supports selecting one of those three exercise variants automatically
 - C1 Deadlift Program auto-refresh: current C1 has only one conservative-geometry result and does not measure torso/sitting-height ratio; available evidence shows meaningful technique differences between deadlift variants and some anthropometric association with conventional-vs-sumo performance, but not enough from the current input set to justify auto-swapping `SMITH_RDL / HIP_EXTENSION_45 / ROMANIAN_DEADLIFT`
+- any future promotion of C3 back to Core until it produces a real downstream decision or Program handoff rather than ratio arithmetic alone
 - widening `save_my_exercise_response` to accept Physical Consult candidate exercises that are not in the Active Program; after C1 targeted refresh, an automatically inserted C1 Squat candidate becomes part of Active Program and can use the existing response path normally
 - Supabase leaked-password protection because it is available on Pro Plan and above while the current organization remains on Free
 
@@ -89,3 +100,4 @@ Validation note:
 - C1 targeted auto-refresh was validated with synthetic users inside transactions that were rolled back; no real user's Program or LAB result was used for acceptance testing.
 - Bench/Deadlift auto-refresh expansion was explicitly evidence-gated after reviewing current V2 rules plus published Bench and Deadlift anthropometry/biomechanics literature; no Program automation was added where the present inputs do not support a distinct direction-sensitive exercise choice.
 - LAB → Program UX outcome behavior was validated with synthetic users inside rollback transactions and one post-deploy function readback; no real user's Program was altered for acceptance.
+- C2 v1.2 trial order was constrained to evidence-supported comparisons: stance-width effects interact with anthropometry, heel elevation changes ankle/knee ROM, and neither finding is used to claim one universally best Squat style.
