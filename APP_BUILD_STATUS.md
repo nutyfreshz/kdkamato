@@ -1,6 +1,6 @@
 # KDKAMATO PROGRAM APP BUILD STATUS
 
-## v0.6
+## v0.7
 
 Completed:
 - Next.js App Router shell: Home / Program / Lab / Progress / Account
@@ -42,11 +42,16 @@ Completed:
 - Existing aligned Quad exercises are preserved and only missing higher-priority directional candidates replace out-of-set exercises, preventing unnecessary whole-program regeneration
 - Exercise Memory remains higher authority than LAB: a `CONFIRMED_GOOD_FIT` current exercise or `DEPRIORITIZED` proposed exercise blocks the automatic swap
 - Quick Checks, C2 Squat Setup, C3 Physique Goal, C1 Bench, and C1 Deadlift remain suggestion/context only and cannot auto-refresh the Program under this policy
-- LAB Save UI detects when that exact saved result generated a new Program version and immediately tells the user the Program was updated
-- Program page displays the LAB-triggered update marker, resulting exercise names, and the rule that actual training response remains higher authority
-- C1 targeted auto-refresh passed pre-deploy rollback-only synthetic stress tests and a second post-deploy Production-function regression for FREE, PRO, low-margin, Quick Check, confirmed-current conflict, and deprioritized-target conflict cases
-- Synthetic fixture residue after the C1 auto-refresh tests is zero
-- Production UI deployment for the LAB save notification and Program update banner completed successfully
+- LAB → Program UX outcome contract deployed (`20260909064155_lab_program_ux_outcome_contract`)
+- `save_my_lab_result` now records the backend Program decision under reserved `_system.program_outcome` on that LAB result without adding a new table, column, or public RPC
+- Incoming LAB payloads cannot spoof the reserved `_system` namespace
+- C1 Squat save UX now maps backend outcomes into five user-facing states: `UPDATED`, `ALREADY_FIT`, `NOT_ENOUGH_EVIDENCE`, `REAL_RESPONSE_OVERRIDES`, and `NO_PROGRAM`
+- Non-auto-refresh LAB tools remain a neutral context-only save state instead of implying that the Program should have changed
+- UPDATED UX compares the pre-save Active Program with the new version and displays the actual exercise change as `old exercise → new exercise`
+- Program page compares the current auto-refreshed version with the archived previous version and repeats the actual exercise change, why it changed, what stayed unchanged, and that actual response remains higher authority
+- Exercise cards changed by LAB are marked `UPDATED FROM LAB`
+- Five-state outcome contract passed rollback-only synthetic tests for all five states, followed by a post-deploy Production-function readback test
+- Production frontend build passed compile, TypeScript, page-data collection, and static generation; deployment is READY on `kdkamato.vercel.app`
 
 Current operating boundary:
 - PRO cycle generates/surfaces review cases for professional review
@@ -83,3 +88,4 @@ Validation note:
 - A real user's credential was not changed merely to test Physical Consult access; live credential handoff should be exercised during an actual authorized Physical Consult or a dedicated test account.
 - C1 targeted auto-refresh was validated with synthetic users inside transactions that were rolled back; no real user's Program or LAB result was used for acceptance testing.
 - Bench/Deadlift auto-refresh expansion was explicitly evidence-gated after reviewing current V2 rules plus published Bench and Deadlift anthropometry/biomechanics literature; no Program automation was added where the present inputs do not support a distinct direction-sensitive exercise choice.
+- LAB → Program UX outcome behavior was validated with synthetic users inside rollback transactions and one post-deploy function readback; no real user's Program was altered for acceptance.
