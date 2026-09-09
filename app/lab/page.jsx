@@ -10,8 +10,10 @@ export const metadata = {
 const content = {
   th: {
     intro: 'เลือกจากคำถามที่อยากรู้ก่อน ไม่ต้องทำทุกเครื่องมือ และไม่ต้องจำศัพท์ biomechanics ค่าที่วัดแล้วจะถูกใช้ซ้ำใน LAB ที่เกี่ยวข้อง เพื่อไม่ให้กรอกเรื่องเดิมหลายรอบ',
-    coreTitle: 'เริ่มจาก 3 เครื่องมือหลัก',
-    coreSub: 'เครื่องมือหลักเอาค่าที่วัดได้ไปตอบคำถามว่า “แล้วควรลองอะไรต่อ?”',
+    coreTitle: 'เริ่มจาก 2 เครื่องมือหลัก',
+    coreSub: 'เครื่องมือหลักต้องตอบคำถามว่า “แล้วควรลองอะไรต่อ?” ได้จริง ไม่ใช่แค่คำนวณตัวเลข',
+    exploreTitle: 'Explore',
+    exploreSub: 'ใช้เมื่ออยากลอง scenario เพื่อทำความเข้าใจตัวเลขเพิ่มเติม เครื่องมือในส่วนนี้ไม่ใช่ prescription และไม่เปลี่ยน Program อัตโนมัติ',
     quickTitle: 'Quick Checks',
     quickSub: 'ใช้เมื่ออยากวัดค่าใดค่าหนึ่งแบบเร็ว ๆ เท่านั้น ไม่จำเป็นต้องทำก่อน Core และค่าที่วัดจะถูก reuse ในเครื่องมือหลักที่เกี่ยวข้อง',
     core: [
@@ -23,29 +25,32 @@ const content = {
       },
       {
         href:'/lab/squat-geometry', tag:'SQUAT',
-        title:'Squat setup แบบไหนควรลองก่อน?',
-        copy:'ลองเปลี่ยนรูปแบบ Squat, ส้นเท้า, stance และการเดินหน้าของเข่า เพื่อเทียบ setup โดยใช้ค่าช่วงขาที่คุณวัดไว้',
-        result:'ได้: setup ที่ควรเอาไปทดลองจริง'
-      },
+        title:'Squat setup อะไรควรลองก่อน?',
+        copy:'เลือก Squat ที่คุณใช้อยู่ แล้วระบบจัดลำดับ 2 comparison จากสัดส่วนช่วงขาให้ลองทีละอย่าง แทนการปรับหลายตัวพร้อมกัน',
+        result:'ได้: ลำดับ setup trial ที่เอาไปลองในยิมได้ทันที'
+      }
+    ],
+    explore: [
       {
-        href:'/lab/physique-goal', tag:'PHYSIQUE',
-        title:'อยากให้หุ่นดู V ขึ้น ควรเปลี่ยนอะไร?',
-        copy:'ลองเปลี่ยนช่วงไหล่ เอว หรือทั้งสองอย่าง แล้วดูผลต่อสัดส่วน โดยใช้ค่าปัจจุบันที่วัดไว้เป็นฐาน',
-        result:'ได้: ทางเลือกที่เห็นผลเชิงสัดส่วนชัดเจน'
+        href:'/lab/physique-goal', technical:'PHYSIQUE SCENARIO',
+        title:'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V จะเปลี่ยนแค่ไหน?',
+        copy:'ลอง scenario จากค่าปัจจุบันเพื่อดูผลเชิงสัดส่วนเท่านั้น ไม่ได้บอกว่าควรเพิ่มกล้ามหรือลดเอวกี่เซนติเมตรจริง'
       }
     ],
     quick: [
       { href:'/lab/knee-to-wall', title:'เข่าเดินหน้าได้แค่ไหน?', technical:'Knee-to-Wall', copy:'วัดซ้าย/ขวาเพื่อดูบริบทของข้อเท้าและการเดินหน้าของเข่า' },
       { href:'/lab/ape-index', title:'แขนยาวแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'Ape Index', copy:'วัด reach อย่างเดียว แล้ว C1 จะนำค่าไปใช้กับ Bench/Deadlift ต่อ' },
       { href:'/lab/femur-tibia', title:'ต้นขายาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?', technical:'Femur:Tibia', copy:'วัดสัดส่วนช่วงขาอย่างเดียว แล้ว C1/C2 จะนำค่าไปใช้ต่อ' },
-      { href:'/lab/v-taper', title:'สัดส่วนไหล่ต่อเอวตอนนี้เป็นเท่าไร?', technical:'V-Taper', copy:'ดู snapshot ปัจจุบัน แล้ว C3 ใช้ค่าเดิมทำ scenario ต่อ' },
+      { href:'/lab/v-taper', title:'สัดส่วนไหล่ต่อเอวตอนนี้เป็นเท่าไร?', technical:'V-Taper', copy:'ดู snapshot ปัจจุบัน แล้ว Explore สามารถใช้ค่าเดิมทำ scenario ต่อ' },
       { href:'/lab/ffmi', title:'มวลไร้ไขมันเทียบกับส่วนสูงเป็นเท่าไร?', technical:'FFMI', copy:'Quick metric สำหรับติดตามตัวเองตามเวลา' }
     ]
   },
   en: {
     intro: 'Start with the question you care about. You do not need to complete every tool or know biomechanics terms first. Measurements are reused across related LAB tools so you do not have to enter the same thing repeatedly.',
-    coreTitle: 'Start with 3 main tools',
-    coreSub: 'Main tools use measurements to answer: “What should I try next?”',
+    coreTitle: 'Start with 2 main tools',
+    coreSub: 'A main tool must answer “What should I try next?” rather than merely calculate a number.',
+    exploreTitle: 'Explore',
+    exploreSub: 'Use these for optional scenarios that help you understand a number. Explore tools are not prescriptions and do not automatically change your Program.',
     quickTitle: 'Quick Checks',
     quickSub: 'Use these only when you want one measurement quickly. They are optional, and saved session measurements are reused by related main tools.',
     core: [
@@ -57,22 +62,23 @@ const content = {
       },
       {
         href:'/lab/squat-geometry', tag:'SQUAT',
-        title:'Which Squat setup is worth trying first?',
-        copy:'Change Squat variant, heel, stance, and knee travel while reusing your existing leg measurements.',
-        result:'Get: a setup to test in real training'
-      },
+        title:'Which Squat setup should you test first?',
+        copy:'Choose the Squat variant you use and get two prioritized setup comparisons from your leg proportions, changing one variable at a time.',
+        result:'Get: an ordered setup trial you can take to the gym'
+      }
+    ],
+    explore: [
       {
-        href:'/lab/physique-goal', tag:'PHYSIQUE',
-        title:'Want a stronger V-shape? What should change?',
-        copy:'Compare shoulder, waist, or combined changes using your current measurements as the baseline.',
-        result:'Get: clear proportion scenarios'
+        href:'/lab/physique-goal', technical:'PHYSIQUE SCENARIO',
+        title:'If shoulder or waist measurements changed, how would the V-ratio change?',
+        copy:'Explore proportion scenarios from your current baseline. This does not prescribe how much muscle to gain or waist size to lose.'
       }
     ],
     quick: [
       { href:'/lab/knee-to-wall', title:'How far can your knee travel forward?', technical:'Knee-to-Wall', copy:'Measure left/right ankle and knee-travel context.' },
       { href:'/lab/ape-index', title:'How long are your arms relative to height?', technical:'Ape Index', copy:'Measure reach only. C1 can reuse it for Bench/Deadlift context.' },
       { href:'/lab/femur-tibia', title:'How long is your thigh relative to lower leg?', technical:'Femur:Tibia', copy:'Measure leg proportions only. C1/C2 can reuse them.' },
-      { href:'/lab/v-taper', title:'What is your current shoulder-to-waist ratio?', technical:'V-Taper', copy:'See the current snapshot. C3 reuses it for scenarios.' },
+      { href:'/lab/v-taper', title:'What is your current shoulder-to-waist ratio?', technical:'V-Taper', copy:'See the current snapshot. Explore can reuse it for scenarios.' },
       { href:'/lab/ffmi', title:'How much fat-free mass do you carry for height?', technical:'FFMI', copy:'A quick metric for self-tracking over time.' }
     ]
   }
@@ -88,12 +94,12 @@ function CoreCards({ items, language }) {
   </Link>)}</div>;
 }
 
-function QuickCards({ items, language }) {
+function CompactCards({ items, language, action }) {
   return <div className="lab-quick-grid">{items.map((tool)=><Link key={tool.href} className="lab-quick-card" href={tool.href}>
     <small>{tool.technical}</small>
     <h3>{tool.title}</h3>
     <p>{tool.copy}</p>
-    <strong>{language === 'en' ? 'QUICK CHECK' : 'วัดค่านี้'} →</strong>
+    <strong>{action ?? (language === 'en' ? 'OPEN' : 'เปิดดู')} →</strong>
   </Link>)}</div>;
 }
 
@@ -117,10 +123,16 @@ export default async function LabPage() {
       <CoreCards items={c.core} language={language}/>
     </section>
 
+    <section className="lab-intent-section lab-explore-section">
+      <p className="eyebrow">{c.exploreTitle}</p>
+      <p className="lab-section-copy">{c.exploreSub}</p>
+      <CompactCards items={c.explore} language={language} action={language === 'en' ? 'EXPLORE' : 'ลอง scenario'}/>
+    </section>
+
     <section className="lab-intent-section lab-quick-section">
       <p className="eyebrow orange">{c.quickTitle}</p>
       <p className="lab-section-copy">{c.quickSub}</p>
-      <QuickCards items={c.quick} language={language}/>
+      <CompactCards items={c.quick} language={language} action={language === 'en' ? 'QUICK CHECK' : 'วัดค่านี้'}/>
     </section>
 
     <div className="tool-warning" style={{marginTop:72}}>
@@ -131,7 +143,7 @@ export default async function LabPage() {
     </div>
 
     <style>{`
-      .lab-simple-rule{margin:34px 0 0;padding:16px 18px;border:1px solid rgba(72,220,232,.22);background:rgba(72,220,232,.04);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}.lab-simple-rule b{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-simple-rule span{color:#c6cdcf;font-size:14px}.lab-intent-section{margin-top:64px}.lab-section-copy{max-width:760px;color:#8f999c;margin:8px 0 24px}.lab-core-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.lab-core-card{display:flex;flex-direction:column;min-height:330px;padding:24px;border:1px solid rgba(72,220,232,.2);background:#0c1113;text-decoration:none}.lab-core-card>span{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-core-card h2{font-size:30px;line-height:1.05;margin:24px 0 14px;color:#f3f4f2}.lab-core-card p{color:#aeb6b8;line-height:1.6}.lab-core-card small{margin-top:auto;padding-top:20px;color:#7f898c}.lab-core-card strong{margin-top:18px;color:#48dce8;font-size:12px;letter-spacing:.08em}.lab-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lab-quick-card{display:flex;flex-direction:column;min-height:220px;padding:18px;border:1px solid rgba(255,255,255,.1);background:#0b0f10;text-decoration:none}.lab-quick-card small{color:#ff6a1a;letter-spacing:.08em}.lab-quick-card h3{font-size:21px;line-height:1.15;margin:16px 0 10px;color:#eef0ef}.lab-quick-card p{font-size:13px;color:#8f989a;line-height:1.55}.lab-quick-card strong{margin-top:auto;padding-top:16px;color:#aeb5b7;font-size:11px;letter-spacing:.06em}@media(max-width:900px){.lab-core-grid{grid-template-columns:1fr}.lab-core-card{min-height:260px}}
+      .lab-simple-rule{margin:34px 0 0;padding:16px 18px;border:1px solid rgba(72,220,232,.22);background:rgba(72,220,232,.04);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}.lab-simple-rule b{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-simple-rule span{color:#c6cdcf;font-size:14px}.lab-intent-section{margin-top:64px}.lab-section-copy{max-width:760px;color:#8f999c;margin:8px 0 24px}.lab-core-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:980px}.lab-core-card{display:flex;flex-direction:column;min-height:330px;padding:24px;border:1px solid rgba(72,220,232,.2);background:#0c1113;text-decoration:none}.lab-core-card>span{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-core-card h2{font-size:30px;line-height:1.05;margin:24px 0 14px;color:#f3f4f2}.lab-core-card p{color:#aeb6b8;line-height:1.6}.lab-core-card small{margin-top:auto;padding-top:20px;color:#7f898c}.lab-core-card strong{margin-top:18px;color:#48dce8;font-size:12px;letter-spacing:.08em}.lab-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lab-quick-card{display:flex;flex-direction:column;min-height:220px;padding:18px;border:1px solid rgba(255,255,255,.1);background:#0b0f10;text-decoration:none}.lab-quick-card small{color:#ff6a1a;letter-spacing:.08em}.lab-explore-section .lab-quick-card small{color:#b9c0c2}.lab-quick-card h3{font-size:21px;line-height:1.15;margin:16px 0 10px;color:#eef0ef}.lab-quick-card p{font-size:13px;color:#8f989a;line-height:1.55}.lab-quick-card strong{margin-top:auto;padding-top:16px;color:#aeb5b7;font-size:11px;letter-spacing:.06em}@media(max-width:900px){.lab-core-grid{grid-template-columns:1fr}.lab-core-card{min-height:260px}}
     `}</style>
   </main></>;
 }
