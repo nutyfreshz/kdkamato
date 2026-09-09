@@ -100,8 +100,8 @@ export default async function PhysicalConsultPage() {
     <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">STEP 3 · ACTIVE PROGRAM RESPONSE</div>
       <h2>{program ? `Program v${program.program_version}` : "ยังไม่มี Active Program"}</h2>
-      <p>{program ? "เปิด Program ใน Physical Consult mode เพื่อให้ Exercise Feedback ของท่าที่อยู่ใน Program เปิดพร้อมบันทึก ไม่ต้องไล่หาเมนูเอง." : "สร้าง Active Program ก่อน หากต้องการบันทึก response ของท่าที่อยู่ใน Program."}</p>
-      <div className="cta-row">{program ? <Link className="btn primary" href="/program?physical=1">เปิด Program + Feedback</Link> : <Link className="btn" href="/program/start">สร้าง Program</Link>}</div>
+      <p>{program ? "เปิดหน้าสำหรับ Physical Consult โดยเฉพาะ ซึ่งแสดงท่าใน Active Program พร้อม Exercise Feedback ทันที ไม่ต้องเปิด details ทีละท่า." : "สร้าง Active Program ก่อน หากต้องการบันทึก response ของท่าที่อยู่ใน Program."}</p>
+      <div className="cta-row">{program ? <Link className="btn primary" href="/physical-consult/program">เปิด Active Program Feedback</Link> : <Link className="btn" href="/program/start">สร้าง Program</Link>}</div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
