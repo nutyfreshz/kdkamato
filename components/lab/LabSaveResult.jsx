@@ -55,13 +55,44 @@ function messageOf(error) {
   return 'Save failed';
 }
 
+function itemName(item) {
+  return item?.metadata?.display_name || item?.exercise_key || '';
+}
+
+function classifyProgramOutcome(toolKey, resultCode, outcome, beforeItems) {
+  const isSquatC1 = toolKey === 'exercise-fit' && String(resultCode || '').startsWith('C1_SQUAT_');
+  if (!outcome || !isSquatC1) return { kind: 'CONTEXT_ONLY' };
+
+  if (outcome.status === 'UPDATED') {
+    const oldByItem = new Map((beforeItems || []).map((item) => [String(item.item_id), item]));
+    const changes = (Array.isArray(outcome.changes) ? outcome.changes : []).map((change) => {
+      const previous = oldByItem.get(String(change?.item_id || ''));
+      return {
+        from: itemName(previous),
+        to: change?.exercise_name || change?.exercise_key || '',
+      };
+    }).filter((change) => change.from || change.to);
+    return { kind: 'UPDATED', programVersion: outcome.new_program_version, changes };
+  }
+
+  if (outcome.reason === 'PROGRAM_ALREADY_ALIGNED') return { kind: 'ALREADY_FIT', desired: outcome.desired_exercises || [] };
+  if (outcome.reason === 'DIRECTIONAL_MARGIN_BELOW_AUTO_THRESHOLD' || outcome.reason === 'DIRECTIONAL_SIGNAL_REQUIRED') {
+    return { kind: 'NOT_ENOUGH_EVIDENCE' };
+  }
+  if (outcome.reason === 'ACTUAL_RESPONSE_CONFLICT_CURRENT_CONFIRMED' || outcome.reason === 'ACTUAL_RESPONSE_CONFLICT_TARGET_DEPRIORITIZED') {
+    return { kind: 'REAL_RESPONSE_OVERRIDES', reason: outcome.reason };
+  }
+  if (outcome.reason === 'ACTIVE_PROGRAM_NOT_FOUND') return { kind: 'NO_PROGRAM' };
+  return { kind: 'NO_CHANGE' };
+}
+
 export function LabSaveResult({ language='th', result, metric, meaning, use, watch, resultCode }) {
   const pathname = usePathname();
   const toolKey = useMemo(() => pathname?.split('/').filter(Boolean).at(-1) || '', [pathname]);
   const [authState, setAuthState] = useState('checking');
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [programUpdate, setProgramUpdate] = useState(null);
+  const [programOutcome, setProgramOutcome] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -75,7 +106,7 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
 
   useEffect(() => {
     setSaved(false);
-    setProgramUpdate(null);
+    setProgramOutcome(null);
     setError('');
   }, [toolKey, result, metric, resultCode]);
 
@@ -111,7 +142,24 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
           result_code: resultCode ?? null,
         },
       };
+
       const supabase = createClient();
+      let beforeItems = [];
+      const isSquatC1 = toolKey === 'exercise-fit' && String(resultCode || '').startsWith('C1_SQUAT_');
+      if (isSquatC1) {
+        const { data: beforeProgram } = await supabase.from('programs')
+          .select('program_id')
+          .eq('status', 'ACTIVE')
+          .maybeSingle();
+        if (beforeProgram?.program_id) {
+          const { data } = await supabase.from('training_program_items')
+            .select('item_id,exercise_key,metadata')
+            .eq('program_id', beforeProgram.program_id)
+            .eq('movement_slot', 'QUAD_COMPOUND');
+          beforeItems = data || [];
+        }
+      }
+
       const { data: resultId, error: saveError } = await supabase.rpc('save_my_lab_result', {
         p_tool_key: toolKey,
         p_result_payload: payload,
@@ -119,25 +167,16 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
       });
       if (saveError) throw saveError;
 
-      let detectedUpdate = null;
+      let rawOutcome = null;
       if (resultId) {
-        const { data: activeProgram } = await supabase.from('programs')
-          .select('program_version,goal_snapshot')
-          .eq('status', 'ACTIVE')
+        const { data: savedRow } = await supabase.from('lab_results')
+          .select('result_payload')
+          .eq('result_id', resultId)
           .maybeSingle();
-        const autoUpdate = activeProgram?.goal_snapshot?.auto_update;
-        if (
-          autoUpdate?.kind === 'LAB_C1_TARGETED_REFRESH' &&
-          String(autoUpdate?.source_result_id || '') === String(resultId)
-        ) {
-          detectedUpdate = {
-            programVersion: activeProgram.program_version,
-            changes: Array.isArray(autoUpdate.changes) ? autoUpdate.changes : [],
-          };
-        }
+        rawOutcome = savedRow?.result_payload?._system?.program_outcome || null;
       }
 
-      setProgramUpdate(detectedUpdate);
+      setProgramOutcome(classifyProgramOutcome(toolKey, resultCode, rawOutcome, beforeItems));
       setSaved(true);
     } catch (e) {
       setError(messageOf(e));
@@ -146,27 +185,52 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
     }
   }
 
-  const updatedNames = programUpdate?.changes
-    ?.map((change) => change?.exercise_name || change?.exercise_key)
-    .filter(Boolean) || [];
-
   return <div className="lab-save-account">
     <button type="button" className="share-result" onClick={save} disabled={busy || saved}>
       {saved
         ? (language === 'en' ? 'SAVED TO ACCOUNT' : 'บันทึกไว้ในบัญชีแล้ว')
         : busy
-          ? (language === 'en' ? 'SAVING…' : 'กำลังบันทึก…')
+          ? (language === 'en' ? 'CHECKING PROGRAM…' : 'กำลังเช็ก Program…')
           : (language === 'en' ? 'SAVE TO MY ACCOUNT' : 'บันทึกผลไว้ในบัญชี')}
     </button>
-    {saved && programUpdate ? <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? `PROGRAM UPDATED AUTOMATICALLY · v${programUpdate.programVersion}` : `PROGRAM อัปเดตอัตโนมัติ · v${programUpdate.programVersion}`}</strong>
-      <p>{language === 'en'
-        ? `This Exercise Fit result changed the relevant Squat slot${updatedNames.length ? ` to ${updatedNames.join(', ')}` : ''}. Other Program components were kept unchanged.`
-        : `ผล Exercise Fit นี้ทำให้ระบบปรับเฉพาะท่า Squat ที่เกี่ยวข้อง${updatedNames.length ? ` เป็น ${updatedNames.join(', ')}` : ''} ส่วนอื่นของ Program คงเดิม`}</p>
+
+    {saved && programOutcome?.kind === 'UPDATED' && <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? `PROGRAM UPDATED · v${programOutcome.programVersion}` : `PROGRAM อัปเดตแล้ว · v${programOutcome.programVersion}`}</strong>
+      <p>{language === 'en' ? 'Your new Exercise Fit result changed only the relevant Squat exercise.' : 'ผล Exercise Fit ใหม่ทำให้ระบบปรับเฉพาะท่า Squat ที่เกี่ยวข้อง'}</p>
+      {programOutcome.changes?.map((change, index) => <p key={`${change.from}-${change.to}-${index}`} style={{ margin: '4px 0' }}><strong>{change.from || '—'} → {change.to || '—'}</strong></p>)}
+      <p>{language === 'en' ? 'Other exercises, training volume, and nutrition stayed unchanged.' : 'ท่าอื่น ปริมาณการฝึก และ Nutrition คงเดิม'}</p>
       <Link className="lab-next" href="/program">{language === 'en' ? 'VIEW UPDATED PROGRAM' : 'ดู Program ที่อัปเดต'} <b>→</b></Link>
-    </div> : null}
-    {saved && !programUpdate && <small>{language === 'en' ? 'This validated Lab result can now be reused by your future account history and PRO workflow.' : 'ผล LAB นี้ถูกผูกกับบัญชีแล้ว และนำไปใช้กับ history / PRO workflow ภายหลังได้'}</small>}
+    </div>}
+
+    {saved && programOutcome?.kind === 'ALREADY_FIT' && <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? 'YOUR PROGRAM ALREADY MATCHES THIS LAB RESULT' : 'Program ของคุณตรงกับผล LAB อยู่แล้ว'}</strong>
+      <p>{language === 'en' ? 'The current Squat exercise set is already aligned with this result, so no change was needed.' : 'กลุ่มท่า Squat ใน Program ปัจจุบันสอดคล้องกับผลที่วัดได้อยู่แล้ว จึงไม่จำเป็นต้องเปลี่ยน'}</p>
+    </div>}
+
+    {saved && programOutcome?.kind === 'NOT_ENOUGH_EVIDENCE' && <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? 'SAVED · PROGRAM NOT CHANGED' : 'บันทึกผลแล้ว · Program ยังไม่เปลี่ยน'}</strong>
+      <p>{language === 'en' ? 'The measured direction is still too close to neutral for an automatic exercise change. This result remains available as context for future decisions.' : 'ค่าที่วัดได้ยังอยู่ใกล้ช่วงกึ่งกลางเกินไปสำหรับการเปลี่ยนท่าอัตโนมัติ ผลนี้ยังถูกเก็บไว้ใช้ประกอบการตัดสินใจครั้งต่อไป'}</p>
+    </div>}
+
+    {saved && programOutcome?.kind === 'REAL_RESPONSE_OVERRIDES' && <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? 'PROGRAM KEPT FROM REAL TRAINING RESPONSE' : 'Program ยังไม่เปลี่ยน เพราะข้อมูลการฝึกจริงมีน้ำหนักสูงกว่า'}</strong>
+      <p>{programOutcome.reason === 'ACTUAL_RESPONSE_CONFLICT_TARGET_DEPRIORITIZED'
+        ? (language === 'en' ? 'LAB suggested an option that your prior training response had already deprioritized, so it was not added back automatically.' : 'LAB แนะนำท่าที่ข้อมูลการฝึกก่อนหน้าของคุณเคยลด priority ไว้ ระบบจึงไม่ใส่กลับอัตโนมัติ')
+        : (language === 'en' ? 'LAB suggested a different direction, but your current exercise has already shown a good real-world fit, so the Program was preserved.' : 'LAB แนะนำอีกทาง แต่ท่าปัจจุบันมีผลตอบสนองจากการฝึกจริงที่ดีอยู่แล้ว ระบบจึงเก็บท่าเดิมไว้')}</p>
+      <small>{language === 'en' ? 'Real training response has higher authority than LAB prediction.' : 'ผลจากการฝึกจริงมี priority สูงกว่าการคาดการณ์จาก LAB'}</small>
+    </div>}
+
+    {saved && programOutcome?.kind === 'NO_PROGRAM' && <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? 'LAB RESULT SAVED' : 'บันทึกผล LAB แล้ว'}</strong>
+      <p>{language === 'en' ? 'You do not have an Active Program yet. This result will remain in your account and can inform Program creation.' : 'ตอนนี้คุณยังไม่มี Active Program ผลนี้จะถูกเก็บไว้ในบัญชีและใช้เป็นข้อมูลประกอบตอนสร้าง Program'}</p>
+      <Link className="lab-next" href="/program/start">{language === 'en' ? 'CREATE PROGRAM' : 'สร้าง Program'} <b>→</b></Link>
+    </div>}
+
+    {saved && (programOutcome?.kind === 'CONTEXT_ONLY' || programOutcome?.kind === 'NO_CHANGE') && <small>
+      {language === 'en' ? 'This Lab result is saved to your account and can be reused as context. It did not automatically change your Program.' : 'ผล LAB นี้ถูกบันทึกไว้ในบัญชีแล้ว และใช้เป็นข้อมูลประกอบได้ โดยไม่ได้เปลี่ยน Program อัตโนมัติ'}
+    </small>}
+
     {error && <small className="warning">{error}</small>}
-    {busy && <ProcessingOverlay title={language === 'en' ? 'Saving Lab result…' : 'กำลังบันทึกผล LAB…'} detail={language === 'en' ? 'Linking this result to your account.' : 'กำลังผูกผลนี้เข้ากับบัญชีของคุณ'} />}
+    {busy && <ProcessingOverlay title={language === 'en' ? 'Saving result and checking Program…' : 'กำลังบันทึกผลและเช็ก Program…'} detail={language === 'en' ? 'Saving this result, then checking whether the Active Program should change.' : 'กำลังบันทึกผล แล้วตรวจว่ามีเหตุผลพอให้ Active Program เปลี่ยนหรือไม่'} />}
   </div>;
 }
