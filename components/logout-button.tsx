@@ -13,7 +13,7 @@ export function LogoutButton() {
     if (busy) return;
     setBusy(true);
     const supabase = createClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: "local" });
     router.replace("/login");
     router.refresh();
   }
@@ -21,7 +21,7 @@ export function LogoutButton() {
   return (
     <>
       <button className="btn" type="button" disabled={busy} onClick={logout}>{busy ? "Signing out..." : "Sign out"}</button>
-      {busy && <ProcessingOverlay title="กำลังออกจากระบบ..." detail="กำลังปิด session และกลับไปหน้า Login" />}
+      {busy && <ProcessingOverlay title="กำลังออกจากระบบ..." detail="กำลังปิด session ของอุปกรณ์นี้และกลับไปหน้า Login" />}
     </>
   );
 }
