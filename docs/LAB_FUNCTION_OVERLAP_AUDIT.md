@@ -1,17 +1,17 @@
 # KDKAMATO LAB Function Overlap Audit
 
-Status: REVIEWED
+Status: REVIEWED + CLIENT SAVE SCOPING FIXED / BACKEND DEDUPE PENDING DIGITAL TWIN
 Date: 2026-09-09
 
 ## Objective
 
-Prevent duplicate user effort and duplicate interpretation across LAB Core and Quick tools while preserving reusable measurement primitives.
+Prevent duplicate user effort, duplicate persistence, and duplicate interpretation across LAB Core and Quick tools while preserving reusable measurement primitives.
 
 ## Current Tool Map
 
 | Tool | Role | Inputs | Derived value / interpretation | Overlap status |
 |---|---|---|---|---|
-| C1 Exercise Fit Explorer | CORE decision/context | height, arm span, femur, tibia, torso | Ape Index + Femur:Tibia + movement-specific copy for Squat/Bench/Deadlift | HIGH overlap with Q4 and Q5; currently over-collects inputs for each selected movement |
+| C1 Exercise Fit Explorer | CORE decision/context | height, arm span, femur, tibia, torso | Ape Index + Femur:Tibia + movement-specific copy for Squat/Bench/Deadlift | HIGH overlap with Q4 and Q5; currently over-collects visible inputs for each selected movement |
 | C2 Squat Geometry | CORE scenario | height, femur, tibia, torso; imports Knee-to-Wall if available | Femur:Tibia + heel/stance/variant/knee-travel scenario | MEDIUM overlap with Q5 and Q3; desired as consumer, but current visual is not actually parameterized by entered segment lengths |
 | C3 Physique Goal Explorer | CORE scenario | shoulder, waist + target shoulder/waist | V-Taper ratio current vs target + scenario meaning | HIGH measurement overlap with Q1; acceptable only if Q1 is treated as primitive and C3 as scenario consumer |
 | Q1 V-Taper Snapshot | QUICK measurement primitive | shoulder, waist | current shoulder:waist ratio | Primitive for C3 |
@@ -30,7 +30,7 @@ The code already uses shared calculation functions, which is good and prevents f
 - `computeKneeToWall()` is used by Q3 and imported by C2.
 - `computeFFMI()` is currently unique to Q2.
 
-The problem is therefore not duplicate formulas. The problem is duplicate collection and duplicate interpretation/positioning in the UX.
+The problem is therefore not duplicate formulas. The problem is duplicate collection, duplicate interpretation, and duplicate evidence ownership.
 
 ## Specific Findings
 
@@ -85,6 +85,74 @@ No second interpretation layer should restate the same current-ratio meaning. C3
 
 No meaningful duplicate found.
 
+## Persistence Audit
+
+### Previous behavior
+
+`LabSaveResult` previously scanned every `kdkamato.lab.v1.*` key in session storage and placed all of them into every saved LAB payload.
+
+Example risk:
+
+- user opens Q4 Ape Index;
+- session already contains femur, waist, or Knee-to-Wall values from earlier tools;
+- pressing Save on Q4 could persist unrelated measurements together with the Q4 result.
+
+This was unnecessary data collection and blurred measurement ownership.
+
+### Fix applied
+
+Client save is now scoped by tool and, for C1, by result code.
+
+Saved measurement ownership is now:
+
+- C1 Bench → `height`, `armSpan`
+- C1 Deadlift → `height`, `armSpan`, `femur`, `tibia`
+- C1 Squat → `femur`, `tibia`, `torso`
+- C2 → `femur`, `tibia`, `torso`
+- C3 → `shoulder`, `waist`
+- Q1 → `shoulder`, `waist`
+- Q2 → `height`, `weight`, `bodyFat`
+- Q3 → `kneeWallLeft`, `kneeWallRight`
+- Q4 → `height`, `armSpan`
+- Q5 → `femur`, `tibia`
+
+Shared session keys remain reusable for prefill, but unrelated measurements are no longer bundled into a save payload.
+
+## PRO Bridge / Evidence Audit
+
+### Current normalization
+
+The backend intentionally normalizes shared measurement families across multiple source tools:
+
+- `ARM_SPAN_HEIGHT` from `ape-index` or `exercise-fit`
+- `FEMUR_TIBIA` from `femur-tibia`, `exercise-fit`, or `squat-geometry`
+- `SHOULDER_WAIST_RATIO` from `v-taper` or `physique-goal`
+- `KNEE_TO_WALL` from `knee-to-wall` or `squat-geometry`
+
+This is acceptable for signal normalization only if downstream evidence is deduplicated by measurement family.
+
+### Current PRO ranking problem
+
+`build_pro_exercise_suggestions()` currently keeps the latest result per `tool_key`, then aggregates candidate evidence across tools. This means multiple tools can contribute separate evidence counts even when they represent the same underlying measurement family.
+
+Current active candidate-rule sources include:
+
+- `exercise-fit`
+- `femur-tibia`
+- `knee-to-wall`
+- `squat-geometry`
+
+This creates a real double-counting risk.
+
+Additional correctness issues:
+
+- Q5 uses one generic result code `Q5_FEMUR_TIBIA`; its candidate rule always ranks `HACK_SQUAT > LEG_PRESS > SMITH_SQUAT`, regardless of whether femur is relatively longer or shorter.
+- Q3 uses one generic `Q3_KNEE_TO_WALL` result code; its candidate rule always ranks the same three exercises and does not branch on side difference or magnitude.
+- C2 uses generic `C2_SCENARIO_COMPARE`; its candidate rule is fixed even though C2 is a user-controlled scenario explorer.
+- C1 is currently the only source whose Squat result code actually distinguishes relative femur direction and changes candidate priority accordingly.
+
+Therefore Q3, Q5, and C2 should not currently be counted as independent recommendation evidence in PRO ranking.
+
 ## Recommended Ownership Model
 
 ### Measurement Primitives
@@ -119,9 +187,16 @@ These consume primitives and add context, comparison, or recommendations:
    - relabel the visual as a generic scenario illustration and stop claiming it represents the entered proportions.
 6. C3 should consume Q1 values as current state and focus only on target scenario deltas.
 7. Preserve shared `useLabMeasurement()` keys so users never have to type the same measurement twice in one browser profile/session.
+8. In the Digital Twin, remove Q3/Q5/C2 as independent PRO candidate-score sources until their result codes and rules encode genuinely distinct evidence.
+9. Change PRO evidence aggregation from `distinct tool_key` to explicit evidence families / signal dimensions so the same measurement family cannot gain extra weight merely by being saved through multiple tools.
+10. Re-run the Exercise Fit → candidate ranking → Exercise Memory → PRO suggestion integration tests after dedupe.
 
 ## Product Rule Going Forward
 
 A LAB value may have one measurement owner and multiple consumers, but only one tool should own the primary interpretation for a given question.
 
 `MEASURE ONCE → DERIVE ONCE → REUSE EVERYWHERE → INTERPRET BY PURPOSE`
+
+For PRO evidence:
+
+`ONE BIOLOGICAL SIGNAL ≠ MULTIPLE VOTES JUST BECAUSE IT APPEARED IN MULTIPLE TOOLS`
