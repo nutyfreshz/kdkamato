@@ -17,8 +17,8 @@ const content = {
     core: [
       {
         href:'/lab/exercise-fit', tag:'TRAINING',
-        title:'ทำไมบางท่ารู้สึกไม่เข้ากับโครงคุณ?',
-        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วดูว่าสัดส่วนของคุณเปลี่ยน setup หรือช่วงการเคลื่อนไหวตรงไหน และอะไรควรลองปรับก่อน',
+        title:'ท่านี้มีอะไรที่ควรลองปรับให้เข้ากับโครงคุณ?',
+        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วใช้สัดส่วนของคุณช่วยจัดลำดับว่า setup หรือทางเลือกไหนควรเอาไปลองเปรียบเทียบก่อน',
         result:'ได้: สิ่งที่ควรลองปรับหรือเปรียบเทียบ'
       },
       {
@@ -51,8 +51,8 @@ const content = {
     core: [
       {
         href:'/lab/exercise-fit', tag:'TRAINING',
-        title:'Why do some exercises feel awkward for your structure?',
-        copy:'Choose Squat, Bench Press, or Deadlift and see where your proportions may change setup or range of motion, plus what to compare first.',
+        title:'What should you try adjusting to fit this movement better?',
+        copy:'Choose Squat, Bench Press, or Deadlift and use your proportions to prioritize which setup or alternative is worth comparing first.',
         result:'Get: a setup or comparison worth testing'
       },
       {
