@@ -61,6 +61,7 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
   const [authState, setAuthState] = useState('checking');
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [programUpdate, setProgramUpdate] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -74,6 +75,7 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
 
   useEffect(() => {
     setSaved(false);
+    setProgramUpdate(null);
     setError('');
   }, [toolKey, result, metric, resultCode]);
 
@@ -110,12 +112,32 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
         },
       };
       const supabase = createClient();
-      const { error: saveError } = await supabase.rpc('save_my_lab_result', {
+      const { data: resultId, error: saveError } = await supabase.rpc('save_my_lab_result', {
         p_tool_key: toolKey,
         p_result_payload: payload,
         p_measured_at: new Date().toISOString(),
       });
       if (saveError) throw saveError;
+
+      let detectedUpdate = null;
+      if (resultId) {
+        const { data: activeProgram } = await supabase.from('programs')
+          .select('program_version,goal_snapshot')
+          .eq('status', 'ACTIVE')
+          .maybeSingle();
+        const autoUpdate = activeProgram?.goal_snapshot?.auto_update;
+        if (
+          autoUpdate?.kind === 'LAB_C1_TARGETED_REFRESH' &&
+          String(autoUpdate?.source_result_id || '') === String(resultId)
+        ) {
+          detectedUpdate = {
+            programVersion: activeProgram.program_version,
+            changes: Array.isArray(autoUpdate.changes) ? autoUpdate.changes : [],
+          };
+        }
+      }
+
+      setProgramUpdate(detectedUpdate);
       setSaved(true);
     } catch (e) {
       setError(messageOf(e));
@@ -123,6 +145,10 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
       setBusy(false);
     }
   }
+
+  const updatedNames = programUpdate?.changes
+    ?.map((change) => change?.exercise_name || change?.exercise_key)
+    .filter(Boolean) || [];
 
   return <div className="lab-save-account">
     <button type="button" className="share-result" onClick={save} disabled={busy || saved}>
@@ -132,7 +158,14 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
           ? (language === 'en' ? 'SAVING…' : 'กำลังบันทึก…')
           : (language === 'en' ? 'SAVE TO MY ACCOUNT' : 'บันทึกผลไว้ในบัญชี')}
     </button>
-    {saved && <small>{language === 'en' ? 'This validated Lab result can now be reused by your future account history and PRO workflow.' : 'ผล LAB นี้ถูกผูกกับบัญชีแล้ว และนำไปใช้กับ history / PRO workflow ภายหลังได้'}</small>}
+    {saved && programUpdate ? <div className="notice" style={{ marginTop: 12 }}>
+      <strong>{language === 'en' ? `PROGRAM UPDATED AUTOMATICALLY · v${programUpdate.programVersion}` : `PROGRAM อัปเดตอัตโนมัติ · v${programUpdate.programVersion}`}</strong>
+      <p>{language === 'en'
+        ? `This Exercise Fit result changed the relevant Squat slot${updatedNames.length ? ` to ${updatedNames.join(', ')}` : ''}. Other Program components were kept unchanged.`
+        : `ผล Exercise Fit นี้ทำให้ระบบปรับเฉพาะท่า Squat ที่เกี่ยวข้อง${updatedNames.length ? ` เป็น ${updatedNames.join(', ')}` : ''} ส่วนอื่นของ Program คงเดิม`}</p>
+      <Link className="lab-next" href="/program">{language === 'en' ? 'VIEW UPDATED PROGRAM' : 'ดู Program ที่อัปเดต'} <b>→</b></Link>
+    </div> : null}
+    {saved && !programUpdate && <small>{language === 'en' ? 'This validated Lab result can now be reused by your future account history and PRO workflow.' : 'ผล LAB นี้ถูกผูกกับบัญชีแล้ว และนำไปใช้กับ history / PRO workflow ภายหลังได้'}</small>}
     {error && <small className="warning">{error}</small>}
     {busy && <ProcessingOverlay title={language === 'en' ? 'Saving Lab result…' : 'กำลังบันทึกผล LAB…'} detail={language === 'en' ? 'Linking this result to your account.' : 'กำลังผูกผลนี้เข้ากับบัญชีของคุณ'} />}
   </div>;
