@@ -19,7 +19,7 @@ const ALLOWED_TOOLS = new Set([
 ]);
 
 const TOOL_MEASUREMENT_KEYS = {
-  'squat-geometry': ['femur', 'tibia', 'torso'],
+  'squat-geometry': ['femur', 'tibia'],
   'physique-goal': ['shoulder', 'waist'],
   'v-taper': ['shoulder', 'waist'],
   'ffmi': ['height', 'weight', 'bodyFat'],
@@ -32,8 +32,8 @@ function measurementKeysFor(toolKey, resultCode) {
   if (toolKey === 'exercise-fit') {
     if (String(resultCode || '').startsWith('C1_BENCH_')) return ['height', 'armSpan'];
     if (resultCode === 'C1_DEADLIFT_CONSERVATIVE_GEOMETRY') return ['height', 'armSpan', 'femur', 'tibia'];
-    if (String(resultCode || '').startsWith('C1_SQUAT_')) return ['femur', 'tibia', 'torso'];
-    return ['height', 'armSpan', 'femur', 'tibia', 'torso'];
+    if (String(resultCode || '').startsWith('C1_SQUAT_')) return ['femur', 'tibia'];
+    return ['height', 'armSpan', 'femur', 'tibia'];
   }
   return TOOL_MEASUREMENT_KEYS[toolKey] || [];
 }
