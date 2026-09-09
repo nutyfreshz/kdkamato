@@ -18,14 +18,32 @@ const ALLOWED_TOOLS = new Set([
   'femur-tibia',
 ]);
 
-function collectMeasurements() {
+const TOOL_MEASUREMENT_KEYS = {
+  'squat-geometry': ['femur', 'tibia', 'torso'],
+  'physique-goal': ['shoulder', 'waist'],
+  'v-taper': ['shoulder', 'waist'],
+  'ffmi': ['height', 'weight', 'bodyFat'],
+  'knee-to-wall': ['kneeWallLeft', 'kneeWallRight'],
+  'ape-index': ['height', 'armSpan'],
+  'femur-tibia': ['femur', 'tibia'],
+};
+
+function measurementKeysFor(toolKey, resultCode) {
+  if (toolKey === 'exercise-fit') {
+    if (String(resultCode || '').startsWith('C1_BENCH_')) return ['height', 'armSpan'];
+    if (resultCode === 'C1_DEADLIFT_CONSERVATIVE_GEOMETRY') return ['height', 'armSpan', 'femur', 'tibia'];
+    if (String(resultCode || '').startsWith('C1_SQUAT_')) return ['femur', 'tibia', 'torso'];
+    return ['height', 'armSpan', 'femur', 'tibia', 'torso'];
+  }
+  return TOOL_MEASUREMENT_KEYS[toolKey] || [];
+}
+
+function collectMeasurements(toolKey, resultCode) {
   const values = {};
   try {
-    for (let i = 0; i < window.sessionStorage.length; i += 1) {
-      const storageKey = window.sessionStorage.key(i);
-      if (!storageKey?.startsWith(PREFIX)) continue;
-      const key = storageKey.slice(PREFIX.length);
-      values[key] = window.sessionStorage.getItem(storageKey);
+    for (const key of measurementKeysFor(toolKey, resultCode)) {
+      const value = window.sessionStorage.getItem(`${PREFIX}${key}`);
+      if (value !== null) values[key] = value;
     }
   } catch (_) {}
   return values;
@@ -81,7 +99,7 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
         tool_key: toolKey,
         source: 'KDKAMATO_LAB_RESULT_CONTRACT_V1',
         language,
-        measurements: collectMeasurements(),
+        measurements: collectMeasurements(toolKey, resultCode),
         output: {
           result: result ?? null,
           metric: metric ?? null,
