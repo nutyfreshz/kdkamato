@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ProcessingOverlay } from "@/components/processing-overlay";
 
-export function LogoutButton() {
+export function LogoutButton({ label = "Sign out", redirectTo = "/login" }: { label?: string; redirectTo?: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -14,13 +14,13 @@ export function LogoutButton() {
     setBusy(true);
     const supabase = createClient();
     await supabase.auth.signOut({ scope: "local" });
-    router.replace("/login");
+    router.replace(redirectTo);
     router.refresh();
   }
 
   return (
     <>
-      <button className="btn" type="button" disabled={busy} onClick={logout}>{busy ? "Signing out..." : "Sign out"}</button>
+      <button className="btn" type="button" disabled={busy} onClick={logout}>{busy ? "Signing out..." : label}</button>
       {busy && <ProcessingOverlay title="กำลังออกจากระบบ..." detail="กำลังปิด session ของอุปกรณ์นี้และกลับไปหน้า Login" />}
     </>
   );
