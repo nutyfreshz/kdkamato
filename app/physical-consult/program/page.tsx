@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
-import { ExerciseFeedbackForm } from "@/components/exercise-feedback-form";
+import { PhysicalConsultProgramAccordion } from "@/components/physical-consult-program-accordion";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -48,35 +48,19 @@ export default async function PhysicalConsultProgramPage() {
     supabase.from("exercise_response_entries").select("exercise_key,performance_status,tolerance_status,recovery_status,preference_status,optional_note").eq("user_id", userId).eq("program_id", program.program_id).eq("entry_date", today),
   ]);
   const items = (itemsRaw ?? []) as ProgramItem[];
-  const feedbackMap = new Map<string, FeedbackRow>(((feedbackRaw ?? []) as FeedbackRow[]).map((x) => [x.exercise_key, x]));
-  const byDay = items.reduce<Map<number, ProgramItem[]>>((acc, item) => {
-    const list = acc.get(item.training_day) ?? [];
-    list.push(item);
-    acc.set(item.training_day, list);
-    return acc;
-  }, new Map<number, ProgramItem[]>());
+  const feedback = (feedbackRaw ?? []) as FeedbackRow[];
+  const completedCount = feedback.filter((row) => row.performance_status || row.tolerance_status || row.recovery_status || row.preference_status || row.optional_note).length;
 
   return <AppShell>
     <div className="topline">PRO · Physical Consult · Program v{program.program_version}</div>
     <h1>Active Program Feedback</h1>
-    <p>หน้านี้เปิดเฉพาะสิ่งที่ Trainer ต้องใช้ระหว่าง consult: ท่าใน Active Program และช่องบันทึก actual response โดยตรง.</p>
+    <p>เลือกเฉพาะท่าที่กำลังประเมิน ไม่ต้องเปิดหรือกรอกทุกท่า.</p>
     <div className="notice" style={{ marginBottom: 18 }}>
-      <strong>กรอกเฉพาะสิ่งที่สังเกตได้จริง</strong>
-      <p style={{ marginBottom: 0 }}>ไม่จำเป็นต้องกรอกทุกช่องหรือทุกท่า. Actual response จะถูกใช้ใน Exercise Memory และมี priority สูงกว่า LAB prediction.</p>
+      <strong>บันทึกวันนี้แล้ว {completedCount}/{items.length} ท่า</strong>
+      <p style={{ marginBottom: 0 }}>แตะชื่อท่าเพื่อเปิด Feedback ได้ทีละ 1 ท่า · Actual response มี priority สูงกว่า LAB prediction.</p>
     </div>
 
-    {Array.from(byDay.entries()).map(([day, dayItems]) => <section className="card day" key={day} style={{ marginTop: 18 }}>
-      <div className="kicker">DAY {day}</div>
-      <h2>{dayItems[0]?.metadata?.day_label ?? `Day ${day}`}</h2>
-      {dayItems.map((item) => {
-        const label = item.metadata?.display_name ?? item.exercise_key;
-        return <div key={item.item_id} style={{ borderTop: "1px solid rgba(255,255,255,.08)", paddingTop: 14, marginTop: 14 }}>
-          <strong>{label}</strong><br/>
-          <small>{item.metadata?.target_label ?? "Training movement"}</small>
-          <ExerciseFeedbackForm exerciseKey={item.exercise_key} label={label} initial={feedbackMap.get(item.exercise_key) ?? null} />
-        </div>;
-      })}
-    </section>)}
+    <PhysicalConsultProgramAccordion items={items} feedback={feedback} />
 
     <div className="cta-row" style={{ marginTop: 18 }}>
       <Link className="btn primary" href="/physical-consult">กลับ Physical Consult Session</Link>
