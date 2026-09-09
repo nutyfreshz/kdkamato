@@ -66,7 +66,7 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
         </div>
         <div style={{ textAlign: "right" }}>
           <strong>{top?.display_name ?? top?.exercise_key ?? "–"}</strong><br/>
-          <small>{top?.status === "RECOMMENDED_FROM_RESPONSE" ? "Recommended from real response" : "Try & evaluate"}{top?.evidence_count ? ` · ${top.evidence_count} Lab signal${top.evidence_count > 1 ? "s" : ""}` : ""}</small>
+          <small>{top?.status === "RECOMMENDED_FROM_RESPONSE" ? "Recommended from real response" : "Try & evaluate"}{top?.evidence_count ? ` · ข้อมูล LAB ${top.evidence_count} กลุ่ม` : ""}</small>
         </div>
       </div>;
     })}
