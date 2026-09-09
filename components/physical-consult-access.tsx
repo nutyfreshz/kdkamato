@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ProcessingOverlay } from "@/components/processing-overlay";
@@ -31,7 +32,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       setSaved(true);
       setPassword("");
       setConfirm("");
-      setMessage("พร้อมใช้แล้ว: Trainer สามารถเข้า user เดิมด้วย Email + Password นี้จากหน้า Login");
+      setMessage("พร้อมใช้แล้ว: บนเครื่อง Trainer เปิด Physical Consult Login แล้วเข้า user เดิมด้วย Email + Password นี้");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "ตั้งรหัสไม่สำเร็จ");
     } finally {
@@ -56,6 +57,11 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       <small>รหัสนี้เป็น credential ของ account เดียวกัน จึงควรใช้เฉพาะกับ Trainer ที่ได้รับอนุญาต และเปลี่ยนรหัสได้จากหน้านี้ภายหลัง.</small>
       {message && <div className="notice warning">{message}</div>}
     </div>
+    <div className="cta-row" style={{ marginTop: 14 }}>
+      <Link className="btn" href="/login?physical=1">ดู Physical Consult Login</Link>
+      <Link className="btn" href="/physical-consult">เปิด Physical Consult Session บนอุปกรณ์นี้</Link>
+    </div>
+    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้ Email + Physical Consult password. เมื่อจบ session ระบบมีปุ่ม sign out เฉพาะเครื่อง Trainer.</small></p>
     {busy && <ProcessingOverlay title="กำลังตั้ง Physical Consult access…" detail="กำลังเพิ่มหรือเปลี่ยน Email + Password login ให้ user เดิม" />}
   </div>;
 }
