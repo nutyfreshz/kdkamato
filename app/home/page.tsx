@@ -66,6 +66,7 @@ export default async function HomePage() {
     <div className="cta-row">
       {activeProgram ? <Link className="btn primary" href="/program">Open Active Program</Link> : <Link className="btn primary" href="/program/preview">Open Preview</Link>}
       {pending && <Link className="btn" href="/program/preview">Preview New Version</Link>}
+      {tier === "PRO" && <Link className="btn" href="/physical-consult">Physical Consult</Link>}
       <Link className="btn" href="/progress">Progress</Link>
       <Link className="btn" href="/program/start">Update Inputs</Link>
     </div>
