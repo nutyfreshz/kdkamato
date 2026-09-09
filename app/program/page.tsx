@@ -29,6 +29,7 @@ type TrainingProgramItem = {
   } | null;
 };
 
+type AutoUpdateChange = { exercise_key?: string; exercise_name?: string };
 type GoalSnapshot = {
   goal?: string;
   training_experience?: string;
@@ -42,6 +43,17 @@ type GoalSnapshot = {
   engine_version?: string;
   contract_version?: string;
   program_fingerprint?: string;
+  auto_update?: {
+    kind?: string;
+    source_result_id?: string;
+    result_code?: string;
+    evidence_family?: string;
+    percent_difference?: number;
+    movement_slot?: string;
+    previous_program_version?: number;
+    applied_at?: string;
+    changes?: AutoUpdateChange[];
+  };
 };
 
 type Baseline = {
@@ -159,12 +171,20 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, dayItems]) => [day, dayItems[0]?.metadata?.day_label ?? `Day ${day}`]));
   const volumeEntries = Object.entries(snapshot.weekly_volume ?? {});
   const hasRepDbVisuals = typedItems.some((x) => Boolean(getExerciseVisual(x.exercise_key)));
+  const autoUpdate = snapshot.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" ? snapshot.auto_update : null;
+  const autoUpdatedExercises = (autoUpdate?.changes ?? [])
+    .map((change) => change.exercise_name ?? change.exercise_key)
+    .filter(Boolean);
 
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
     <h1>{snapshot.program_family ?? "Active Program"}</h1>
     <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {snapshot.focus_label ?? "–"} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
     {params.activated && <div className="notice" style={{ marginBottom: 16 }}>Activate Program สำเร็จ Version ก่อนหน้าจะถูกเก็บไว้เป็น history เมื่อมี version ใหม่.</div>}
+    {autoUpdate && <div className="notice" style={{ marginBottom: 16 }}>
+      <strong>Program อัปเดตอัตโนมัติจาก LAB</strong>
+      <p style={{ marginBottom: 0 }}>Exercise Fit ล่าสุดทำให้ Program v{program.program_version} ปรับเฉพาะกลุ่ม Squat ที่เกี่ยวข้อง{autoUpdatedExercises.length ? ` → ${autoUpdatedExercises.join(", ")}` : ""}. ท่าและส่วนอื่นที่ไม่เกี่ยวข้องคงเดิม และผลตอบสนองจากการฝึกจริงยังมี priority สูงกว่า LAB.</p>
+    </div>}
     {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูล Program Setup ปัจจุบันต่างจาก Active Program v{program.program_version}. Program ที่ใช้อยู่จะยังไม่เปลี่ยนจนกว่าคุณจะ Preview และ Activate version ใหม่.</div>}
 
     <div className="grid">
