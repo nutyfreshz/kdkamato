@@ -1,0 +1,147 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { computeFemurTibia, computeKneeToWall } from '../../lib/lab';
+import { useLabMeasurement } from '../../lib/labSession';
+import { MeasurementCheckNote, MeasurementField, PrivacyStrip, ResultContract, ToolHeader } from './LabUI';
+
+const C2_RULESET = {
+  id: 'LAB_RULESET_C2_v1.2',
+  version: '1.2',
+  evidenceClass: 'GEOMETRY + EVIDENCE-SUPPORTED TRIAL PRIORITY',
+  lastReviewed: '2026-09-09'
+};
+
+function Field(props) {
+  return <MeasurementField {...props} />;
+}
+
+function SelectButtons({ label, value, onChange, options }) {
+  return <div className="selector-row"><span>{label}</span><div>{options.map(([key, text]) => <button type="button" key={key} className={value === key ? 'active' : ''} onClick={() => onChange(key)}>{text}</button>)}</div></div>;
+}
+
+function variantLabel(variant, th) {
+  if (variant === 'front') return 'Front Squat';
+  if (variant === 'lowbar') return 'Low-Bar Back Squat';
+  return 'High-Bar Back Squat';
+}
+
+function buildTrialPlan(ft, ankle, variant, language) {
+  if (!ft) return null;
+  const th = language !== 'en';
+  const name = variantLabel(variant, th);
+  const clearlyLonger = ft.percent >= 5;
+
+  const step1 = clearlyLonger
+    ? (th
+      ? `${name}: คงส้นราบ แล้วเทียบ stance กลาง ↔ stance กว้าง`
+      : `${name}: keep the heel flat and compare medium ↔ wide stance`)
+    : (th
+      ? `${name}: คง stance กลาง แล้วเทียบส้นราบ ↔ ยกส้นเล็กน้อย`
+      : `${name}: keep a medium stance and compare flat heel ↔ small heel lift`);
+
+  const step2 = clearlyLonger
+    ? (th
+      ? 'เลือก stance ที่ควบคุมได้ดีกว่า แล้วคง stance นั้นเพื่อเทียบส้นราบ ↔ ยกส้นเล็กน้อย'
+      : 'Keep the stance you control better, then compare flat heel ↔ small heel lift')
+    : (th
+      ? 'ถ้ายัง balance หรือ depth ไม่ลงตัว ให้คง heel ที่ดีกว่า แล้วเทียบ stance กลาง ↔ stance กว้าง'
+      : 'If balance or depth still feels limited, keep the better heel setup and compare medium ↔ wide stance');
+
+  const rationale = clearlyLonger
+    ? (th
+      ? 'สัดส่วนต้นขายาวกว่าหน้าแข้งชัดพอให้ stance เป็นตัวแปรแรกที่ควรเทียบ; งาน biomechanical พบว่าคนที่มีต้นขายาวกว่าอาจต้องใช้ ankle/knee motion มากขึ้นใน stance แคบ และ stance กว้างขึ้นเป็น comparison ที่สมเหตุผล'
+      : 'Your thigh segment is clearly longer relative to the lower leg, so stance is the first variable worth comparing. Biomechanical data suggest relatively longer thighs can require more ankle/knee motion in narrower stances, making a wider stance a reasonable comparison.')
+    : (th
+      ? 'สัดส่วนช่วงขาอย่างเดียวไม่ได้ชี้ว่าควรใช้ stance แคบหรือกว้างแบบฟันธง จึงเริ่มจาก heel ซึ่งเป็นตัวแปรที่มีผลต่อ ankle/knee ROM ชัดกว่า แล้วค่อยเทียบ stance ถ้ายังจำเป็น'
+      : 'Leg proportions alone do not justify declaring a narrow or wide stance best, so start with heel elevation, which has a clearer effect on ankle/knee ROM, then compare stance if needed.');
+
+  const ankleText = ankle
+    ? (th
+      ? `Knee-to-Wall ที่วัดไว้: ซ้าย ${ankle.left} cm / ขวา ${ankle.right} cm`
+      : `Saved Knee-to-Wall: L ${ankle.left} cm / R ${ankle.right} cm`)
+    : null;
+
+  const asymmetryNote = ankle && ankle.difference >= 1.5
+    ? (th
+      ? `ซ้าย-ขวาต่างกัน ${ankle.difference} cm — ควรวัดซ้ำด้วยวิธีเดิมก่อนใช้ความต่างนี้ตัดสิน setup`
+      : `Left-right difference is ${ankle.difference} cm — repeat the same measurement before using the asymmetry to guide setup.`)
+    : null;
+
+  return { name, step1, step2, rationale, ankleText, asymmetryNote };
+}
+
+export function SquatSetupTrialTool({ language = 'th' }) {
+  const th = language !== 'en';
+  const [femur, setFemur] = useLabMeasurement('femur');
+  const [tibia, setTibia] = useLabMeasurement('tibia');
+  const [kneeLeft] = useLabMeasurement('kneeWallLeft');
+  const [kneeRight] = useLabMeasurement('kneeWallRight');
+  const [variant, setVariant] = useState('highbar');
+
+  const ft = computeFemurTibia(femur, tibia);
+  const ankle = computeKneeToWall(kneeLeft, kneeRight);
+  const plan = useMemo(() => buildTrialPlan(ft, ankle, variant, language), [ft?.ratio, ft?.percent, ankle?.left, ankle?.right, ankle?.difference, variant, language]);
+
+  const result = ft && plan ? {
+    result: th ? `เริ่มจาก 2 comparison นี้ก่อนสำหรับ ${plan.name}` : `Start with these two comparisons for ${plan.name}`,
+    metric: `Femur:Tibia ${ft.ratio}${ankle ? ` · KTW ${ankle.left}/${ankle.right} cm` : ''}`,
+    meaning: th
+      ? `1) ${plan.step1}  2) ${plan.step2}`
+      : `1) ${plan.step1}.  2) ${plan.step2}.`,
+    use: th
+      ? `${plan.rationale} ทดสอบด้วยน้ำหนักเบาหรือคงน้ำหนักเดิม ใช้ depth ใกล้เคียงกัน และเปลี่ยนทีละ 1 ตัวแปร แล้วเลือก setup ที่ balance และ control ได้ดีกว่า`
+      : `${plan.rationale} Test with a light or fixed load, keep depth similar, change one variable at a time, and keep the setup you can balance and control better.`,
+    watch: th
+      ? `C2 ไม่ใช้สัดส่วนร่างกายฟันธงว่า Front / High-Bar / Low-Bar แบบไหนดีที่สุด — คุณเลือก variant ที่ต้องการทดสอบ แล้วใช้ C2 จัดลำดับ setup ภายใน variant นั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
+      : `C2 does not use body proportions to declare Front / High-Bar / Low-Bar best. Choose the variant you actually want to test; C2 prioritizes setup comparisons inside it.${plan.asymmetryNote ? ` ${plan.asymmetryNote}` : ''}`,
+    nextHref: ankle ? undefined : '/lab/knee-to-wall',
+    nextLabel: ankle ? undefined : (th ? 'วัด Knee-to-Wall เพิ่ม (ไม่บังคับ)' : 'ADD KNEE-TO-WALL (OPTIONAL)'),
+    resultCode: 'C2_SCENARIO_COMPARE'
+  } : null;
+
+  return <>
+    <ToolHeader
+      language={language}
+      id="C2_SQUAT_GEOMETRY"
+      role="CORE"
+      technicalName="Squat Setup Trial"
+      title={th ? 'Squat setup อะไรควรลองก่อน?' : 'Which Squat setup should you test first?'}
+      question={th
+        ? 'เลือก Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับ 2 comparison ที่ควรลองก่อนจากสัดส่วนช่วงขา โดยเปลี่ยนทีละอย่าง'
+        : 'Choose the Squat variant you actually use. The system prioritizes two setup comparisons from your leg proportions, changing one thing at a time.'}
+    />
+
+    <div className="lab-workbench">
+      <div>
+        <div className="lab-import-note">
+          <b>{th ? 'กรอกครั้งเดียวพอ' : 'MEASURE ONCE'}</b>
+          <span>{th ? 'ถ้าเคยวัด Femur:Tibia หรือ Knee-to-Wall แล้ว ค่าเดิมจะถูกใช้ที่นี่อัตโนมัติ' : 'Existing Femur:Tibia and Knee-to-Wall measurements are reused automatically.'}</span>
+        </div>
+
+        <div className="lab-input-grid">
+          <Field language={language} label={th ? 'ช่วงต้นขา' : 'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
+          <Field language={language} label={th ? 'ช่วงหน้าแข้ง' : 'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
+        </div>
+
+        <SelectButtons
+          label={th ? 'Squat ที่คุณจะทดสอบ' : 'SQUAT TO TEST'}
+          value={variant}
+          onChange={setVariant}
+          options={[["front", "FRONT"], ["highbar", "HIGH-BAR"], ["lowbar", "LOW-BAR"]]}
+        />
+
+        {plan && <div className="lab-import-note" style={{ marginTop: 16 }}>
+          <b>{th ? 'ลำดับการลอง' : 'TEST ORDER'}</b>
+          <span>1. {plan.step1}<br/>2. {plan.step2}</span>
+        </div>}
+
+        {plan?.ankleText && <div className="lab-import-note"><b>KNEE-TO-WALL</b><span>{plan.ankleText}</span></div>}
+
+        <MeasurementCheckNote language={language}/>
+        <PrivacyStrip language={language} ruleset={C2_RULESET}/>
+      </div>
+      <ResultContract language={language} {...result}/>
+    </div>
+  </>;
+}
