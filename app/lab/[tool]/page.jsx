@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import SiteHeader from '../../../components/SiteHeader';
 import { FFMITool, KneeToWallTool, VTaperTool } from '../../../components/lab/LabTools';
-import { ApeIndexSimpleTool, ExerciseFitSimpleTool, FemurTibiaSimpleTool, PhysiqueGoalSimpleTool, SquatGeometrySimpleTool } from '../../../components/lab/LabSimpleTools';
+import { ApeIndexSimpleTool, ExerciseFitSimpleTool, FemurTibiaSimpleTool, PhysiqueGoalSimpleTool } from '../../../components/lab/LabSimpleTools';
+import { SquatSetupTrialTool } from '../../../components/lab/SquatSetupTrialTool';
 import { getLanguage } from '../../../lib/language';
 
 const tools = {
   'exercise-fit': { th: { title: 'Exercise Fit — KDKAMATO LAB', description: 'เลือกท่าก่อน แล้วใช้เฉพาะค่าที่จำเป็นเพื่อดูว่า setup ไหนควรลองเปรียบเทียบ' }, en: { title: 'Exercise Fit — KDKAMATO LAB', description: 'Choose the movement first, then use only the measurements needed for that movement.' }, Component: ExerciseFitSimpleTool },
-  'squat-geometry': { th: { title: 'Squat setup แบบไหนควรลองก่อน? — KDKAMATO LAB', description: 'ใช้ค่าช่วงขาที่วัดไว้แล้วเปลี่ยน setup ทีละอย่าง โดยไม่ต้องตีความภาพมุมข้อต่อ' }, en: { title: 'Squat Setup Explorer — KDKAMATO LAB', description: 'Reuse leg measurements and compare one setup variable at a time without a joint-angle diagram.' }, Component: SquatGeometrySimpleTool },
+  'squat-geometry': { th: { title: 'Squat setup อะไรควรลองก่อน? — KDKAMATO LAB', description: 'เลือก Squat ที่ใช้อยู่ แล้วใช้สัดส่วนช่วงขาจัดลำดับ 2 comparison ที่ควรลองก่อน โดยเปลี่ยนทีละอย่าง' }, en: { title: 'Squat Setup Trial — KDKAMATO LAB', description: 'Choose the Squat variant you use and prioritize two setup comparisons from your leg proportions, changing one thing at a time.' }, Component: SquatSetupTrialTool },
   'physique-goal': { th: { title: 'อยากให้หุ่นดู V ขึ้น ควรเปลี่ยนด้านไหน? — KDKAMATO LAB', description: 'ใช้รอบไหล่และเอวที่วัดไว้เป็นฐาน แล้วเปรียบเทียบ scenario แบบง่าย ๆ' }, en: { title: 'Physique Goal Explorer — KDKAMATO LAB', description: 'Reuse shoulder and waist measurements as a baseline and compare simple scenarios.' }, Component: PhysiqueGoalSimpleTool },
   'v-taper': { th: { title: 'สัดส่วน V ของคุณตอนนี้เป็นอย่างไร? — KDKAMATO LAB', description: 'คำนวณอัตราส่วนรอบไหล่ต่อรอบเอว พร้อมขอบเขตว่าเลขนี้บอกอะไรได้และบอกอะไรไม่ได้' }, en: { title: 'V-Taper Snapshot — KDKAMATO LAB', description: 'Calculate shoulder-to-waist ratio and understand what it can and cannot tell you.' }, Component: VTaperTool },
   'ffmi': { th: { title: 'มวลไร้ไขมันของคุณมากแค่ไหนเมื่อเทียบกับส่วนสูง? — KDKAMATO LAB', description: 'คำนวณ FFMI เพื่อใช้ติดตามตัวเอง พร้อมข้อจำกัดจากการประเมินเปอร์เซ็นต์ไขมัน' }, en: { title: 'FFMI Snapshot — KDKAMATO LAB', description: 'Calculate height-normalized fat-free mass with clear limits around body-fat estimation.' }, Component: FFMITool },
