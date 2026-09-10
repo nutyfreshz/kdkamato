@@ -26,20 +26,20 @@ export function LoginPanel({ redirectTo = "/home", physicalMode = false }: { red
         : await supabase.auth.signUp({ email, password });
       if (result.error) throw result.error;
       if (effectiveMode === "signup" && !result.data.session) {
-        setMessage("สร้างบัญชีแล้ว กรุณาตรวจอีเมลเพื่อยืนยันบัญชีก่อนเข้าสู่ระบบ");
+        setMessage("สร้างบัญชีสำเร็จ กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชีก่อนเข้าสู่ระบบ");
         setBusy(false);
       } else {
         router.push(redirectTo); router.refresh();
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "ไม่สามารถเข้าสู่ระบบได้");
+      setMessage(error instanceof Error ? error.message : "เข้าสู่ระบบไม่สำเร็จ");
       setBusy(false);
     }
   }
 
   async function google() {
     if (busy || physicalMode) return;
-    setBusyLabel("กำลังเชื่อมต่อ Google...");
+    setBusyLabel("กำลังเชื่อมต่อกับ Google...");
     setBusy(true); setMessage("");
     try {
       const supabase = createClient();
@@ -50,28 +50,28 @@ export function LoginPanel({ redirectTo = "/home", physicalMode = false }: { red
       if (error) throw error;
     } catch (error) {
       setBusy(false);
-      setMessage(error instanceof Error ? error.message : "Google sign-in ไม่สำเร็จ");
+      setMessage(error instanceof Error ? error.message : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ");
     }
   }
 
   return (
     <div className="card form" style={{ maxWidth: 520 }}>
       {physicalMode ? <div className="notice" style={{ marginBottom: 12 }}>
-        <strong>Physical Consult · Trainer device</strong>
-        <p style={{ marginBottom: 0 }}>ใช้ Email + Physical Consult password ของ user เดิม. หน้านี้ไม่ใช้ Google login และไม่สร้าง account ใหม่.</p>
+        <strong>Physical Consult · อุปกรณ์ Trainer</strong>
+        <p style={{ marginBottom: 0 }}>ใช้อีเมล + รหัสผ่าน Physical Consult ของผู้ใช้เดิม หน้านี้ไม่ใช้การเข้าสู่ระบบด้วย Google และไม่สร้างบัญชีใหม่</p>
       </div> : <>
-        <button className="btn" onClick={google} disabled={busy}>Continue with Google</button>
-        <div className="help">หรือใช้ Email + Password</div>
+        <button className="btn" onClick={google} disabled={busy}>ดำเนินการต่อด้วย Google</button>
+        <div className="help">หรือใช้อีเมล + รหัสผ่าน</div>
       </>}
-      <label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
-      <label>Password<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" /></label>
-      <button className="btn primary" onClick={submit} disabled={busy || !email || password.length < 6}>{busy ? "กำลังดำเนินการ..." : physicalMode ? "เข้า Physical Consult Session" : mode === "login" ? "เข้าสู่ระบบ" : "สร้างบัญชี"}</button>
-      {!physicalMode && <button className="btn ghost" disabled={busy} onClick={() => setMode(mode === "login" ? "signup" : "login")}>{mode === "login" ? "ยังไม่มีบัญชี? สร้างบัญชี" : "มีบัญชีแล้ว? เข้าสู่ระบบ"}</button>}
+      <label>อีเมล<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
+      <label>รหัสผ่าน<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" /></label>
+      <button className="btn primary" onClick={submit} disabled={busy || !email || password.length < 6}>{busy ? "กำลังดำเนินการ..." : physicalMode ? "เข้าสู่ Physical Consult Session" : mode === "login" ? "เข้าสู่ระบบ" : "สร้างบัญชี"}</button>
+      {!physicalMode && <button className="btn ghost" disabled={busy} onClick={() => setMode(mode === "login" ? "signup" : "login")}>{mode === "login" ? "ยังไม่มีบัญชี? สร้างบัญชีใหม่" : "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ"}</button>}
       {!physicalMode && <div className="help" style={{ marginTop: 14 }}>
-        Physical Consult: ถ้าปกติเข้าด้วย Google ให้ตั้ง Physical Consult password ที่หน้า Account ก่อน แล้วเปิดหน้า Physical Consult Login บนเครื่อง Trainer
+        Physical Consult: หากปกติคุณเข้าสู่ระบบด้วย Google ให้ตั้งรหัสผ่าน Physical Consult ที่หน้าบัญชีก่อน แล้วเปิดหน้าเข้าสู่ระบบ Physical Consult บนอุปกรณ์ Trainer
       </div>}
-      {physicalMode && <div className="help" style={{ marginTop: 14 }}>เมื่อจบ consult ให้ใช้ปุ่ม “จบ Physical Consult และ Sign out เครื่องนี้” เพื่อปิดเฉพาะ session ของเครื่อง Trainer.</div>}
-      {busy && <ProcessingOverlay title={busyLabel} detail="กรุณารอสักครู่ และไม่ต้องกดปุ่มซ้ำ" />}
+      {physicalMode && <div className="help" style={{ marginTop: 14 }}>เมื่อจบการปรึกษา ให้ใช้ปุ่ม “จบ Physical Consult และ Sign out เครื่องนี้” เพื่อปิดเซสชันเฉพาะอุปกรณ์ Trainer</div>}
+      {busy && <ProcessingOverlay title={busyLabel} detail="กรุณารอสักครู่ และไม่จำเป็นต้องกดซ้ำ" />}
       {message && <div className="notice warning">{message}</div>}
     </div>
   );
