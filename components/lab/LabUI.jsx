@@ -13,8 +13,8 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   if (has('femur', 'ต้นขา')) return th ? {
     why: 'ใช้ดูว่าสัดส่วนต้นขาของคุณมีผลต่อท่า Squat อย่างไร',
     path: 'ปุ่มกระดูกสะโพกด้านข้าง → กึ่งกลางหัวเข่าด้านข้าง',
-    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากสะโพกถึงหัวเข่า หน่วยเป็น cm',
-    mistake: 'อย่าวัดจากขอบกางเกงหรือจุดที่เปลี่ยนตำแหน่งได้ง่าย',
+    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากสะโพกถึงหัวเข่า หน่วยเป็น ซม.',
+    mistake: 'อย่าวัดจากขอบกางเกง หรือจุดที่เปลี่ยนตำแหน่งได้ง่าย',
   } : {
     why: 'Used to understand how your thigh proportion can affect Squat setup.',
     path: 'Side hip bone → center of the outside of the knee',
@@ -23,10 +23,10 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('tibia', 'หน้าแข้ง')) return th ? {
-    why: 'ใช้เทียบความยาวหน้าแข้งกับต้นขา เพื่อดูสัดส่วนช่วงขา',
+    why: 'ใช้เปรียบเทียบความยาวหน้าแข้งกับต้นขา เพื่อดูสัดส่วนช่วงขา',
     path: 'กึ่งกลางหัวเข่าด้านข้าง → ปุ่มกระดูกข้อเท้าด้านนอก',
-    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากหัวเข่าถึงข้อเท้า หน่วยเป็น cm',
-    mistake: 'อย่าวัดเฉียง และใช้จุดหัวเข่า/ข้อเท้าคนละจุดในแต่ละครั้ง',
+    guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากหัวเข่าถึงข้อเท้า หน่วยเป็น ซม.',
+    mistake: 'อย่าวัดเฉียง และใช้จุดหัวเข่าหรือข้อเท้าคนละจุดในแต่ละครั้ง',
   } : {
     why: 'Used with femur length to describe your leg proportions.',
     path: 'Center of the outside of the knee → outer ankle bone',
@@ -35,10 +35,10 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('torso', 'ลำตัว')) return th ? {
-    why: 'ใช้ประมาณความยาวลำตัวเพื่อช่วยดูตำแหน่งใน Squat',
+    why: 'ใช้ประมาณความยาวลำตัวเพื่อช่วยดูตำแหน่งในท่า Squat',
     path: 'ปุ่มกระดูกสะโพกด้านข้าง → ปลายหัวไหล่ด้านข้าง',
-    guide: 'ยืนตรง แล้ววัดด้านข้างลำตัวจากสะโพกขึ้นไปถึงปลายหัวไหล่ หน่วยเป็น cm',
-    mistake: 'อย่าวัดอ้อมตามลำตัวหรือเปลี่ยนจุดสะโพก/หัวไหล่ระหว่างครั้ง',
+    guide: 'ยืนตรง แล้ววัดด้านข้างลำตัวจากสะโพกขึ้นไปถึงปลายหัวไหล่ หน่วยเป็น ซม.',
+    mistake: 'อย่าวัดอ้อมตามลำตัว หรือเปลี่ยนจุดสะโพกและหัวไหล่ระหว่างครั้ง',
   } : {
     why: 'A simple torso estimate used as extra context for Squat geometry.',
     path: 'Side hip bone → outer tip of the shoulder',
@@ -47,10 +47,10 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('arm span', 'ช่วงแขน')) return th ? {
-    why: 'ใช้ดูระยะเอื้อมของคุณเทียบกับส่วนสูง',
+    why: 'ใช้ดูระยะเอื้อม (reach) ของคุณเทียบกับส่วนสูง',
     path: 'ปลายนิ้วกลางซ้าย → ปลายนิ้วกลางขวา',
-    guide: 'ยืนชิดผนัง กางแขนตรงระดับไหล่ แล้ววัดจากปลายนิ้วกลางข้างหนึ่งถึงอีกข้าง หน่วยเป็น cm',
-    mistake: 'อย่างอศอก ยกไหล่ หรือวัดตามแนวโค้ง',
+    guide: 'ยืนชิดผนัง กางแขนตรงระดับไหล่ แล้ววัดจากปลายนิ้วกลางข้างหนึ่งถึงอีกข้าง หน่วยเป็น ซม.',
+    mistake: 'อย่างอศอก อย่ายกไหล่ หรือวัดตามแนวโค้ง',
   } : {
     why: 'Used to compare your reach with your height.',
     path: 'Left middle fingertip → right middle fingertip',
@@ -59,10 +59,10 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('height', 'ส่วนสูง')) return th ? {
-    why: 'ใช้เป็นค่าฐานสำหรับเทียบกับสัดส่วนอื่น',
+    why: 'ใช้เป็นค่าฐานสำหรับเปรียบเทียบกับสัดส่วนอื่น',
     path: 'พื้น → จุดสูงสุดของศีรษะ',
-    guide: 'ถอดรองเท้า ยืนตรงชิดผนัง มองตรง แล้ววัดจากพื้นถึงบนสุดของศีรษะ หน่วยเป็น cm',
-    mistake: 'อย่าวัดทั้งที่ใส่รองเท้าหรือยืนบนพื้นเอียง',
+    guide: 'ถอดรองเท้า ยืนตรงชิดผนัง มองตรง แล้ววัดจากพื้นถึงจุดสูงสุดของศีรษะ หน่วยเป็น ซม.',
+    mistake: 'อย่าวัดขณะใส่รองเท้า หรือยืนบนพื้นเอียง',
   } : {
     why: 'Used as the reference for your other body proportions.',
     path: 'Floor → top of head',
@@ -71,9 +71,9 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('shoulder', 'ไหล่')) return th ? {
-    why: 'ใช้เทียบขนาดช่วงไหล่กับเอว',
-    path: 'พันสายวัดรอบส่วนที่กว้างที่สุดของหัวไหล่/เดลต์',
-    guide: 'ยืนผ่อนคลาย ให้สายวัดผ่านส่วนที่กว้างที่สุดของหัวไหล่ทั้งสองข้าง แล้วอ่านค่าเป็น cm',
+    why: 'ใช้เปรียบเทียบขนาดช่วงไหล่กับรอบเอว',
+    path: 'พันสายวัดรอบส่วนที่กว้างที่สุดของหัวไหล่หรือกล้ามเนื้อเดลต์',
+    guide: 'ยืนผ่อนคลาย ให้สายวัดผ่านส่วนที่กว้างที่สุดของหัวไหล่ทั้งสองข้าง แล้วอ่านค่าเป็น ซม.',
     mistake: 'อย่าดึงสายวัดแน่นจนกดเนื้อ และอย่าวัดคนละระดับในแต่ละครั้ง',
   } : {
     why: 'Used to compare shoulder size with waist size.',
@@ -83,9 +83,9 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('waist', 'เอว')) return th ? {
-    why: 'ใช้เทียบกับรอบไหล่และติดตามสัดส่วนเดิมให้สม่ำเสมอ',
+    why: 'ใช้เปรียบเทียบกับรอบไหล่ และติดตามสัดส่วนเดิมอย่างสม่ำเสมอ',
     path: 'พันสายวัดรอบเอวที่ระดับสะดือ',
-    guide: 'ยืนผ่อนคลาย หายใจออกตามปกติ แล้ววัดรอบเอวผ่านระดับสะดือ หน่วยเป็น cm',
+    guide: 'ยืนผ่อนคลาย หายใจออกตามปกติ แล้ววัดรอบเอวระดับสะดือ หน่วยเป็น ซม.',
     mistake: 'อย่าแขม่วท้อง และอย่าสลับไปวัดตรงเอวคอดที่สุดในครั้งอื่น',
   } : {
     why: 'Used with shoulder circumference and for consistent tracking.',
@@ -95,10 +95,10 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('knee-to-wall', 'เข่าถึงผนัง', 'knee to wall')) return th ? {
-    why: 'ใช้ดูว่าเข่าแต่ละข้างเดินหน้าได้แค่ไหนตอนเท้ายังแนบพื้น',
+    why: 'ใช้ระยะเข่าถึงผนังเพื่อเปรียบเทียบว่าแต่ละข้างสามารถเข่าเดินหน้าได้มากน้อยต่างกันแค่ไหนขณะลงน้ำหนัก',
     path: 'ปลายนิ้วโป้งเท้า → กำแพง',
-    guide: 'หันหน้าเข้ากำแพง วางเท้าราบ ดันเข่าแตะกำแพงโดยส้นไม่ยก แล้วค่อยๆ เลื่อนเท้าถอยจนได้ระยะไกลสุดที่ยังแตะได้ วัดจากปลายนิ้วโป้งเท้าถึงกำแพง',
-    mistake: 'ถ้าส้นยกหรือเท้าหมุนออกมาก ค่านั้นใช้ไม่ได้',
+    guide: 'หันหน้าเข้าผนัง วางเท้าราบ ดันเข่าแตะผนังโดยส้นเท้าไม่ยก แล้วเลื่อนเท้าออกจนได้ระยะไกลที่สุดที่ทำซ้ำได้ วัดจากจุดเดิมของเท้าถึงผนัง',
+    mistake: 'อย่าปล่อยส้นเท้าลอย อย่าหมุนเท้าเปลี่ยนมุมมากเกินไป หรือใช้จุดวัดคนละจุดระหว่างซ้ายและขวา',
   } : {
     why: 'Shows how far the knee can travel forward while the foot stays flat.',
     path: 'Big toe → wall',
@@ -108,9 +108,9 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
 
   if (has('body fat', 'bodyfat', 'ไขมัน')) return th ? {
     why: 'ใช้ร่วมกับน้ำหนักเพื่อคำนวณมวลไร้ไขมันและ FFMI',
-    path: 'กรอก % ไขมันจากวิธีที่คุณใช้อยู่จริง',
-    guide: 'ใช้ค่าจากเครื่องหรือวิธีประเมินที่คุณใช้จริง และถ้าจะเทียบครั้งต่อไปควรใช้วิธีเดิม',
-    mistake: 'อย่าคิดว่าค่า % ไขมันเป็นค่าที่แม่นยำ 100%',
+    path: 'กรอกเปอร์เซ็นต์ไขมันจากวิธีที่คุณใช้จริง',
+    guide: 'ใช้ค่าจากเครื่องหรือวิธีประเมินที่คุณใช้จริง และหากต้องการเปรียบเทียบในครั้งต่อไป ควรใช้วิธีเดิม',
+    mistake: 'อย่าถือว่าค่าเปอร์เซ็นต์ไขมันเป็นค่าที่แม่นยำ 100%',
   } : {
     why: 'Used with body weight to estimate fat-free mass and FFMI.',
     path: 'Enter the body-fat % from the method you actually use',
@@ -121,8 +121,8 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   if (has('weight', 'น้ำหนัก')) return th ? {
     why: 'ใช้คำนวณ FFMI และติดตามการเปลี่ยนแปลง',
     path: 'ชั่งด้วยเครื่องชั่งตามปกติ',
-    guide: 'ถ้าจะติดตาม ให้ชั่งช่วงเวลาและเงื่อนไขใกล้เคียงกัน เช่น ตอนเช้าหลังเข้าห้องน้ำ',
-    mistake: 'อย่าเทียบน้ำหนักที่ชั่งคนละช่วงเวลาและคนละสภาพแล้วตีความมากเกินไป',
+    guide: 'หากต้องการติดตาม ให้ชั่งในช่วงเวลาและเงื่อนไขใกล้เคียงกัน เช่น ตอนเช้าหลังเข้าห้องน้ำ',
+    mistake: 'อย่าเปรียบเทียบน้ำหนักที่ชั่งคนละช่วงเวลาและคนละสภาพ แล้วตีความมากเกินไป',
   } : {
     why: 'Used for FFMI and progress tracking.',
     path: 'Use a normal body-weight scale',
@@ -140,20 +140,21 @@ export function ToolHeader({ id, title, question, technicalName, role = 'LAB TOO
 export function MeasurementField({ label, unit, value, onChange, step = '0.1', guide, mistake, why, language = 'th' }) {
   const [open, setOpen] = useState(false);
   const copy = simpleMeasurementCopy(label, language, guide, mistake, why);
+  const displayUnit = language !== 'en' && unit === 'cm' ? 'ซม.' : unit;
   return <div className="measure-field">
     {copy.why && <p className="measure-why">{copy.why}</p>}
-    <label><span>{label}</span><b>{unit}</b><input inputMode="decimal" type="number" min="0" step={step} value={value} onChange={(e) => onChange(e.target.value)} /></label>
-    <button type="button" className="measure-help" onClick={() => { const next=!open; setOpen(next); if(next) trackLabEvent('lab_measurement_help_open'); }}>{open ? (language === 'en' ? 'HIDE GUIDE' : 'ซ่อนวิธีวัด') : (language === 'en' ? 'SIMPLE MEASURING GUIDE' : 'วิธีวัดแบบง่าย')}</button>
+    <label><span>{label}</span><b>{displayUnit}</b><input inputMode="decimal" type="number" min="0" step={step} value={value} onChange={(e) => onChange(e.target.value)} /></label>
+    <button type="button" className="measure-help" onClick={() => { const next=!open; setOpen(next); if(next) trackLabEvent('lab_measurement_help_open'); }}>{open ? (language === 'en' ? 'HIDE GUIDE' : 'ซ่อนวิธีวัด') : (language === 'en' ? 'SIMPLE MEASURING GUIDE' : 'วิธีวัดอย่างง่าย')}</button>
     {open && <div className="measure-guide">
       {copy.path && <p><strong>{language === 'en' ? 'MEASURE:' : 'วัดจาก:'}</strong> {copy.path}</p>}
       <p>{copy.guide}</p>
-      <small><strong>{language === 'en' ? 'AVOID' : 'อย่าทำแบบนี้'}:</strong> {copy.mistake}</small>
+      <small><strong>{language === 'en' ? 'AVOID' : 'ข้อควรระวัง'}:</strong> {copy.mistake}</small>
     </div>}
   </div>;
 }
 
 export function ResultContract({ result, metric, meaning, use, watch, nextHref, nextLabel, resultCode, children, language = 'th' }) {
-  if (!result) return <div className="lab-empty-result"><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><p>{language === 'en' ? 'Complete the required measurements to calculate your result.' : 'กรอกข้อมูลที่จำเป็นให้ครบ ระบบจะคำนวณผลตามสูตรและกฎที่กำหนดไว้'}</p></div>;
+  if (!result) return <div className="lab-empty-result"><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><p>{language === 'en' ? 'Complete the required measurements to calculate your result.' : 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน ระบบจะคำนวณผลตามสูตรและเงื่อนไขที่กำหนดไว้'}</p></div>;
   return <div className="result-contract" aria-live="polite">
     <section><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><h2>{result}</h2>{metric && <p className="technical-metric">{metric}</p>}{resultCode && <small>RESULT CODE: {resultCode}</small>}</section>
     <section><span>{language === 'en' ? 'WHAT IT MEANS' : 'หมายความว่าอะไร'}</span><p>{meaning}</p></section>
@@ -166,15 +167,15 @@ export function ResultContract({ result, metric, meaning, use, watch, nextHref, 
 }
 
 export function PrivacyStrip({ ruleset, language = 'th' }) {
-  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account · No AI interpretation' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · เก็บบนเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี · ไม่มี AI ตีความ'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
+  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account · No AI interpretation' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · บันทึกลงเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี · ไม่มีการตีความด้วย AI'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
 }
 
 export function MeasurementCheckNote({ language = 'th' }) {
-  return <p className="measurement-check-note">{language === 'en' ? 'Your entered values are never silently changed. If a result looks unusual, check your measurement landmarks and units first.' : 'ระบบจะไม่แก้ค่าที่คุณกรอกเอง หากผลดูผิดปกติ ให้ตรวจจุดที่ใช้วัดและหน่วยวัดก่อนตีความ'}</p>;
+  return <p className="measurement-check-note">{language === 'en' ? 'Your entered values are never silently changed. If a result looks unusual, check your measurement landmarks and units first.' : 'ระบบจะไม่แก้ไขค่าที่คุณกรอกเอง หากผลดูผิดปกติ ให้ตรวจสอบจุดวัดและหน่วยวัดก่อนตีความ'}</p>;
 }
 
 export function ImportedMeasurementNote({ children, language = 'th' }) {
-  return <div className="lab-import-note"><b>{language === 'en' ? 'Previously measured values loaded' : 'นำค่าที่วัดไว้ก่อนหน้าเข้ามาแล้ว'}</b><span>{children}</span></div>;
+  return <div className="lab-import-note"><b>{language === 'en' ? 'Previously measured values loaded' : 'ระบบนำค่าที่วัดไว้ก่อนหน้ามาใช้แล้ว'}</b><span>{children}</span></div>;
 }
 
 export function ShareResult({ title, text, language = 'th' }) {
