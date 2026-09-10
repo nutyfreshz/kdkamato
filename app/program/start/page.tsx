@@ -19,7 +19,7 @@ function text(value: unknown) {
 
 export default async function ProgramStartPage() {
   const user = await requireUser();
-  if (!user) return <AppShell><div className="notice warning">ระบบเชื่อมต่อบัญชียังไม่พร้อมใน runtime นี้.</div></AppShell>;
+  if (!user) return <AppShell><div className="notice warning">ระบบเชื่อมต่อบัญชีไม่พร้อมใช้งานชั่วคราว กรุณาลองใหม่ภายหลัง</div></AppShell>;
 
   const supabase = await createClient();
   const [{ data: baseline }, { data: training }, { data: nutrition }] = await Promise.all([
@@ -44,9 +44,9 @@ export default async function ProgramStartPage() {
   } : undefined;
 
   return <AppShell>
-    <div className="topline">Program Setup</div>
-    <h1>ตั้งค่า Program ให้ตรงกับเป้าหมายและเวลาฝึก</h1>
-    <p>ระบบจะใช้ Goal, Focus, Training Days, Experience, Equipment และ Session Time เพื่อจัด weekly training budget และเลือกท่าให้เหมาะกับเงื่อนไขของคุณ.</p>
+    <div className="topline">ตั้งค่า Program</div>
+    <h1>ตั้งค่า Program ให้ตรงกับเป้าหมายและเวลาฝึกของคุณ</h1>
+    <p>ระบบจะใช้เป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้ง เพื่อกำหนดปริมาณการฝึกรายสัปดาห์และเลือกท่าฝึกให้เหมาะกับคุณ</p>
     <OnboardingForm initial={initial} />
   </AppShell>;
 }
