@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ProcessingOverlay } from "@/components/processing-overlay";
 
@@ -29,6 +30,7 @@ export function ExerciseFeedbackForm({
   label: string;
   initial?: InitialFeedback | null;
 }) {
+  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
@@ -58,6 +60,7 @@ export function ExerciseFeedbackForm({
       });
       if (saveError) throw saveError;
       setSaved(true);
+      router.refresh();
     } catch (e) {
       setError(errorText(e));
     } finally {
