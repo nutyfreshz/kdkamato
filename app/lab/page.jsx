@@ -9,40 +9,40 @@ export const metadata = {
 
 const content = {
   th: {
-    intro: 'เลือกเฉพาะคำถามที่คุณอยากรู้ ไม่ต้องทำทุกเครื่องมือ ค่าที่เคยวัดไว้จะถูกนำไปใช้ต่อใน LAB ที่เกี่ยวข้องโดยอัตโนมัติ',
+    intro: 'เลือกจากคำถามที่อยากรู้ก่อน ไม่จำเป็นต้องทำทุกเครื่องมือ และไม่ต้องจำศัพท์เฉพาะทาง ค่าที่วัดแล้วจะถูกใช้ซ้ำใน LAB ที่เกี่ยวข้อง เพื่อไม่ต้องกรอกข้อมูลเดิมซ้ำ',
     coreTitle: 'เริ่มจาก 2 เครื่องมือหลัก',
-    coreSub: 'เครื่องมือหลักไม่ได้ให้แค่ตัวเลข แต่ช่วยบอกว่าควรลองอะไรต่อ',
+    coreSub: 'เครื่องมือหลักต้องตอบคำถามว่า “ควรลองอะไรต่อ?” ได้จริง ไม่ใช่เพียงคำนวณตัวเลข',
     exploreTitle: 'Explore',
-    exploreSub: 'ใช้เมื่ออยากลอง scenario เพื่อทำความเข้าใจตัวเลขเพิ่มเติม เครื่องมือในส่วนนี้ไม่ใช่ prescription และไม่เปลี่ยน Program อัตโนมัติ',
+    exploreSub: 'ใช้เมื่ออยากลองสถานการณ์จำลองเพื่อทำความเข้าใจตัวเลขเพิ่มเติม เครื่องมือในส่วนนี้ไม่ใช่คำแนะนำ และจะไม่เปลี่ยน Program โดยอัตโนมัติ',
     quickTitle: 'Quick Checks',
-    quickSub: 'ใช้เมื่ออยากวัดค่าใดค่าหนึ่งแบบเร็ว ๆ เท่านั้น ไม่จำเป็นต้องทำก่อน Core และค่าที่วัดจะถูก reuse ในเครื่องมือหลักที่เกี่ยวข้อง',
+    quickSub: 'ใช้เมื่อต้องการวัดค่าใดค่าหนึ่งแบบรวดเร็ว ไม่จำเป็นต้องทำก่อนเครื่องมือหลัก และค่าที่วัดได้จะถูกนำไปใช้ต่อในเครื่องมือหลักที่เกี่ยวข้อง',
     core: [
       {
         href:'/lab/exercise-fit', tag:'TRAINING',
-        title:'ท่านี้มีอะไรที่คุณควรลองปรับ?',
-        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วกรอกเฉพาะค่าที่จำเป็น เพื่อดูว่าควรลองปรับอะไรต่อ',
-        result:'ได้: สิ่งที่ควรลองปรับหรือเปรียบเทียบ'
+        title:'ท่านี้ควรปรับอะไรให้เข้ากับโครงสร้างร่างกายของคุณ?',
+        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วใช้สัดส่วนร่างกายของคุณช่วยจัดลำดับว่าท่าหรือทางเลือกใดควรนำไปทดลองเปรียบเทียบก่อน',
+        result:'ผลลัพธ์: สิ่งที่ควรลองปรับหรือเปรียบเทียบ'
       },
       {
         href:'/lab/squat-geometry', tag:'SQUAT',
         title:'Squat setup แบบไหนควรลองก่อน?',
-        copy:'เลือก Squat ที่คุณใช้อยู่ แล้วลอง 2 setup ตามลำดับ โดยเปลี่ยนทีละอย่างเพื่อดูว่าแบบไหนควบคุมได้ดีกว่า',
-        result:'ได้: ลำดับ setup trial ที่เอาไปลองในยิมได้ทันที'
+        copy:'เลือกท่า Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับการเปรียบเทียบ 2 แบบจากสัดส่วนช่วงขา ให้คุณทดลองทีละอย่าง แทนการปรับหลายจุดพร้อมกัน',
+        result:'ผลลัพธ์: ลำดับการทดลอง setup ที่นำไปลองในยิมได้ทันที'
       }
     ],
     explore: [
       {
         href:'/lab/physique-goal', technical:'PHYSIQUE SCENARIO',
-        title:'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V จะเปลี่ยนแค่ไหน?',
-        copy:'ลอง scenario จากค่าปัจจุบันเพื่อดูผลเชิงสัดส่วนเท่านั้น ไม่ได้บอกว่าควรเพิ่มกล้ามหรือลดเอวกี่เซนติเมตรจริง'
+        title:'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V (V-shape) จะเปลี่ยนไปแค่ไหน?',
+        copy:'ลองสถานการณ์จำลองจากค่าปัจจุบันเพื่อดูผลเชิงสัดส่วนเท่านั้น ไม่ได้แนะนำว่าควรเพิ่มกล้ามเนื้อหรือลดรอบเอวกี่เซนติเมตร'
       }
     ],
     quick: [
-      { href:'/lab/knee-to-wall', title:'เข่าเดินหน้าได้แค่ไหน?', technical:'Knee-to-Wall', copy:'วัดซ้าย/ขวาเพื่อดูบริบทของข้อเท้าและการเดินหน้าของเข่า' },
-      { href:'/lab/ape-index', title:'แขนยาวแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'Ape Index', copy:'วัด reach อย่างเดียว แล้ว C1 จะนำค่าไปใช้กับ Bench/Deadlift ต่อ' },
-      { href:'/lab/femur-tibia', title:'ต้นขายาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?', technical:'Femur:Tibia', copy:'วัดสัดส่วนช่วงขาอย่างเดียว แล้ว C1/C2 จะนำค่าไปใช้ต่อ' },
-      { href:'/lab/v-taper', title:'สัดส่วนไหล่ต่อเอวตอนนี้เป็นเท่าไร?', technical:'V-Taper', copy:'ดู snapshot ปัจจุบัน แล้ว Explore สามารถใช้ค่าเดิมทำ scenario ต่อ' },
-      { href:'/lab/ffmi', title:'มวลไร้ไขมันเทียบกับส่วนสูงเป็นเท่าไร?', technical:'FFMI', copy:'Quick metric สำหรับติดตามตัวเองตามเวลา' }
+      { href:'/lab/knee-to-wall', title:'เข่าของคุณเดินหน้าได้แค่ไหน?', technical:'Knee-to-Wall', copy:'วัดซ้ายและขวาเพื่อดูบริบทของข้อเท้าและการเคลื่อนที่ของเข่าไปข้างหน้า' },
+      { href:'/lab/ape-index', title:'แขนยาวแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'Ape Index', copy:'วัดระยะเอื้อม (reach) อย่างเดียว แล้ว C1 จะนำค่าไปใช้กับ Bench Press หรือ Deadlift ต่อ' },
+      { href:'/lab/femur-tibia', title:'ต้นขายาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?', technical:'Femur:Tibia', copy:'วัดสัดส่วนช่วงขาอย่างเดียว แล้ว C1 หรือ C2 จะนำค่าไปใช้ต่อ' },
+      { href:'/lab/v-taper', title:'สัดส่วนไหล่ต่อเอวของคุณตอนนี้เป็นเท่าไร?', technical:'V-Taper', copy:'ดูค่าปัจจุบัน แล้ว Explore สามารถนำค่าเดิมไปทำสถานการณ์จำลองต่อได้' },
+      { href:'/lab/ffmi', title:'มวลไร้ไขมันของคุณมากแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'FFMI', copy:'ตัววัดสั้น ๆ สำหรับติดตามตัวเองตามเวลา' }
     ]
   },
   en: {
@@ -109,12 +109,12 @@ export default async function LabPage() {
 
   return <><SiteHeader language={language}/><main className="listing-page shell lab-page">
     <p className="eyebrow cyan">KDKAMATO LAB</p>
-    <h1>{language === 'en' ? <>WHAT DO YOU WANT<br/>TO UNDERSTAND?</> : <>มีอะไรเกี่ยวกับการฝึก<br/>ที่คุณอยากหาคำตอบ?</>}</h1>
+    <h1>{language === 'en' ? <>WHAT DO YOU WANT<br/>TO UNDERSTAND?</> : <>คุณอยากรู้อะไรเกี่ยวกับ<br/>ร่างกายของตัวเอง?</>}</h1>
     <p className="listing-intro">{c.intro}</p>
 
     <div className="lab-simple-rule">
-      <b>{language === 'en' ? 'ONE RULE' : 'ใช้ LAB แบบนี้'}</b>
-      <span>{language === 'en' ? 'Measure once → reuse the value → apply it to the question you care about.' : 'วัดครั้งเดียว → ใช้ต่อได้ → รู้ว่าควรลองอะไรต่อ'}</span>
+      <b>{language === 'en' ? 'ONE RULE' : 'หลักการใช้งานง่าย ๆ'}</b>
+      <span>{language === 'en' ? 'Measure once → reuse the value → apply it to the question you care about.' : 'วัดครั้งเดียว → ใช้ค่าซ้ำได้ → นำไปตอบคำถามที่คุณสนใจ'}</span>
     </div>
 
     <section className="lab-intent-section lab-core-section">
@@ -126,7 +126,7 @@ export default async function LabPage() {
     <section className="lab-intent-section lab-explore-section">
       <p className="eyebrow">{c.exploreTitle}</p>
       <p className="lab-section-copy">{c.exploreSub}</p>
-      <CompactCards items={c.explore} language={language} action={language === 'en' ? 'EXPLORE' : 'ลอง scenario'}/>
+      <CompactCards items={c.explore} language={language} action={language === 'en' ? 'EXPLORE' : 'ลองสถานการณ์จำลอง'}/>
     </section>
 
     <section className="lab-intent-section lab-quick-section">
@@ -136,10 +136,10 @@ export default async function LabPage() {
     </section>
 
     <div className="tool-warning" style={{marginTop:72}}>
-      <strong>{language === 'en' ? 'HOW TO READ LAB RESULTS' : 'จำไว้เวลาอ่านผล LAB'}</strong>
+      <strong>{language === 'en' ? 'HOW TO READ LAB RESULTS' : 'สิ่งที่ควรจำเมื่ออ่านผล LAB'}</strong>
       <p>{language === 'en'
         ? 'Measurements are context, not predictions. LAB helps you decide what to test next; your actual training response matters more than a body ratio.'
-        : 'ค่าที่วัดได้เป็นข้อมูลประกอบ ไม่ใช่คำทำนาย LAB ช่วยบอกว่าอะไรควรลองต่อ แต่ผลตอบสนองตอนฝึกจริงสำคัญกว่าสัดส่วนร่างกายเพียงค่าเดียว'}</p>
+        : 'ค่าที่วัดได้เป็นข้อมูลประกอบ ไม่ใช่คำทำนาย LAB ช่วยบอกว่าอะไรควรลองต่อ แต่ผลตอบสนองจากการฝึกจริงสำคัญกว่าสัดส่วนร่างกายเพียงค่าเดียว'}</p>
     </div>
 
     <style>{`
