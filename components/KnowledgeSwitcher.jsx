@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 const items = {
   th: [
-    ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'มองร่างกายทั้งระบบ ตั้งแต่การควบคุมภายในจนถึงสิ่งที่เห็นจากภายนอก'],
-    ['TRAINING SCIENCE', '/assets/a07_training_science.webp', 'เข้าใจแรง การเคลื่อนไหว ภาระที่เนื้อเยื่อรับ และเหตุผลที่การจัดท่าต่างกัน'],
-    ['REHAB', '/assets/a08_rehab.webp', 'เข้าใจความสามารถของเนื้อเยื่อ การเพิ่มโหลดอย่างเป็นขั้นตอน และการกลับไปใช้งานจริง'],
-    ['BIOLOGY & PHYSIOLOGY', '/assets/a09_biology.webp', 'ตามดูว่าสัญญาณถูกส่ง รับ และเปลี่ยนเป็นการตอบสนองของเซลล์ได้อย่างไร']
+    ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'มองร่างกายทั้งระบบ ตั้งแต่การควบคุมภายในจนถึงผลลัพธ์ที่เห็นภายนอก'],
+    ['TRAINING SCIENCE', '/assets/a07_training_science.webp', 'เข้าใจแรง การเคลื่อนไหว ภาระที่เนื้อเยื่อได้รับ และเหตุผลที่การจัดท่าแตกต่างกัน'],
+    ['REHAB', '/assets/a08_rehab.webp', 'เข้าใจความสามารถของเนื้อเยื่อ การเพิ่มภาระอย่างเป็นขั้นตอน และการกลับไปใช้งานจริง'],
+    ['BIOLOGY & PHYSIOLOGY', '/assets/a09_biology.webp', 'ติดตามว่าสัญญาณถูกส่ง รับ และเปลี่ยนเป็นการตอบสนองของเซลล์ได้อย่างไร']
   ],
   en: [
     ['MEDICAL BODYBUILDING', '/assets/a06_medical.webp', 'Whole-body physiology as an interconnected living system.'],
