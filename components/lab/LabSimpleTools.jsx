@@ -43,8 +43,8 @@ export function ExerciseFitSimpleTool({ language='th' }) {
       id="C1_EXERCISE_FIT"
       role="CORE"
       technicalName="Exercise Fit Explorer"
-      title={th ? 'ท่านี้ควรปรับอะไรให้เข้ากับโครงคุณมากขึ้น?' : 'What should you adjust to make this movement fit you better?'}
-      question={th ? 'เลือกท่าก่อน แล้วกรอกเฉพาะค่าที่ท่านั้นต้องใช้ ระบบจะบอกสิ่งที่ควรลองเปรียบเทียบต่อ' : 'Choose the movement first, then enter only the measurements that movement needs.'}
+      title={th ? 'ท่านี้มีอะไรที่คุณควรลองปรับ?' : 'What should you adjust to make this movement fit you better?'}
+      question={th ? 'เลือก Squat, Bench Press หรือ Deadlift แล้วกรอกเฉพาะค่าที่จำเป็น เพื่อดูว่าควรลองปรับอะไรต่อ' : 'Choose the movement first, then enter only the measurements that movement needs.'}
     />
 
     <div className="lab-workbench">
