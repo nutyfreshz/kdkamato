@@ -43,8 +43,8 @@ export function ExerciseFitSimpleTool({ language='th' }) {
       id="C1_EXERCISE_FIT"
       role="CORE"
       technicalName="Exercise Fit Explorer"
-      title={th ? 'ท่านี้มีอะไรที่คุณควรลองปรับ?' : 'What should you adjust to make this movement fit you better?'}
-      question={th ? 'เลือก Squat, Bench Press หรือ Deadlift แล้วกรอกเฉพาะค่าที่จำเป็น เพื่อดูว่าควรลองปรับอะไรต่อ' : 'Choose the movement first, then enter only the measurements that movement needs.'}
+      title={th ? 'ท่านี้ควรปรับอะไรให้เข้ากับโครงคุณมากขึ้น?' : 'What should you adjust to make this movement fit you better?'}
+      question={th ? 'เลือกท่าก่อน แล้วกรอกเฉพาะค่าที่ท่านั้นต้องใช้ ระบบจะบอกสิ่งที่ควรลองเปรียบเทียบต่อ' : 'Choose the movement first, then enter only the measurements that movement needs.'}
     />
 
     <div className="lab-workbench">
@@ -120,7 +120,7 @@ export function SquatGeometrySimpleTool({ language='th' }) {
         <InputGrid>
           <Field language={language} label={th?'ช่วงต้นขา':'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
           <Field language={language} label={th?'ช่วงหน้าแข้ง':'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
-        </InputGrid>}
+        </InputGrid>
 
         {ankle && <div className="lab-import-note"><b>KNEE-TO-WALL</b><span>{th?`ใช้ค่าที่วัดไว้แล้ว: ซ้าย ${ankle.left} cm · ขวา ${ankle.right} cm`:`Reusing saved values: left ${ankle.left} cm · right ${ankle.right} cm`}</span></div>}
 
@@ -179,7 +179,7 @@ export function PhysiqueGoalSimpleTool({ language='th' }) {
         <InputGrid>
           <Field language={language} label={th?'รอบไหล่':'SHOULDER'} unit="cm" value={shoulder} onChange={setShoulder}/>
           <Field language={language} label={th?'รอบเอวที่สะดือ':'WAIST @ NAVEL'} unit="cm" value={waist} onChange={setWaist}/>
-        </InputGrid>}
+        </InputGrid>
 
         <SelectButtons label={th?'อยากลองเปลี่ยนด้านไหน':'SCENARIO'} value={route} onChange={setRoute} options={[["upper",th?"ช่วงบน":"UPPER BODY"],["waist",th?"เอว":"WAIST"],["both",th?"ทั้งสอง":"BOTH"]]}/>
 
