@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 
 const content = {
   th: [
-    { image: '/assets/a02_body.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 01', title: <>การฝึกคือสิ่งที่<br/>มองเห็น</> },
-    { image: '/assets/a03_signal.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 02', title: <>แต่การตอบสนองของร่างกาย<br/>เกิดขึ้นลึกกว่านั้น</> },
-    { image: '/assets/a04_cell.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 03', title: <>การปรับตัว<br/>เริ่มจากข้างใน</> },
-    { image: '/assets/a05_tissue.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 04', title: <>เราเข้าไปดู<br/>ว่ามันเกิดขึ้นอย่างไร</> }
+    { image: '/assets/a02_body.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 01', title: <>การฝึกเป็นสิ่งที่<br/>มองเห็นได้</> },
+    { image: '/assets/a03_signal.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 02', title: <>แต่สัญญาณที่ร่างกายได้รับ<br/>อาจมองไม่เห็น</> },
+    { image: '/assets/a04_cell.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 03', title: <>การปรับตัวเริ่มจากภายใน</> },
+    { image: '/assets/a05_tissue.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 04', title: <>สำรวจว่ามันเกิดขึ้นอย่างไร</> }
   ],
   en: [
     { image: '/assets/a02_body.webp', eyebrow: 'BENEATH THE SURFACE / 01', title: <>TRAINING<br/>IS VISIBLE.</> },
