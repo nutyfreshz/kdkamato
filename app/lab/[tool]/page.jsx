@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import SiteHeader from '../../../components/SiteHeader';
-import { FFMITool, KneeToWallTool, VTaperTool } from '../../../components/lab/LabTools';
+import { FFMITool, KneeToWallTool, VTaperTool } from '../../../components/lab/LabQuickTools';
 import { ApeIndexSimpleTool, ExerciseFitSimpleTool, FemurTibiaSimpleTool } from '../../../components/lab/LabSimpleTools';
 import { PhysiqueScenarioExploreTool } from '../../../components/lab/PhysiqueScenarioExploreTool';
 import { SquatSetupTrialTool } from '../../../components/lab/SquatSetupTrialTool';
