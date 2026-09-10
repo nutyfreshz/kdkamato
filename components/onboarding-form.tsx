@@ -92,7 +92,7 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
         <label>อุปกรณ์ที่ใช้งานได้<select value={form.equipmentProfile} onChange={(e) => set("equipmentProfile", e.target.value)}><option value="FULL_GYM">ฟิตเนสครบวงจร</option><option value="LIMITED_GYM">ฟิตเนสจำกัดอุปกรณ์</option><option value="HOME_BASIC">อุปกรณ์พื้นฐานที่บ้าน</option></select></label>
       </div>
 
-      <div className="notice">จุดเน้น (Focus) มีผลต่อจำนวนเซตหนักโดยตรงและการจัดท่าใน Program จริง ตัวเลือกปรับท่าทาง/สมดุลหัวไหล่จะเน้นกล้ามเนื้อหลังส่วนบน ด้านหลังหัวไหล่ ข้อต่อหัวไหล่ และกล้ามเนื้อควบคุมสะบัก เพื่อเพิ่มสมดุลของหัวไหล่และสะบัก แต่ไม่ใช่การฟื้นฟูหรือรักษาอาการปวด</div>
+      <div className="notice">จุดเน้นมีผลต่อจำนวนเซตหนักโดยตรงและการจัดท่าใน Program จริง ตัวเลือกปรับท่าทาง/สมดุลหัวไหล่จะเน้นกล้ามเนื้อหลังส่วนบน ด้านหลังหัวไหล่ ข้อต่อหัวไหล่ และกล้ามเนื้อควบคุมสะบัก เพื่อเพิ่มสมดุลของหัวไหล่และสะบัก แต่ไม่ใช่การฟื้นฟูหรือรักษาอาการปวด</div>
 
       <div className="form-grid">
         <label>ส่วนสูง (ซม.)<input inputMode="decimal" value={form.heightCm} onChange={(e) => set("heightCm", e.target.value)} /></label>
@@ -102,7 +102,7 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
         <label>คาร์ดิโอ (นาทีต่อสัปดาห์)<input inputMode="numeric" value={form.cardioMinutesPerWeek} onChange={(e) => set("cardioMinutesPerWeek", e.target.value)} placeholder="ถ้ามี" /></label>
       </div>
 
-      <div className="notice">การประมาณพลังงาน (Energy Estimate) เป็นข้อมูลเสริม: หากข้อมูลที่วัดได้ยังไม่เพียงพอ ระบบจะไม่เดาตัวคูณกิจกรรม หรือแสดงตัวเลขที่ดูแม่นยำเกินจริง</div>
+      <div className="notice">การประมาณพลังงานเป็นข้อมูลเสริม หากข้อมูลที่วัดได้ยังไม่เพียงพอ ระบบจะไม่เดาระดับกิจกรรมหรือแสดงตัวเลขที่ดูแม่นยำเกินจริง</div>
 
       <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังประมวลผล..." : "สร้าง Program"}</button>
       {busy && <ProcessingOverlay title="กำลังสร้าง Program..." detail="กำลังบันทึกข้อมูลพื้นฐานและคำนวณการฝึก/โภชนาการ กรุณารอสักครู่" />}

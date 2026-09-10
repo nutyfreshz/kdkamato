@@ -17,9 +17,9 @@ const BATCH = [
 export default function ExerciseVisualBatchPage() {
   return (
     <AppShell>
-      <div className="topline">Exercise Visuals · Batch 01</div>
-      <h1>RepDB Base Library</h1>
-      <p>First production batch. Remaining catalog gaps are intentionally deferred until the PRO version passes validation.</p>
+      <div className="topline">ภาพประกอบท่าฝึก · ชุดที่ 01</div>
+      <h1>คลังภาพท่าฝึก RepDB</h1>
+      <p>ชุดภาพที่ใช้งานใน Program ปัจจุบัน ท่าที่ค้างอยู่จะเพิ่มเมื่อผ่านการตรวจสอบความชัดเจนและเหมาะกับการใช้งานจริง</p>
       <div className="grid" style={{ marginTop: 18 }}>
         {BATCH.map(([key, label]) => (
           <section className="card" key={key}>

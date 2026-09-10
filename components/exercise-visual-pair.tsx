@@ -23,12 +23,12 @@ export function ExerciseVisualPair({ exerciseKey, label }: { exerciseKey: string
     <div style={{ marginTop: 10, maxWidth: 360 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
         <div style={frameStyle}>
-          <div style={{ padding: "6px 8px", fontSize: ".68rem", letterSpacing: ".08em", opacity: .68 }}>START</div>
-          <img src={visual.start} alt={`${label} start position`} loading="lazy" style={imageStyle} />
+          <div style={{ padding: "6px 8px", fontSize: ".68rem", letterSpacing: ".08em", opacity: .68 }}>เริ่ม</div>
+          <img src={visual.start} alt={`${label} ท่าเริ่มต้น`} loading="lazy" style={imageStyle} />
         </div>
         <div style={frameStyle}>
-          <div style={{ padding: "6px 8px", fontSize: ".68rem", letterSpacing: ".08em", opacity: .68 }}>FINISH</div>
-          <img src={visual.finish} alt={`${label} finish position`} loading="lazy" style={imageStyle} />
+          <div style={{ padding: "6px 8px", fontSize: ".68rem", letterSpacing: ".08em", opacity: .68 }}>สิ้นสุด</div>
+          <img src={visual.finish} alt={`${label} ท่าสิ้นสุด`} loading="lazy" style={imageStyle} />
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ export function ExerciseVisualPair({ exerciseKey, label }: { exerciseKey: string
 export function RepDbAttribution() {
   return (
     <p style={{ marginTop: 16, fontSize: ".72rem", opacity: .58 }}>
-      Exercise data by <a href="https://repdb.co" target="_blank" rel="noreferrer">RepDB</a>
+      ข้อมูลท่าฝึกจาก <a href="https://repdb.co" target="_blank" rel="noreferrer">RepDB</a>
     </p>
   );
 }

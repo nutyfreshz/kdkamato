@@ -69,8 +69,8 @@ type PreviewData = {
 };
 
 const muscleLabel: Record<string, string> = {
-  CHEST: "Chest", BACK: "Back", QUADS: "Quads", HAMSTRINGS: "Hamstrings", SHOULDERS: "Shoulders",
-  BICEPS: "Biceps", TRICEPS: "Triceps", CALVES: "Calves", CORE: "Core", ROTATOR_CUFF: "Rotator Cuff", LOWER_TRAP: "Lower Trap / Scapular",
+  CHEST: "อก", BACK: "หลัง", QUADS: "ต้นขาด้านหน้า", HAMSTRINGS: "ต้นขาด้านหลัง", SHOULDERS: "หัวไหล่",
+  BICEPS: "ไบเซปส์", TRICEPS: "ไตรเซปส์", CALVES: "น่อง", CORE: "แกนกลางลำตัว", ROTATOR_CUFF: "กล้ามเนื้อรอบหัวไหล่", LOWER_TRAP: "หลังส่วนบน / สะบัก",
 };
 
 const valueLabel: Record<string, string> = {
@@ -149,17 +149,17 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       return <AppShell>
         <div className="topline">การตรวจสอบความถูกต้องของระบบ</div>
         <h1>ตัวอย่าง Program ถูกระงับชั่วคราว</h1>
-        <div className="notice warning">การตรวจสอบระบบคำนวณ Program ไม่ผ่าน ({code}) จึงยังไม่สามารถ Activate ได้</div>
+        <div className="notice warning">ระบบตรวจพบว่าข้อมูลสำหรับสร้าง Program ไม่สอดคล้องกัน จึงยังไม่อนุญาตให้เปิดใช้เวอร์ชันนี้</div>
       </AppShell>;
     }
-    return <AppShell><div className="notice warning">ยังสร้างตัวอย่างไม่ได้: {code !== "UNKNOWN_ERROR" ? code : error?.message ?? code}</div></AppShell>;
+    return <AppShell><div className="notice warning">ยังสร้างตัวอย่างไม่ได้ กรุณาลองใหม่อีกครั้ง</div></AppShell>;
   }
 
   if (!validPreview(data)) {
     return <AppShell>
       <div className="topline">การตรวจสอบความถูกต้องของระบบ</div>
       <h1>ตัวอย่าง Program ถูกระงับชั่วคราว</h1>
-      <div className="notice warning">ข้อมูลระหว่างหน้าเว็บและระบบคำนวณ Program ไม่ตรงกัน ระบบจะไม่ใช้ค่าสำรอง และยังไม่อนุญาตให้ Activate</div>
+      <div className="notice warning">ข้อมูลระหว่างหน้าเว็บและระบบคำนวณ Program ไม่ตรงกัน ระบบจะไม่ใช้ค่าทดแทน และยังไม่อนุญาตให้เปิดใช้ Program</div>
       <div className="cta-row"><Link className="btn primary" href="/program/start">สร้าง Program ใหม่</Link></div>
     </AppShell>;
   }
@@ -172,7 +172,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     return acc;
   }, new Map<number, PreviewItem[]>());
 
-  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, items]) => [day, items[0]?.metadata?.day_label ?? `Day ${day}`]));
+  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, items]) => [day, items[0]?.metadata?.day_label ?? `วันที่ฝึก ${day}`]));
   const energyReady = preview.nutrition_target.maintenance_low != null && preview.nutrition_target.maintenance_high != null;
   const volumeEntries = Object.entries(preview.weekly_volume);
   const snapshot = preview.goal_snapshot;
@@ -182,13 +182,13 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     <div className="topline">ตัวอย่าง Program</div>
     <h1>{preview.family}</h1>
     <p>{valueLabel[snapshot.goal] ?? snapshot.goal} · {valueLabel[snapshot.training_experience] ?? snapshot.training_experience} · {valueLabel[snapshot.equipment_profile] ?? snapshot.equipment_profile} · {preview.focus_label} · {preview.days} วัน · {preview.session_duration_min} นาที</p>
-    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "ข้อมูลหรือระบบคำนวณเปลี่ยนแปลงหลังจากตัวอย่างนี้ กรุณาตรวจสอบตัวอย่างล่าสุดแล้ว Activate ใหม่" : `Activate ไม่สำเร็จ: ${activationError}`}</div>}
+    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "ข้อมูลหรือระบบคำนวณเปลี่ยนหลังจากสร้างตัวอย่างนี้ กรุณาตรวจสอบตัวอย่างล่าสุดแล้วเปิดใช้อีกครั้ง" : "เปิดใช้ Program ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"}</div>}
 
     <div className="grid">
       <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{preview.focus_label}</div></div>
       <div className="card"><div className="kicker">ตารางฝึก</div><div className="metric">{preview.days} วัน</div><p>{preview.session_duration_min} นาทีต่อครั้ง</p></div>
       <div className="card"><div className="kicker">โปรตีน</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
-      <div className="card"><div className="kicker">พลังงาน</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `Maintenance ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "จะแสดงเมื่อข้อมูลที่วัดได้เพียงพอแล้วเท่านั้น"}</p></div>
+      <div className="card"><div className="kicker">พลังงาน</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `พลังงานคงน้ำหนัก ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "จะแสดงเมื่อข้อมูลที่วัดได้เพียงพอแล้วเท่านั้น"}</p></div>
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}>
@@ -201,16 +201,16 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
 
     {Array.from(byDay.entries()).map(([day, items]) => {
       const sorted = [...items].sort((a, b) => a.display_order - b.display_order);
-      const dayLabel = sorted[0]?.metadata?.day_label ?? `Day ${day}`;
+      const dayLabel = sorted[0]?.metadata?.day_label ?? `วันที่ฝึก ${day}`;
       return <section className="card day" key={day}>
-        <div className="kicker">Day {day}</div>
+        <div className="kicker">วันที่ฝึก {day}</div>
         <h2>{dayLabel}</h2>
         {sorted.map((x) => {
           const next = progressionText(x);
           return <div className="exercise" key={`${x.training_day}-${x.display_order}`}>
             <div style={{ minWidth: 0 }}>
               <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
-              <small>{x.metadata?.target_label ?? "ท่าฝึก"}{x.metadata?.focus_boost ? " · FOCUS" : ""}</small>
+              <small>{x.metadata?.target_label ?? "ท่าฝึก"}{x.metadata?.focus_boost ? " · จุดเน้น" : ""}</small>
               {next ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {next}</p> : null}
               {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>ตัวเลือก: {x.metadata.alternative_name}</p> : null}
             </div>
@@ -220,7 +220,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       </section>;
     })}
 
-    {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>การประมาณพลังงาน (Energy Estimate) ยังไม่แสดง เนื่องจากยังขาดข้อมูล: {preview.energy_estimate.missing_inputs.join(", ")}</div> : null}
+    {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>ยังประเมินพลังงานไม่ได้ เพราะข้อมูลที่จำเป็นยังไม่ครบ: {preview.energy_estimate.missing_inputs.join(", ")}</div> : null}
     <div className="cta-row"><ActivateProgramButton fingerprint={preview.program_fingerprint} /></div>
   </AppShell>;
 }
