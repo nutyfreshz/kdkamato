@@ -9,9 +9,9 @@ function SubmitState() {
   return (
     <>
       <button className="btn primary" type="submit" disabled={pending}>
-        {pending ? "Activating..." : "Activate This Program"}
+        {pending ? "กำลัง Activate..." : "Activate Program นี้"}
       </button>
-      {pending && <ProcessingOverlay title="กำลัง Activate Program..." detail="กำลังตรวจ fingerprint และบันทึก Program version กรุณารอสักครู่" />}
+      {pending && <ProcessingOverlay title="กำลัง Activate Program..." detail="กำลังตรวจสอบความถูกต้องและบันทึกเวอร์ชัน Program กรุณารอสักครู่" />}
     </>
   );
 }
