@@ -167,7 +167,7 @@ export function ResultContract({ result, metric, meaning, use, watch, nextHref, 
 }
 
 export function PrivacyStrip({ ruleset, language = 'th' }) {
-  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account · No AI interpretation' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · บันทึกลงเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี · ไม่มีการตีความด้วย AI'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
+  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · บันทึกลงเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
 }
 
 export function MeasurementCheckNote({ language = 'th' }) {
