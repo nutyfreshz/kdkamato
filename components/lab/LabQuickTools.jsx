@@ -87,14 +87,6 @@ export function FFMITool({ language='th' }) {
   </QuickShell>;
 }
 
-function KneeToWallVisual({language}) {
-  return <div className="ankle-test-viz" aria-label={language==='en'?'Knee-to-wall test illustration':'ภาพสาธิต Knee-to-Wall'}>
-    <div className="wall"/><div className="floor"/><div className="foot"/><div className="shin"/><div className="knee"/>
-    <p>{language==='en' ? 'Heel stays down → knee touches wall → move foot back to the farthest repeatable distance' : 'ส้นเท้าติดพื้น → ดันเข่าแตะผนัง → เลื่อนเท้าออกจนได้ระยะไกลที่สุดที่ทำซ้ำได้'}</p>
-    <small>{language==='en'?'SAME LANDMARK BOTH SIDES':'ใช้จุดวัดเดียวกันทั้งสองข้าง'}</small>
-  </div>;
-}
-
 export function KneeToWallTool({ language='th' }) {
   const [l,setL]=useLabMeasurement('kneeWallLeft','9.5');
   const [r,setR]=useLabMeasurement('kneeWallRight','6.5');
@@ -130,7 +122,6 @@ export function KneeToWallTool({ language='th' }) {
     />
     <div className="lab-workbench">
       <div>
-        <KneeToWallVisual language={language}/>
         <InputGrid>
           <Field language={language} label={th?'ซ้าย':'LEFT'} unit="cm" value={l} onChange={v=>{setL(v);trackLabEvent('q3_test_side_completed',{side:'left'})}}/>
           <Field language={language} label={th?'ขวา':'RIGHT'} unit="cm" value={r} onChange={v=>{setR(v);trackLabEvent('q3_test_side_completed',{side:'right'})}}/>
