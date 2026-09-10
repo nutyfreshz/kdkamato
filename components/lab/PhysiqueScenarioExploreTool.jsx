@@ -31,16 +31,16 @@ export function PhysiqueScenarioExploreTool({ language = 'th' }) {
   const target = targetShoulder && targetWaist ? computeVTaper(targetShoulder, targetWaist) : null;
 
   const result = current && target ? {
-    result: th ? `scenario นี้ทำให้สัดส่วนเปลี่ยนจาก ${current.ratio}× → ${target.ratio}×` : `This scenario changes the ratio from ${current.ratio}× → ${target.ratio}×`,
+    result: th ? `สถานการณ์จำลองนี้ทำให้สัดส่วนเปลี่ยนจาก ${current.ratio} เท่า → ${target.ratio} เท่า` : `This scenario changes the ratio from ${current.ratio}× → ${target.ratio}×`,
     metric: `V-Taper ${current.ratio} → ${target.ratio}`,
     meaning: th
-      ? `ฐานปัจจุบันคือไหล่ ${shoulder} cm / เอว ${waist} cm ตัวอย่างที่เลือกจะเป็นไหล่ ${targetShoulder} cm / เอว ${targetWaist} cm`
+      ? `ค่าปัจจุบันคือไหล่ ${shoulder} ซม. / เอว ${waist} ซม. ตัวอย่างที่เลือกจะเป็นไหล่ ${targetShoulder} ซม. / เอว ${targetWaist} ซม.`
       : `Current baseline: shoulder ${shoulder} cm / waist ${waist} cm. Selected scenario: shoulder ${targetShoulder} cm / waist ${targetWaist} cm.`,
     use: th
-      ? 'ใช้เพื่อเข้าใจว่าเลขสัดส่วนตอบสนองต่อการเปลี่ยนช่วงบน เอว หรือทั้งสองทางอย่างไรเท่านั้น ไม่ได้ใช้เลือก Program หรือกำหนดเป้าหมายให้คุณ'
+      ? 'ใช้เพื่อเข้าใจว่าตัวเลขสัดส่วนตอบสนองต่อการเปลี่ยนช่วงบน เอว หรือทั้งสองด้านอย่างไรเท่านั้น ไม่ได้ใช้เลือก Program หรือกำหนดเป้าหมายให้คุณ'
       : 'Use this only to understand how the ratio responds to upper-body, waist, or combined changes. It does not select your Program or prescribe a target.',
     watch: th
-      ? 'รอบไหล่และรอบเอวเปลี่ยนจากหลายปัจจัย และ +3 cm ไหล่ กับ -3 cm เอวไม่ได้มีความยากหรือระยะเวลาเท่ากัน จึงห้ามอ่าน scenario นี้เป็น prescription'
+      ? 'รอบไหล่และรอบเอวเปลี่ยนแปลงจากหลายปัจจัย และการเพิ่มรอบไหล่ 3 ซม. กับการลดรอบเอว 3 ซม. ไม่มีความยากหรือระยะเวลาเท่ากัน จึงไม่ควรตีความสถานการณ์จำลองนี้เป็นคำแนะนำ'
       : 'Shoulder and waist measurements change for many reasons, and +3 cm at the shoulders is not equivalent in difficulty or time to -3 cm at the waist. Do not read this scenario as a prescription.',
     resultCode: 'C3_SCENARIO_RATIO'
   } : null;
@@ -51,27 +51,27 @@ export function PhysiqueScenarioExploreTool({ language = 'th' }) {
       id="C3_PHYSIQUE_GOAL"
       role="EXPLORE"
       technicalName="Physique Scenario Explorer"
-      title={th ? 'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V จะเปลี่ยนแค่ไหน?' : 'If shoulder or waist measurements changed, how would the V-ratio change?'}
-      question={th ? 'นี่เป็น scenario math เพื่อทำความเข้าใจสัดส่วน ไม่ใช่คำแนะนำว่าคุณควรเพิ่มหรือลดกี่เซนติเมตร' : 'This is scenario math for understanding the ratio, not a recommendation for how many centimeters you should gain or lose.'}
+      title={th ? 'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V (V-shape) จะเปลี่ยนไปแค่ไหน?' : 'If shoulder or waist measurements changed, how would the V-ratio change?'}
+      question={th ? 'นี่คือการคำนวณสถานการณ์จำลองเพื่อทำความเข้าใจสัดส่วน ไม่ใช่คำแนะนำว่าควรเพิ่มหรือลดกี่เซนติเมตร' : 'This is scenario math for understanding the ratio, not a recommendation for how many centimeters you should gain or lose.'}
     />
 
     <div className="lab-workbench">
       <div>
         <div className="lab-import-note">
           <b>{th ? 'กรอกครั้งเดียวพอ' : 'MEASURE ONCE'}</b>
-          <span>{th ? 'ถ้าเคยวัด V-Taper แล้ว รอบไหล่และเอวเดิมจะถูกใช้ที่นี่อัตโนมัติ' : 'If you already measured V-Taper, the same shoulder and waist values are reused automatically.'}</span>
+          <span>{th ? 'หากคุณเคยวัดสัดส่วน V (V-Taper) แล้ว ระบบจะใช้ค่ารอบไหล่และรอบเอวเดิมที่นี่โดยอัตโนมัติ' : 'If you already measured V-Taper, the same shoulder and waist values are reused automatically.'}</span>
         </div>
 
         <div className="lab-input-grid">
           <Field language={language} label={th ? 'รอบไหล่' : 'SHOULDER'} unit="cm" value={shoulder} onChange={setShoulder}/>
-          <Field language={language} label={th ? 'รอบเอวที่สะดือ' : 'WAIST @ NAVEL'} unit="cm" value={waist} onChange={setWaist}/>
+          <Field language={language} label={th ? 'รอบเอวระดับสะดือ' : 'WAIST @ NAVEL'} unit="cm" value={waist} onChange={setWaist}/>
         </div>
 
-        <SelectButtons label={th ? 'อยากลองเปลี่ยนด้านไหน' : 'SCENARIO'} value={route} onChange={setRoute} options={[["upper", th ? "ช่วงบน" : "UPPER BODY"], ["waist", th ? "เอว" : "WAIST"], ["both", th ? "ทั้งสอง" : "BOTH"]]}/>
+        <SelectButtons label={th ? 'ต้องการลองเปลี่ยนด้านไหน' : 'SCENARIO'} value={route} onChange={setRoute} options={[["upper", th ? "ช่วงบน" : "UPPER BODY"], ["waist", th ? "เอว" : "WAIST"], ["both", th ? "ทั้งสองด้าน" : "BOTH"]]}/>
 
         <div className="scenario-editor">
-          {(route === 'upper' || route === 'both') && <label>{th ? 'ลองเพิ่มรอบไหล่' : 'ADD TO SHOULDER'} <input type="number" min="0" step="0.5" value={shoulderDelta} onChange={e => setShoulderDelta(e.target.value)}/><span>cm</span></label>}
-          {(route === 'waist' || route === 'both') && <label>{th ? 'ลองลดรอบเอว' : 'REDUCE WAIST'} <input type="number" min="0" step="0.5" value={waistDelta} onChange={e => setWaistDelta(e.target.value)}/><span>cm</span></label>}
+          {(route === 'upper' || route === 'both') && <label>{th ? 'ลองเพิ่มรอบไหล่' : 'ADD TO SHOULDER'} <input type="number" min="0" step="0.5" value={shoulderDelta} onChange={e => setShoulderDelta(e.target.value)}/><span>{th ? 'ซม.' : 'cm'}</span></label>}
+          {(route === 'waist' || route === 'both') && <label>{th ? 'ลองลดรอบเอว' : 'REDUCE WAIST'} <input type="number" min="0" step="0.5" value={waistDelta} onChange={e => setWaistDelta(e.target.value)}/><span>{th ? 'ซม.' : 'cm'}</span></label>}
         </div>
 
         <MeasurementCheckNote language={language}/>
