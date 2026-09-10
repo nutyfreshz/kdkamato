@@ -34,18 +34,18 @@ function buildTrialPlan(ft, ankle, variant, language) {
 
   const step1 = clearlyLonger
     ? (th
-      ? `${name}: คงส้นราบ แล้วเทียบ stance กลาง ↔ stance กว้าง`
+      ? `${name}: คงส้นเท้าราบ แล้วเปรียบเทียบท่ากว้างปานกลางกับท่ากว้าง`
       : `${name}: keep the heel flat and compare medium ↔ wide stance`)
     : (th
-      ? `${name}: คง stance กลาง แล้วเทียบส้นราบ ↔ ยกส้นเล็กน้อย`
+      ? `${name}: คงท่ายืนกว้างปานกลาง แล้วเปรียบเทียบส้นเท้าราบกับการยกส้นเล็กน้อย`
       : `${name}: keep a medium stance and compare flat heel ↔ small heel lift`);
 
   const step2 = clearlyLonger
     ? (th
-      ? 'เลือก stance ที่ควบคุมได้ดีกว่า แล้วคง stance นั้นไว้เพื่อเทียบส้นราบกับยกส้นเล็กน้อย'
+      ? 'เลือกท่าที่ยืนได้มั่นคงกว่า แล้วคงท่านั้นเพื่อเปรียบเทียบส้นเท้าราบกับการยกส้นเล็กน้อย'
       : 'Keep the stance you control better, then compare flat heel ↔ small heel lift')
     : (th
-      ? 'ถ้ายัง balance หรือ depth ไม่ลงตัว ให้คง heel ที่ดีกว่า แล้วเทียบ stance กลาง ↔ stance กว้าง'
+      ? 'หากสมดุลหรือความลึกยังไม่ลงตัว ให้คงการยกส้นแบบที่ดีกว่า แล้วเปรียบเทียบท่ายืนกว้างปานกลางกับท่ายืนกว้าง'
       : 'If balance or depth still feels limited, keep the better heel setup and compare medium ↔ wide stance');
 
   const rationale = clearlyLonger
@@ -58,13 +58,13 @@ function buildTrialPlan(ft, ankle, variant, language) {
 
   const ankleText = ankle
     ? (th
-      ? `Knee-to-Wall ที่วัดไว้: ซ้าย ${ankle.left} cm / ขวา ${ankle.right} cm`
+      ? `Knee-to-Wall ที่วัดไว้: ซ้าย ${ankle.left} ซม. / ขวา ${ankle.right} ซม.`
       : `Saved Knee-to-Wall: L ${ankle.left} cm / R ${ankle.right} cm`)
     : null;
 
   const asymmetryNote = ankle && ankle.difference >= 1.5
     ? (th
-      ? `ซ้าย-ขวาต่างกัน ${ankle.difference} cm — ควรวัดซ้ำด้วยวิธีเดิมก่อนใช้ความต่างนี้ตัดสิน setup`
+      ? `ซ้ายและขวาต่างกัน ${ankle.difference} ซม. ควรวัดซ้ำด้วยวิธีเดิมก่อนใช้ความแตกต่างนี้ตัดสินเลือก setup`
       : `Left-right difference is ${ankle.difference} cm — repeat the same measurement before using the asymmetry to guide setup.`)
     : null;
 
@@ -84,19 +84,19 @@ export function SquatSetupTrialTool({ language = 'th' }) {
   const plan = useMemo(() => buildTrialPlan(ft, ankle, variant, language), [ft?.ratio, ft?.percent, ankle?.left, ankle?.right, ankle?.difference, variant, language]);
 
   const result = ft && plan ? {
-    result: th ? `เริ่มจาก 2 comparison นี้ก่อนสำหรับ ${plan.name}` : `Start with these two comparisons for ${plan.name}`,
-    metric: `Femur:Tibia ${ft.ratio}${ankle ? ` · KTW ${ankle.left}/${ankle.right} cm` : ''}`,
+    result: th ? `เริ่มจากการเปรียบเทียบ 2 แบบนี้ก่อนสำหรับ ${plan.name}` : `Start with these two comparisons for ${plan.name}`,
+    metric: `Femur:Tibia ${ft.ratio}${ankle ? ` · KTW ${ankle.left}/${ankle.right} ${th ? 'ซม.' : 'cm'}` : ''}`,
     meaning: th
       ? `1) ${plan.step1}  2) ${plan.step2}`
       : `1) ${plan.step1}.  2) ${plan.step2}.`,
     use: th
-      ? `${plan.rationale} ใช้น้ำหนักและความลึกใกล้เคียงกัน เปลี่ยนทีละอย่าง แล้วเลือก setup ที่คุณทรงตัวและควบคุมได้ดีกว่า`
+      ? `${plan.rationale} ให้ทดสอบด้วยน้ำหนักเบาหรือคงน้ำหนักเดิม ใช้ความลึกใกล้เคียงกัน และเปลี่ยนทีละ 1 ตัวแปร แล้วเลือก setup ที่สมดุลและควบคุมได้ดีกว่า`
       : `${plan.rationale} Test with a light or fixed load, keep depth similar, change one variable at a time, and keep the setup you can balance and control better.`,
     watch: th
-      ? `C2 ไม่ใช้สัดส่วนร่างกายฟันธงว่า Front / High-Bar / Low-Bar แบบไหนดีที่สุด — คุณเลือก variant ที่ต้องการทดสอบ แล้วใช้ C2 จัดลำดับ setup ภายใน variant นั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
+      ? `C2 ไม่ใช้สัดส่วนร่างกายเพื่อฟันธงว่า Front / High-Bar / Low-Bar แบบไหนดีที่สุด แต่ให้คุณเลือกท่าที่ต้องการทดสอบ แล้วใช้ C2 จัดลำดับ setup ภายในท่านั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
       : `C2 does not use body proportions to declare Front / High-Bar / Low-Bar best. Choose the variant you actually want to test; C2 prioritizes setup comparisons inside it.${plan.asymmetryNote ? ` ${plan.asymmetryNote}` : ''}`,
     nextHref: ankle ? undefined : '/lab/knee-to-wall',
-    nextLabel: ankle ? undefined : (th ? 'วัด Knee-to-Wall เพิ่ม (ไม่บังคับ)' : 'ADD KNEE-TO-WALL (OPTIONAL)'),
+    nextLabel: ankle ? undefined : (th ? 'วัด Knee-to-Wall เพิ่มเติม (ไม่บังคับ)' : 'ADD KNEE-TO-WALL (OPTIONAL)'),
     resultCode: 'C2_SCENARIO_COMPARE'
   } : null;
 
@@ -108,7 +108,7 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       technicalName="Squat Setup Trial"
       title={th ? 'Squat setup แบบไหนควรลองก่อน?' : 'Which Squat setup should you test first?'}
       question={th
-        ? 'เลือก Squat ที่คุณใช้อยู่ แล้วลอง 2 setup ตามลำดับ โดยเปลี่ยนทีละอย่างเพื่อดูว่าแบบไหนควบคุมได้ดีกว่า'
+        ? 'เลือกท่า Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับการเปรียบเทียบ 2 แบบที่ควรลองก่อนจากสัดส่วนช่วงขา โดยเปลี่ยนทีละอย่าง'
         : 'Choose the Squat variant you actually use. The system prioritizes two setup comparisons from your leg proportions, changing one thing at a time.'}
     />
 
@@ -116,7 +116,7 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       <div>
         <div className="lab-import-note">
           <b>{th ? 'กรอกครั้งเดียวพอ' : 'MEASURE ONCE'}</b>
-          <span>{th ? 'ถ้าเคยวัด Femur:Tibia หรือ Knee-to-Wall แล้ว ค่าเดิมจะถูกใช้ที่นี่อัตโนมัติ' : 'Existing Femur:Tibia and Knee-to-Wall measurements are reused automatically.'}</span>
+          <span>{th ? 'หากคุณเคยวัดสัดส่วน Femur:Tibia หรือ Knee-to-Wall แล้ว ระบบจะใช้ค่าเดิมที่นี่โดยอัตโนมัติ' : 'Existing Femur:Tibia and Knee-to-Wall measurements are reused automatically.'}</span>
         </div>
 
         <div className="lab-input-grid">
@@ -125,14 +125,14 @@ export function SquatSetupTrialTool({ language = 'th' }) {
         </div>
 
         <SelectButtons
-          label={th ? 'Squat ที่คุณจะทดสอบ' : 'SQUAT TO TEST'}
+          label={th ? 'ท่า Squat ที่คุณจะทดสอบ' : 'SQUAT TO TEST'}
           value={variant}
           onChange={setVariant}
           options={[["front", "FRONT"], ["highbar", "HIGH-BAR"], ["lowbar", "LOW-BAR"]]}
         />
 
         {plan && <div className="lab-import-note" style={{ marginTop: 16 }}>
-          <b>{th ? 'ลองตามลำดับนี้' : 'TEST ORDER'}</b>
+          <b>{th ? 'ลำดับการทดลอง' : 'TEST ORDER'}</b>
           <span>1. {plan.step1}<br/>2. {plan.step2}</span>
         </div>}
 
