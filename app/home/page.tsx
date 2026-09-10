@@ -25,11 +25,11 @@ function focusFromProfile(p: unknown) {
 }
 
 export default async function HomePage() {
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">Supabase env ยังไม่ถูก inject.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบยังเชื่อมต่อไม่สมบูรณ์ กรุณาลองใหม่ภายหลัง</div></AppShell>;
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getClaims();
   const userId = auth?.claims?.sub as string | undefined;
-  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน.</div></AppShell>;
+  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน</div></AppShell>;
 
   const [{ data: baseline }, { data: training }, { data: access }, { data: activeProgram }] = await Promise.all([
     supabase.from("user_baseline").select("goal,training_experience,training_days_per_week,equipment_profile,weight_kg").eq("user_id", userId).maybeSingle(),
@@ -40,8 +40,8 @@ export default async function HomePage() {
 
   const tier = access?.tier ?? "FREE";
   if (!baseline) return <AppShell>
-    <div className="topline">{tier} Foundation</div><h1>เริ่มจากข้อมูลที่เปลี่ยน Program จริง</h1>
-    <div className="card"><h2>ยังไม่มี Foundation inputs</h2><p>เลือก Goal, Focus, Training Days, Experience, Equipment และ Session Time ก่อน.</p><Link className="btn primary" href="/program/start">Start My Program</Link></div>
+    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>เริ่มจากข้อมูลที่นำไปใช้สร้าง Program จริง</h1>
+    <div className="card"><h2>ยังไม่มีข้อมูลพื้นฐาน (Foundation)</h2><p>เลือกเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้งก่อน</p><Link className="btn primary" href="/program/start">เริ่มโปรแกรมของฉัน</Link></div>
   </AppShell>;
 
   const snapshot = (activeProgram?.goal_snapshot ?? {}) as GoalSnapshot;
@@ -55,20 +55,20 @@ export default async function HomePage() {
   );
 
   return <AppShell>
-    <div className="topline">{tier} Foundation</div><h1>{activeProgram ? "Active Program พร้อมใช้งาน" : "Foundation พร้อมสร้าง Program"}</h1>
+    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>{activeProgram ? "Active Program พร้อมใช้งาน" : "ข้อมูลพื้นฐานพร้อมสำหรับสร้าง Program"}</h1>
     <div className="grid">
-      <div className="card"><div className="kicker">Goal</div><div className="metric">{String(baseline.goal)}</div></div>
-      <div className="card"><div className="kicker">Focus</div><div className="metric cyan">{focusFromProfile(training?.priority_muscles) || "–"}</div></div>
-      <div className="card"><div className="kicker">Training</div><div className="metric">{String(baseline.training_days_per_week)} d/wk</div><p>{training?.session_duration_min ?? "–"} min/session</p></div>
-      <div className="card"><div className="kicker">Program</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "Preview"}</div><p>{activeProgram ? snapshot.program_family ?? "Active" : "Not activated yet"}</p></div>
+      <div className="card"><div className="kicker">เป้าหมาย</div><div className="metric">{String(baseline.goal)}</div></div>
+      <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{focusFromProfile(training?.priority_muscles) || "–"}</div></div>
+      <div className="card"><div className="kicker">การฝึก</div><div className="metric">{String(baseline.training_days_per_week)} d/wk</div><p>{training?.session_duration_min ?? "–"} min/session</p></div>
+      <div className="card"><div className="kicker">โปรแกรม</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "ดูตัวอย่าง"}</div><p>{activeProgram ? snapshot.program_family ?? "Active" : "ยังไม่ได้เปิดใช้งาน"}</p></div>
     </div>
-    {pending && <div className="notice warning" style={{marginTop:18}}>Foundation inputs เปลี่ยนจาก Active Program. Program เดิมยังคง active จนกว่าจะ Activate version ใหม่.</div>}
+    {pending && <div className="notice warning" style={{marginTop:18}}>ข้อมูลพื้นฐานเปลี่ยนจาก Active Program โปรแกรมเดิมจะยังคงใช้งานอยู่ จนกว่าคุณจะ Activate เวอร์ชันใหม่</div>}
     <div className="cta-row">
-      {activeProgram ? <Link className="btn primary" href="/program">Open Active Program</Link> : <Link className="btn primary" href="/program/preview">Open Preview</Link>}
-      {pending && <Link className="btn" href="/program/preview">Preview New Version</Link>}
+      {activeProgram ? <Link className="btn primary" href="/program">เปิด Active Program</Link> : <Link className="btn primary" href="/program/preview">เปิดตัวอย่างโปรแกรม</Link>}
+      {pending && <Link className="btn" href="/program/preview">ตัวอย่างเวอร์ชันใหม่</Link>}
       {tier === "PRO" && <Link className="btn" href="/physical-consult">Physical Consult</Link>}
-      <Link className="btn" href="/progress">Progress</Link>
-      <Link className="btn" href="/program/start">Update Inputs</Link>
+      <Link className="btn" href="/progress">ความคืบหน้า</Link>
+      <Link className="btn" href="/program/start">อัปเดตข้อมูลพื้นฐาน</Link>
     </div>
   </AppShell>;
 }
