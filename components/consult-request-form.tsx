@@ -35,17 +35,17 @@ export function ConsultRequestForm() {
   }
 
   return <div className="card form">
-    <div className="kicker">Optional Online Consult</div>
-    <h2>ขอ Professional Review เพิ่มเติม</h2>
-    <p>PRO ใช้ Online Consult ได้สูงสุด 2 ครั้งต่อเดือน การส่งคำขอยังไม่ตัดสิทธิ์ จนกว่าจะมีการใช้ meeting จริง.</p>
+    <div className="kicker">การปรึกษาออนไลน์เพิ่มเติม</div>
+    <h2>ขอให้ PRO ช่วยทบทวนเพิ่มเติม</h2>
+    <p>PRO ใช้การปรึกษาออนไลน์ได้สูงสุด 2 ครั้งต่อเดือน การส่งคำขอยังไม่ตัดสิทธิ์จนกว่าจะมีการใช้การปรึกษาจริง</p>
     <label>อยากให้ช่วยดูเรื่องอะไร? (ไม่บังคับ)
-      <input value={reason} maxLength={500} onChange={(e) => setReason(e.target.value)} placeholder="เช่น Training, Nutrition, Exercise Fit หรือคำถามอื่น" />
+      <input value={reason} maxLength={500} onChange={(e) => setReason(e.target.value)} placeholder="เช่น การฝึก โภชนาการ Exercise Fit หรือคำถามอื่น" />
     </label>
     <button className="btn primary" type="button" onClick={submit} disabled={busy || sent}>
-      {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ขอ Consult"}
+      {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ส่งคำขอปรึกษา"}
     </button>
-    {sent && <div className="notice">รับคำขอแล้ว ระบบสร้าง Professional Review item ให้เรียบร้อย.</div>}
+    {sent && <div className="notice">รับคำขอแล้ว ระบบส่งเรื่องเข้าสู่การทบทวนโดย PRO เรียบร้อย</div>}
     {error && <div className="notice warning">{error}</div>}
-    {busy && <ProcessingOverlay title="กำลังส่ง Consult Request..." detail="กำลังสร้าง Professional Review request โดยยังไม่ตัดสิทธิ์ meeting" />}
+    {busy && <ProcessingOverlay title="กำลังส่งคำขอปรึกษา..." detail="กำลังสร้างคำขอเพื่อให้ PRO ทบทวน โดยยังไม่ตัดสิทธิ์การปรึกษา" />}
   </div>;
 }

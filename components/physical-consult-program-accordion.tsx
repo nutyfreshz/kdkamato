@@ -51,8 +51,8 @@ export function PhysicalConsultProgramAccordion({
 
   return <>
     {days.map(([day, dayItems]) => <section className="card day" key={day} style={{ marginTop: 18 }}>
-      <div className="kicker">DAY {day}</div>
-      <h2>{dayItems[0]?.metadata?.day_label ?? `Day ${day}`}</h2>
+      <div className="kicker">วันที่ฝึก {day}</div>
+      <h2>{dayItems[0]?.metadata?.day_label ?? `วันที่ฝึก ${day}`}</h2>
       <p style={{ marginTop: -4, opacity: .72, fontSize: ".86rem" }}>แตะท่าที่กำลังทดสอบ · เปิดได้ทีละ 1 ท่า</p>
 
       {dayItems.map((item) => {
@@ -82,7 +82,7 @@ export function PhysicalConsultProgramAccordion({
           >
             <span style={{ minWidth: 0 }}>
               <strong style={{ display: "block" }}>{label}</strong>
-              <small>{item.metadata?.target_label ?? "Training movement"}</small>
+              <small>{item.metadata?.target_label ?? "ท่าฝึก"}</small>
             </span>
             <span style={{ flexShrink: 0, textAlign: "right" }}>
               {done && <small style={{ display: "block", marginBottom: 2 }}>บันทึกวันนี้แล้ว</small>}

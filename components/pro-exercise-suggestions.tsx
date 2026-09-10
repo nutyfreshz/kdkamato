@@ -27,11 +27,11 @@ export type ProExerciseSuggestionPayload = {
 
 function slotLabel(slot?: string) {
   const labels: Record<string, string> = {
-    CHEST_FLAT: "Horizontal Press",
-    HIP_HINGE: "Hip Hinge",
-    QUAD_COMPOUND: "Quad Compound",
+    CHEST_FLAT: "อก / ท่าดันแนวนอน",
+    HIP_HINGE: "ท่าพับสะโพก",
+    QUAD_COMPOUND: "ท่าหลักสำหรับต้นขาด้านหน้า",
   };
-  return labels[slot ?? ""] ?? slot ?? "Movement";
+  return labels[slot ?? ""] ?? slot ?? "กลุ่มท่าฝึก";
 }
 
 function names(items?: ExerciseRef[]) {
@@ -43,7 +43,7 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
 
   if (!suggestions.length) {
     return <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">PRO · Lab-informed Exercise Selection</div>
+      <div className="kicker">PRO · คำแนะนำท่าจาก LAB</div>
       <h2>ยังไม่มีคำแนะนำท่าฝึกจาก LAB</h2>
       <p>เมื่อบันทึก LAB ที่เกี่ยวข้อง ระบบจะช่วยจัดลำดับว่าท่าไหนควรลองก่อน โดยยังไม่เปลี่ยน Program ทันที</p>
       <div className="cta-row"><Link className="btn" href="/lab">เปิด KDKAMATO LAB</Link></div>
@@ -51,7 +51,7 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
   }
 
   return <section className="card" style={{ marginTop: 18 }}>
-    <div className="kicker">PRO · Lab-informed Exercise Selection</div>
+    <div className="kicker">PRO · คำแนะนำท่าจาก LAB</div>
     <h2>คำแนะนำท่าฝึก</h2>
     <p>LAB ช่วยเลือกว่าควรลองท่าไหนก่อน แต่เมื่อคุณลองจริงแล้ว Exercise Memory จะให้ความสำคัญกับผลการฝึกของคุณมากกว่า</p>
     {suggestions.map((s) => {
@@ -61,8 +61,8 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
       return <div className="exercise" key={s.movement_slot ?? top?.exercise_key}>
         <div style={{ minWidth: 0 }}>
           <strong>{slotLabel(s.movement_slot)}</strong><br/>
-          <small>{current ? `ปัจจุบัน: ${current}` : "ยังไม่มีท่านี้ใน Active Program"}</small>
-          {alternatives ? <p style={{ margin: "5px 0 0", fontSize: ".78rem", opacity: .72 }}>ทางเลือก: {alternatives}</p> : null}
+          <small>{current ? `ปัจจุบัน: ${current}` : "ยังไม่มีท่านี้ใน Program ปัจจุบัน"}</small>
+          {alternatives ? <p style={{ margin: "5px 0 0", fontSize: ".78rem", opacity: .72 }}>ตัวเลือก: {alternatives}</p> : null}
         </div>
         <div style={{ textAlign: "right" }}>
           <strong>{top?.display_name ?? top?.exercise_key ?? "–"}</strong><br/>
@@ -70,6 +70,6 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
         </div>
       </div>;
     })}
-    <div className="notice" style={{ marginTop: 12 }}>คำแนะนำนี้ยังไม่เปลี่ยน Program โดยอัตโนมัติ และจะถูกนำไปใช้ประกอบการทบทวนครั้งถัดไป</div>
+    <div className="notice" style={{ marginTop: 12 }}>คำแนะนำนี้ยังไม่เปลี่ยน Program โดยอัตโนมัติ และจะใช้เป็นข้อมูลประกอบในการทบทวนครั้งถัดไป</div>
   </section>;
 }

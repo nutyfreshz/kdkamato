@@ -32,7 +32,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       setSaved(true);
       setPassword("");
       setConfirm("");
-      setMessage("พร้อมใช้งานแล้ว · เปิด Physical Consult Login บนเครื่อง Trainer แล้วใช้อีเมลกับรหัสผ่านนี้");
+      setMessage("พร้อมใช้งานแล้ว · เปิดหน้าเข้าสู่ระบบ Physical Consult บนเครื่อง Trainer แล้วใช้อีเมลกับรหัสผ่านนี้");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "ตั้งรหัสไม่สำเร็จ");
     } finally {
@@ -41,7 +41,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
   }
 
   return <div className="card" style={{ marginTop: 18 }}>
-    <div className="kicker">Physical Consult Access</div>
+    <div className="kicker">การเข้าถึง Physical Consult</div>
     <h2>ให้ Trainer ใช้ Physical Consult โดยไม่ต้องเปิด Gmail ของคุณบนเครื่อง Trainer</h2>
     <p>ใช้อีเมลเดิมของบัญชี <b>{email}</b> แล้วตั้งรหัสผ่านสำหรับ Physical Consult วิธีนี้ใช้บัญชีเดิมและไม่สร้างผู้ใช้ใหม่</p>
     <div className="form" style={{ maxWidth: 520 }}>
@@ -58,10 +58,10 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       {message && <div className="notice warning">{message}</div>}
     </div>
     <div className="cta-row" style={{ marginTop: 14 }}>
-      <Link className="btn" href="/login?physical=1">ดู Physical Consult Login</Link>
-      <Link className="btn" href="/physical-consult">เปิด Physical Consult Session บนอุปกรณ์นี้</Link>
+      <Link className="btn" href="/login?physical=1">ดูหน้าเข้าสู่ระบบ Physical Consult</Link>
+      <Link className="btn" href="/physical-consult">เปิด Physical Consult บนอุปกรณ์นี้</Link>
     </div>
-    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้อีเมลกับรหัสผ่าน Physical Consult เมื่อจบ session ระบบมีปุ่มออกจากระบบเฉพาะเครื่อง Trainer</small></p>
+    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้อีเมลกับรหัสผ่าน Physical Consult เมื่อจบเซสชัน ระบบมีปุ่มออกจากระบบเฉพาะเครื่อง Trainer</small></p>
     {busy && <ProcessingOverlay title="กำลังตั้งค่าการเข้าถึง Physical Consult…" detail="กำลังเพิ่มหรือเปลี่ยนการเข้าสู่ระบบด้วยอีเมลและรหัสผ่านให้บัญชีเดิม" />}
   </div>;
 }

@@ -2,20 +2,20 @@ import Link from "next/link";
 import styles from "./program-app.module.css";
 
 const desktopNav = [
-  ["Home", "/home"],
+  ["หน้าแรก", "/home"],
   ["Program", "/program"],
-  ["Lab", "/lab"],
-  ["Progress", "/progress"],
-  ["Consult", "/consult"],
-  ["Account", "/account"],
+  ["LAB", "/lab"],
+  ["ความคืบหน้า", "/progress"],
+  ["PRO Review", "/consult"],
+  ["บัญชี", "/account"],
 ] as const;
 
 const bottomNav = [
-  ["Home", "/home"],
+  ["หน้าแรก", "/home"],
   ["Program", "/program"],
-  ["Lab", "/lab"],
-  ["Progress", "/progress"],
-  ["Account", "/account"],
+  ["LAB", "/lab"],
+  ["ความคืบหน้า", "/progress"],
+  ["บัญชี", "/account"],
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {

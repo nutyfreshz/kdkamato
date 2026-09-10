@@ -25,21 +25,21 @@ function bangkokDate() {
 }
 
 export default async function PhysicalConsultProgramPage() {
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลยังไม่พร้อม.</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
-  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน.</div></AppShell>;
+  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน</div></AppShell>;
 
   const [{ data: access }, { data: program }] = await Promise.all([
     supabase.from("user_access").select("tier").eq("user_id", userId).maybeSingle(),
     supabase.from("programs").select("program_id,program_version").eq("user_id", userId).eq("status", "ACTIVE").maybeSingle(),
   ]);
-  if (access?.tier !== "PRO") return <AppShell><div className="notice warning">Physical Consult Exercise Memory ใช้กับ PRO account.</div></AppShell>;
+  if (access?.tier !== "PRO") return <AppShell><div className="notice warning">Physical Consult และ Exercise Memory ใช้ได้กับบัญชี PRO</div></AppShell>;
   if (!program) return <AppShell>
-    <div className="topline">Physical Consult · Active Program</div>
-    <h1>ยังไม่มี Active Program</h1>
-    <div className="cta-row"><Link className="btn" href="/physical-consult">กลับ Physical Consult</Link><Link className="btn primary" href="/program/start">สร้าง Program</Link></div>
+    <div className="topline">Physical Consult · Program ปัจจุบัน</div>
+    <h1>ยังไม่มี Program ปัจจุบัน</h1>
+    <div className="cta-row"><Link className="btn" href="/physical-consult">กลับสู่ Physical Consult</Link><Link className="btn primary" href="/program/start">สร้าง Program</Link></div>
   </AppShell>;
 
   const today = bangkokDate();
@@ -63,8 +63,8 @@ export default async function PhysicalConsultProgramPage() {
     <PhysicalConsultProgramAccordion items={items} feedback={feedback} />
 
     <div className="cta-row" style={{ marginTop: 18 }}>
-      <Link className="btn primary" href="/physical-consult">กลับ Physical Consult Session</Link>
-      <Link className="btn" href="/program">ดู Program เต็ม</Link>
+      <Link className="btn primary" href="/physical-consult">กลับสู่ Physical Consult</Link>
+      <Link className="btn" href="/program">ดู Program แบบเต็ม</Link>
     </div>
   </AppShell>;
 }

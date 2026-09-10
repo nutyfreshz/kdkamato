@@ -66,20 +66,20 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
   }
 
   return <div className="card form">
-    <h2>Quick Check · ประมาณ 30 วินาที</h2>
-    <p>{hasActiveProgram ? "ข้อมูลวันนี้จะถูกผูกกับ Active Program ให้อัตโนมัติ" : "ยังไม่มี Active Program — บันทึกน้ำหนักได้ แต่ training response จะยังไม่ผูกกับ Program"}</p>
+    <h2>เช็กอินสั้น ๆ · ประมาณ 30 วินาที</h2>
+    <p>{hasActiveProgram ? "ข้อมูลวันนี้จะผูกกับ Program ปัจจุบันโดยอัตโนมัติ" : "ยังไม่มี Program ปัจจุบัน — บันทึกน้ำหนักได้ แต่ผลการฝึกจะยังไม่เชื่อมกับ Program"}</p>
     <div className="form-grid">
       <label>น้ำหนักวันนี้ (ไม่บังคับ)<input inputMode="decimal" value={form.weight} onChange={(e)=>setForm({...form,weight:e.target.value})} placeholder="kg" /></label>
-      <label>Training<select value={form.trainingStatus} onChange={(e)=>setForm({...form,trainingStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="BETTER">ดีขึ้น</option><option value="SAME">ใกล้เคียงเดิม</option><option value="WORSE">แย่ลง</option></select></label>
-      <label>Recovery<select value={form.recoveryStatus} onChange={(e)=>setForm({...form,recoveryStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="GOOD">ดี</option><option value="OK">พอใช้</option><option value="POOR">ยังฟื้นไม่ดี</option></select></label>
-      <label>Adherence<select value={form.adherenceStatus} onChange={(e)=>setForm({...form,adherenceStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ทำได้เกือบครบ</option><option value="MEDIUM">ทำได้บางส่วน</option><option value="LOW">ทำได้น้อย</option></select></label>
+      <label>ผลการฝึก<select value={form.trainingStatus} onChange={(e)=>setForm({...form,trainingStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="BETTER">ดีขึ้น</option><option value="SAME">ใกล้เคียงเดิม</option><option value="WORSE">แย่ลง</option></select></label>
+      <label>การฟื้นตัว<select value={form.recoveryStatus} onChange={(e)=>setForm({...form,recoveryStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="GOOD">ดี</option><option value="OK">พอใช้</option><option value="POOR">ยังฟื้นไม่ดี</option></select></label>
+      <label>ความสม่ำเสมอ<select value={form.adherenceStatus} onChange={(e)=>setForm({...form,adherenceStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ทำได้เกือบครบ</option><option value="MEDIUM">ทำได้บางส่วน</option><option value="LOW">ทำได้น้อย</option></select></label>
     </div>
     <label className="check"><input type="checkbox" checked={form.trainingCompleted} onChange={(e)=>setForm({...form,trainingCompleted:e.target.checked})}/> วันนี้ฝึกแล้ว</label>
-    <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มี issue ใหม่</label>
-    <label>Note (ไม่บังคับ)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
-    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก..." : "บันทึก Check-in"}</button>
-    {busy && <ProcessingOverlay title="กำลังบันทึก Progress..." detail="กำลังผูก Check-in กับ Program version ที่ใช้งานอยู่" />}
-    {saved && <div className="notice">บันทึกแล้ว หากกด Save ซ้ำในวันเดียวกัน ระบบจะอัปเดต Check-in เดิม.</div>}
+    <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มีปัญหาใหม่</label>
+    <label>หมายเหตุ (ไม่บังคับ)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
+    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก..." : "บันทึกการเช็กอิน"}</button>
+    {busy && <ProcessingOverlay title="กำลังบันทึกความคืบหน้า..." detail="กำลังผูกการเช็กอินกับ Program เวอร์ชันที่ใช้งานอยู่" />}
+    {saved && <div className="notice">บันทึกแล้ว หากบันทึกซ้ำในวันเดียวกัน ระบบจะอัปเดตการเช็กอินเดิม</div>}
     {error && <div className="notice warning">{error}</div>}
   </div>;
 }
