@@ -1,7 +1,7 @@
 # Physical Consult Mobile UX Pass
 
 Date: 2026-09-09
-Status: PRODUCTION READY
+Status: PRODUCTION ACCEPTED
 
 ## Problem
 
@@ -18,6 +18,7 @@ The focused feedback page now uses a one-exercise-at-a-time accordion.
 - Rows with feedback already recorded for the current day show `บันทึกวันนี้แล้ว`.
 - The page shows `บันทึกวันนี้แล้ว X/Y ท่า` at the top.
 - Copy clarifies that the Trainer does not need to fill every exercise.
+- After Save, the recorded-today counter and exercise status refresh immediately.
 
 ## Scope
 
@@ -32,12 +33,12 @@ Unchanged:
 - Program writeback and C1 Squat auto-refresh
 - authentication and tier rules
 
-Backend stress tests were therefore intentionally not rerun.
+Backend stress tests were therefore intentionally not rerun for the UI-only fixes.
 
-## Validation
+## Build Validation
 
-Commit: `069147db265cc485d1df22817d3089b90269b3dc`
-Deployment: `dpl_2CSLLYvNzxBbJJRjRPWBu8TaZLuM`
+Initial mobile UX commit: `069147db265cc485d1df22817d3089b90269b3dc`
+Initial deployment: `dpl_2CSLLYvNzxBbJJRjRPWBu8TaZLuM`
 
 - Next.js compile: PASS
 - TypeScript: PASS
@@ -48,6 +49,34 @@ Deployment: `dpl_2CSLLYvNzxBbJJRjRPWBu8TaZLuM`
 - `kdkamato.vercel.app` alias present: PASS
 - aliasError: null
 
+## Authenticated Production E2E Acceptance
+
+Date: 2026-09-10
+Dedicated QA account only.
+
+Final UX fix commit: `c7db831804c076830658c5ba90327ed9c193b2da`
+Production deployment: `dpl_3knbXaozjEcadFVzYxuzrtnc9mHr`
+
+Authenticated browser flow:
+
+`/login?physical=1` → `/physical-consult` → C1/C2 → off-program LAB candidate trial → Exercise Memory → `/physical-consult/program` Active Program feedback → local-device sign out
+
+Acceptance results:
+- Physical Consult E2E: PASS
+- Dedicated QA login: PASS
+- C1/C2 navigation: PASS
+- off-program LAB candidate trial: PASS; DB Bench saved successfully
+- Exercise Memory update: PASS; DB Bench reached `CONFIRMED_GOOD_FIT`
+- Active Program feedback: PASS; Hack Squat response persisted and Exercise Memory updated
+- local-device sign out: PASS; returned to `/login`
+- Program mutation boundary: PASS; exactly one Active Program remained at v1
+- post-save `บันทึกวันนี้แล้ว` counter/status refresh: PASS
+- deployment state: READY
+- production alias: `kdkamato.vercel.app`
+- aliasError: null
+
+Dedicated QA account is intentionally retained for continuing regression QA. Its data is test-only.
+
 ## Remaining validation
 
-The accordion interaction itself still needs one authenticated browser click-through to confirm final mobile ergonomics. This deployment does not change the previously accepted Physical Consult backend behavior.
+None for the current Physical Consult v0.9 acceptance scope. Reopen E2E validation only when auth/session flow, Physical Consult RPC behavior, evidence semantics, candidate eligibility, or Program writeback policy changes.
