@@ -70,11 +70,11 @@ export function ExerciseFeedbackForm({
 
   return (
     <div className="form" style={{ marginTop: 12 }}>
-      <div className="kicker">PRO Exercise Memory</div>
-      <h3 style={{ margin: "4px 0 8px" }}>Feedback สั้น ๆ · {label}</h3>
-      <p style={{ marginTop: 0 }}>ไม่ต้องกรอกทุกท่าหรือทุกสัปดาห์ ใส่เมื่อมีสิ่งที่สังเกตได้จริง เช่น performance เปลี่ยน, ท่ารู้สึกไม่เข้ากับคุณ หรือกำลังลอง candidate ใหม่ ระบบจะสะสมข้อมูลนี้เพื่อใช้ใน PRO review รอบถัดไป.</p>
+      <div className="kicker">Exercise Memory</div>
+      <h3 style={{ margin: "4px 0 8px" }}>ท่านี้เป็นอย่างไรบ้าง? · {label}</h3>
+      <p style={{ marginTop: 0 }}>ไม่ต้องกรอกทุกท่า บันทึกเมื่อมีอะไรที่สังเกตได้จริง เช่น ทำได้ดีขึ้น ท่ารู้สึกไม่เข้ากับคุณ หรือกำลังลองท่าใหม่ ระบบจะจำข้อมูลนี้ไว้ใช้ในการตัดสินใจครั้งต่อไป</p>
       <div className="form-grid">
-        <label>Performance
+        <label>ผลการฝึก
           <select value={performance} onChange={(e) => setPerformance(e.target.value)}>
             <option value="">ไม่ระบุ</option>
             <option value="BETTER">ดีขึ้น</option>
@@ -82,7 +82,7 @@ export function ExerciseFeedbackForm({
             <option value="WORSE">แย่ลง</option>
           </select>
         </label>
-        <label>Movement tolerance
+        <label>การควบคุม / ความสบาย
           <select value={tolerance} onChange={(e) => setTolerance(e.target.value)}>
             <option value="">ไม่ระบุ</option>
             <option value="GOOD">ดี</option>
@@ -90,7 +90,7 @@ export function ExerciseFeedbackForm({
             <option value="POOR">ไม่ดี</option>
           </select>
         </label>
-        <label>Recovery
+        <label>การฟื้นตัว
           <select value={recovery} onChange={(e) => setRecovery(e.target.value)}>
             <option value="">ไม่ระบุ</option>
             <option value="GOOD">ดี</option>
@@ -98,7 +98,7 @@ export function ExerciseFeedbackForm({
             <option value="POOR">ไม่ดี</option>
           </select>
         </label>
-        <label>Preference
+        <label>ความชอบ
           <select value={preference} onChange={(e) => setPreference(e.target.value)}>
             <option value="">ไม่ระบุ</option>
             <option value="LIKE">ชอบ</option>
@@ -107,15 +107,15 @@ export function ExerciseFeedbackForm({
           </select>
         </label>
       </div>
-      <label>Note (ไม่บังคับ)
+      <label>หมายเหตุ (ไม่บังคับ)
         <input value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} placeholder="เช่น คุมท่าได้ดีขึ้น หรือเครื่องนี้ไม่เข้ากับช่วงแขน" />
       </label>
       <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
-        {busy ? "กำลังบันทึก..." : "บันทึก Exercise Feedback"}
+        {busy ? "กำลังบันทึก..." : "บันทึกผลของท่านี้"}
       </button>
-      {saved && <div className="notice">บันทึกแล้ว Exercise Memory ถูกอัปเดตจากข้อมูลล่าสุด.</div>}
+      {saved && <div className="notice">บันทึกแล้ว · Exercise Memory จะจำผลของท่านี้ไว้ใช้ครั้งต่อไป</div>}
       {error && <div className="notice warning">{error}</div>}
-      {busy && <ProcessingOverlay title="กำลังบันทึก Exercise Feedback..." detail="กำลังอัปเดต Exercise Memory ของท่านี้" />}
+      {busy && <ProcessingOverlay title="กำลังบันทึกผลของท่านี้..." detail="กำลังอัปเดต Exercise Memory ของท่านี้" />}
     </div>
   );
 }

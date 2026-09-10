@@ -53,11 +53,11 @@ export default async function PhysicalConsultProgramPage() {
 
   return <AppShell>
     <div className="topline">PRO · Physical Consult · Program v{program.program_version}</div>
-    <h1>Active Program Feedback</h1>
-    <p>เลือกเฉพาะท่าที่กำลังประเมิน ไม่ต้องเปิดหรือกรอกทุกท่า.</p>
+    <h1>บันทึกผลจาก Program</h1>
+    <p>เลือกเฉพาะท่าที่ต้องการประเมิน ไม่ต้องกรอกทุกท่า</p>
     <div className="notice" style={{ marginBottom: 18 }}>
       <strong>บันทึกวันนี้แล้ว {completedCount}/{items.length} ท่า</strong>
-      <p style={{ marginBottom: 0 }}>แตะชื่อท่าเพื่อเปิด Feedback ได้ทีละ 1 ท่า · Actual response มี priority สูงกว่า LAB prediction.</p>
+      <p style={{ marginBottom: 0 }}>แตะท่าที่ต้องการบันทึก · ผลการฝึกจริงจะมีน้ำหนักมากกว่าคำคาดการณ์จาก LAB</p>
     </div>
 
     <PhysicalConsultProgramAccordion items={items} feedback={feedback} />

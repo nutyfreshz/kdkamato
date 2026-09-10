@@ -42,7 +42,7 @@ function buildTrialPlan(ft, ankle, variant, language) {
 
   const step2 = clearlyLonger
     ? (th
-      ? 'เลือก stance ที่ควบคุมได้ดีกว่า แล้วคง stance นั้นเพื่อเทียบส้นราบ ↔ ยกส้นเล็กน้อย'
+      ? 'เลือก stance ที่ควบคุมได้ดีกว่า แล้วคง stance นั้นไว้เพื่อเทียบส้นราบกับยกส้นเล็กน้อย'
       : 'Keep the stance you control better, then compare flat heel ↔ small heel lift')
     : (th
       ? 'ถ้ายัง balance หรือ depth ไม่ลงตัว ให้คง heel ที่ดีกว่า แล้วเทียบ stance กลาง ↔ stance กว้าง'
@@ -90,7 +90,7 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       ? `1) ${plan.step1}  2) ${plan.step2}`
       : `1) ${plan.step1}.  2) ${plan.step2}.`,
     use: th
-      ? `${plan.rationale} ทดสอบด้วยน้ำหนักเบาหรือคงน้ำหนักเดิม ใช้ depth ใกล้เคียงกัน และเปลี่ยนทีละ 1 ตัวแปร แล้วเลือก setup ที่ balance และ control ได้ดีกว่า`
+      ? `${plan.rationale} ใช้น้ำหนักและความลึกใกล้เคียงกัน เปลี่ยนทีละอย่าง แล้วเลือก setup ที่คุณทรงตัวและควบคุมได้ดีกว่า`
       : `${plan.rationale} Test with a light or fixed load, keep depth similar, change one variable at a time, and keep the setup you can balance and control better.`,
     watch: th
       ? `C2 ไม่ใช้สัดส่วนร่างกายฟันธงว่า Front / High-Bar / Low-Bar แบบไหนดีที่สุด — คุณเลือก variant ที่ต้องการทดสอบ แล้วใช้ C2 จัดลำดับ setup ภายใน variant นั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
@@ -106,9 +106,9 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       id="C2_SQUAT_GEOMETRY"
       role="CORE"
       technicalName="Squat Setup Trial"
-      title={th ? 'Squat setup อะไรควรลองก่อน?' : 'Which Squat setup should you test first?'}
+      title={th ? 'Squat setup แบบไหนควรลองก่อน?' : 'Which Squat setup should you test first?'}
       question={th
-        ? 'เลือก Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับ 2 comparison ที่ควรลองก่อนจากสัดส่วนช่วงขา โดยเปลี่ยนทีละอย่าง'
+        ? 'เลือก Squat ที่คุณใช้อยู่ แล้วลอง 2 setup ตามลำดับ โดยเปลี่ยนทีละอย่างเพื่อดูว่าแบบไหนควบคุมได้ดีกว่า'
         : 'Choose the Squat variant you actually use. The system prioritizes two setup comparisons from your leg proportions, changing one thing at a time.'}
     />
 
@@ -132,7 +132,7 @@ export function SquatSetupTrialTool({ language = 'th' }) {
         />
 
         {plan && <div className="lab-import-note" style={{ marginTop: 16 }}>
-          <b>{th ? 'ลำดับการลอง' : 'TEST ORDER'}</b>
+          <b>{th ? 'ลองตามลำดับนี้' : 'TEST ORDER'}</b>
           <span>1. {plan.step1}<br/>2. {plan.step2}</span>
         </div>}
 

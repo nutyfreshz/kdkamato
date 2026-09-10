@@ -44,16 +44,16 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
   if (!suggestions.length) {
     return <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">PRO · Lab-informed Exercise Selection</div>
-      <h2>ยังไม่มี Exercise Suggestion จาก LAB</h2>
-      <p>เมื่อบันทึก LAB ที่เกี่ยวข้อง ระบบจะคำนวณ candidate ranking หลังบ้านและใช้เป็นจุดเริ่มต้นสำหรับการเลือกท่าใน PRO โดยยังไม่เปลี่ยน Active Program ทันที.</p>
+      <h2>ยังไม่มีคำแนะนำท่าฝึกจาก LAB</h2>
+      <p>เมื่อบันทึก LAB ที่เกี่ยวข้อง ระบบจะช่วยจัดลำดับว่าท่าไหนควรลองก่อน โดยยังไม่เปลี่ยน Program ทันที</p>
       <div className="cta-row"><Link className="btn" href="/lab">เปิด KDKAMATO LAB</Link></div>
     </section>;
   }
 
   return <section className="card" style={{ marginTop: 18 }}>
     <div className="kicker">PRO · Lab-informed Exercise Selection</div>
-    <h2>Exercise Suggestions</h2>
-    <p>LAB ใช้จัดลำดับท่าที่ควรลองก่อนเท่านั้น เมื่อมีข้อมูลฝึกจริง Exercise Memory จะมีน้ำหนักสูงกว่า LAB.</p>
+    <h2>คำแนะนำท่าฝึก</h2>
+    <p>LAB ช่วยเลือกว่าควรลองท่าไหนก่อน แต่เมื่อคุณลองจริงแล้ว Exercise Memory จะให้ความสำคัญกับผลการฝึกของคุณมากกว่า</p>
     {suggestions.map((s) => {
       const top = s.suggested;
       const current = names(s.current_exercises);
@@ -66,10 +66,10 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
         </div>
         <div style={{ textAlign: "right" }}>
           <strong>{top?.display_name ?? top?.exercise_key ?? "–"}</strong><br/>
-          <small>{top?.status === "RECOMMENDED_FROM_RESPONSE" ? "Recommended from real response" : "Try & evaluate"}{top?.evidence_count ? ` · ข้อมูล LAB ${top.evidence_count} กลุ่ม` : ""}</small>
+          <small>{top?.status === "RECOMMENDED_FROM_RESPONSE" ? "แนะนำจากผลการฝึกจริง" : "ควรลองต่อ"}{top?.evidence_count ? ` · ข้อมูล LAB ${top.evidence_count} กลุ่ม` : ""}</small>
         </div>
       </div>;
     })}
-    <div className="notice" style={{ marginTop: 12 }}>ยังไม่ใช่การ auto-swap ท่าใน Program: suggestion นี้จะถูกใช้เป็น evidence ใน PRO review และ Program version ถัดไปเมื่อมีเหตุผลพอ.</div>
+    <div className="notice" style={{ marginTop: 12 }}>คำแนะนำนี้ยังไม่เปลี่ยน Program โดยอัตโนมัติ และจะถูกนำไปใช้ประกอบการทบทวนครั้งถัดไป</div>
   </section>;
 }

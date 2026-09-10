@@ -21,14 +21,14 @@ export default async function AccountPage(){
   const email = userData.user?.email ?? "";
 
   return <AppShell>
-    <div className="topline">Account</div><h1>บัญชีเดียว ประวัติ Program ต่อเนื่อง</h1>
+    <div className="topline">บัญชี</div><h1>บัญชีเดียว ประวัติ Program ต่อเนื่อง</h1>
     <div className="grid">
-      <div className="card"><div className="kicker">Email</div><div className="metric" style={{fontSize:"1rem"}}>{email || "–"}</div></div>
-      <div className="card"><div className="kicker">Tier</div><div className="metric cyan">{access?.tier ?? "FREE"}</div></div>
-      <div className="card"><div className="kicker">Program Versions</div><div className="metric">{programCount ?? 0}</div></div>
-      <div className="card"><div className="kicker">Progress Checks</div><div className="metric">{progressCount ?? 0}</div></div>
+      <div className="card"><div className="kicker">อีเมล</div><div className="metric" style={{fontSize:"1rem"}}>{email || "–"}</div></div>
+      <div className="card"><div className="kicker">ระดับบัญชี</div><div className="metric cyan">{access?.tier ?? "FREE"}</div></div>
+      <div className="card"><div className="kicker">เวอร์ชัน Program</div><div className="metric">{programCount ?? 0}</div></div>
+      <div className="card"><div className="kicker">การเช็กอินความคืบหน้า</div><div className="metric">{progressCount ?? 0}</div></div>
     </div>
     {email ? <PhysicalConsultAccess email={email} /> : null}
-    <div className="card" style={{marginTop:18}}><p>FREE และ PRO ใช้ account และ history เดียวกัน การเปลี่ยน Tier เป็น server-controlled state และไม่สามารถยกระดับจาก browser เองได้.</p><LogoutButton /></div>
+    <div className="card" style={{marginTop:18}}><p>บัญชี FREE และ PRO ใช้บัญชีและประวัติเดียวกัน การเปลี่ยนระดับบัญชีจัดการโดยระบบและไม่สามารถเปลี่ยนจากหน้าเว็บได้โดยตรง</p><LogoutButton /></div>
   </AppShell>;
 }

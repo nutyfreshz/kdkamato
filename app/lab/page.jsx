@@ -9,9 +9,9 @@ export const metadata = {
 
 const content = {
   th: {
-    intro: 'เลือกจากคำถามที่อยากรู้ก่อน ไม่ต้องทำทุกเครื่องมือ และไม่ต้องจำศัพท์ biomechanics ค่าที่วัดแล้วจะถูกใช้ซ้ำใน LAB ที่เกี่ยวข้อง เพื่อไม่ให้กรอกเรื่องเดิมหลายรอบ',
+    intro: 'เลือกเฉพาะคำถามที่คุณอยากรู้ ไม่ต้องทำทุกเครื่องมือ ค่าที่เคยวัดไว้จะถูกนำไปใช้ต่อใน LAB ที่เกี่ยวข้องโดยอัตโนมัติ',
     coreTitle: 'เริ่มจาก 2 เครื่องมือหลัก',
-    coreSub: 'เครื่องมือหลักต้องตอบคำถามว่า “แล้วควรลองอะไรต่อ?” ได้จริง ไม่ใช่แค่คำนวณตัวเลข',
+    coreSub: 'เครื่องมือหลักไม่ได้ให้แค่ตัวเลข แต่ช่วยบอกว่าควรลองอะไรต่อ',
     exploreTitle: 'Explore',
     exploreSub: 'ใช้เมื่ออยากลอง scenario เพื่อทำความเข้าใจตัวเลขเพิ่มเติม เครื่องมือในส่วนนี้ไม่ใช่ prescription และไม่เปลี่ยน Program อัตโนมัติ',
     quickTitle: 'Quick Checks',
@@ -19,14 +19,14 @@ const content = {
     core: [
       {
         href:'/lab/exercise-fit', tag:'TRAINING',
-        title:'ท่านี้มีอะไรที่ควรลองปรับให้เข้ากับโครงคุณ?',
-        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วใช้สัดส่วนของคุณช่วยจัดลำดับว่า setup หรือทางเลือกไหนควรเอาไปลองเปรียบเทียบก่อน',
+        title:'ท่านี้มีอะไรที่คุณควรลองปรับ?',
+        copy:'เลือก Squat, Bench Press หรือ Deadlift แล้วกรอกเฉพาะค่าที่จำเป็น เพื่อดูว่าควรลองปรับอะไรต่อ',
         result:'ได้: สิ่งที่ควรลองปรับหรือเปรียบเทียบ'
       },
       {
         href:'/lab/squat-geometry', tag:'SQUAT',
-        title:'Squat setup อะไรควรลองก่อน?',
-        copy:'เลือก Squat ที่คุณใช้อยู่ แล้วระบบจัดลำดับ 2 comparison จากสัดส่วนช่วงขาให้ลองทีละอย่าง แทนการปรับหลายตัวพร้อมกัน',
+        title:'Squat setup แบบไหนควรลองก่อน?',
+        copy:'เลือก Squat ที่คุณใช้อยู่ แล้วลอง 2 setup ตามลำดับ โดยเปลี่ยนทีละอย่างเพื่อดูว่าแบบไหนควบคุมได้ดีกว่า',
         result:'ได้: ลำดับ setup trial ที่เอาไปลองในยิมได้ทันที'
       }
     ],
@@ -109,12 +109,12 @@ export default async function LabPage() {
 
   return <><SiteHeader language={language}/><main className="listing-page shell lab-page">
     <p className="eyebrow cyan">KDKAMATO LAB</p>
-    <h1>{language === 'en' ? <>WHAT DO YOU WANT<br/>TO UNDERSTAND?</> : <>อยากรู้อะไร<br/>เกี่ยวกับร่างกายตัวเอง?</>}</h1>
+    <h1>{language === 'en' ? <>WHAT DO YOU WANT<br/>TO UNDERSTAND?</> : <>มีอะไรเกี่ยวกับการฝึก<br/>ที่คุณอยากหาคำตอบ?</>}</h1>
     <p className="listing-intro">{c.intro}</p>
 
     <div className="lab-simple-rule">
-      <b>{language === 'en' ? 'ONE RULE' : 'กติกาง่าย ๆ'}</b>
-      <span>{language === 'en' ? 'Measure once → reuse the value → apply it to the question you care about.' : 'วัดครั้งเดียว → ใช้ค่าซ้ำได้ → เอาไปตอบคำถามที่คุณสนใจ'}</span>
+      <b>{language === 'en' ? 'ONE RULE' : 'ใช้ LAB แบบนี้'}</b>
+      <span>{language === 'en' ? 'Measure once → reuse the value → apply it to the question you care about.' : 'วัดครั้งเดียว → ใช้ต่อได้ → รู้ว่าควรลองอะไรต่อ'}</span>
     </div>
 
     <section className="lab-intent-section lab-core-section">

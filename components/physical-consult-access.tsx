@@ -32,7 +32,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       setSaved(true);
       setPassword("");
       setConfirm("");
-      setMessage("พร้อมใช้แล้ว: บนเครื่อง Trainer เปิด Physical Consult Login แล้วเข้า user เดิมด้วย Email + Password นี้");
+      setMessage("พร้อมใช้งานแล้ว · เปิด Physical Consult Login บนเครื่อง Trainer แล้วใช้อีเมลกับรหัสผ่านนี้");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "ตั้งรหัสไม่สำเร็จ");
     } finally {
@@ -42,26 +42,26 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
 
   return <div className="card" style={{ marginTop: 18 }}>
     <div className="kicker">Physical Consult Access</div>
-    <h2>ให้ Trainer เข้า user เดิมโดยไม่ต้อง login Gmail</h2>
-    <p>ใช้ Email เดิมของบัญชี <b>{email}</b> แล้วตั้ง password สำหรับเข้าแบบ Email + Password. สำหรับบัญชีที่สร้างด้วย Google วิธีนี้เพิ่ม Email login ให้ user เดิม ไม่สร้าง user ใหม่.</p>
+    <h2>ให้ Trainer ใช้ Physical Consult โดยไม่ต้องเปิด Gmail ของคุณบนเครื่อง Trainer</h2>
+    <p>ใช้อีเมลเดิมของบัญชี <b>{email}</b> แล้วตั้งรหัสผ่านสำหรับ Physical Consult วิธีนี้ใช้บัญชีเดิมและไม่สร้างผู้ใช้ใหม่</p>
     <div className="form" style={{ maxWidth: 520 }}>
-      <label>Physical Consult password
+      <label>รหัสผ่าน Physical Consult
         <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setSaved(false); }} autoComplete="new-password" />
       </label>
-      <label>ยืนยัน password
+      <label>ยืนยันรหัสผ่าน
         <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
       </label>
       <button className="btn primary" type="button" onClick={savePassword} disabled={busy || password.length < 10 || confirm.length < 10}>
-        {busy ? "กำลังตั้งค่า..." : saved ? "ตั้งค่าแล้ว" : "ตั้ง / เปลี่ยน Physical Consult password"}
+        {busy ? "กำลังตั้งค่า..." : saved ? "ตั้งค่าแล้ว" : "ตั้ง / เปลี่ยนรหัสผ่าน Physical Consult"}
       </button>
-      <small>รหัสนี้เป็น credential ของ account เดียวกัน จึงควรใช้เฉพาะกับ Trainer ที่ได้รับอนุญาต และเปลี่ยนรหัสได้จากหน้านี้ภายหลัง.</small>
+      <small>รหัสนี้ใช้เข้าสู่บัญชีของคุณสำหรับ Physical Consult เท่านั้น ควรให้เฉพาะ Trainer ที่คุณอนุญาต และเปลี่ยนได้จากหน้านี้ทุกเมื่อ</small>
       {message && <div className="notice warning">{message}</div>}
     </div>
     <div className="cta-row" style={{ marginTop: 14 }}>
       <Link className="btn" href="/login?physical=1">ดู Physical Consult Login</Link>
       <Link className="btn" href="/physical-consult">เปิด Physical Consult Session บนอุปกรณ์นี้</Link>
     </div>
-    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้ Email + Physical Consult password. เมื่อจบ session ระบบมีปุ่ม sign out เฉพาะเครื่อง Trainer.</small></p>
-    {busy && <ProcessingOverlay title="กำลังตั้ง Physical Consult access…" detail="กำลังเพิ่มหรือเปลี่ยน Email + Password login ให้ user เดิม" />}
+    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้อีเมลกับรหัสผ่าน Physical Consult เมื่อจบ session ระบบมีปุ่มออกจากระบบเฉพาะเครื่อง Trainer</small></p>
+    {busy && <ProcessingOverlay title="กำลังตั้งค่าการเข้าถึง Physical Consult…" detail="กำลังเพิ่มหรือเปลี่ยนการเข้าสู่ระบบด้วยอีเมลและรหัสผ่านให้บัญชีเดิม" />}
   </div>;
 }

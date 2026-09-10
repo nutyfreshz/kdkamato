@@ -48,12 +48,12 @@ export default async function ConsultPage() {
   if (!isPro) {
     return <AppShell>
       <div className="topline">PRO Consult</div>
-      <h1>Professional Longitudinal Review</h1>
+      <h1>PRO Review</h1>
       <div className="notice warning">Consult เป็นฟีเจอร์ PRO. FREE Program และ Progress history ของคุณยังคงอยู่ และจะถูกใช้ต่อเมื่อบัญชีได้รับ PRO entitlement.</div>
       <section className="card" style={{ marginTop: 18 }}>
         <div className="kicker">PRO</div>
         <h2>สิ่งที่เพิ่มขึ้นใน PRO</h2>
-        <p>Biweekly Professional Report · ใช้ Lab context เมื่อเกี่ยวข้อง · longitudinal Exercise Memory · optional Online Consult.</p>
+        <p>รีวิวทุก 2 สัปดาห์ · ใช้ LAB เมื่อเกี่ยวข้อง · ดู Exercise Memory ระยะยาว · ขอ Online Consult เพิ่มได้</p>
       </section>
     </AppShell>;
   }
@@ -79,8 +79,8 @@ export default async function ConsultPage() {
 
   return <AppShell>
     <div className="topline">PRO Consult</div>
-    <h1>Professional Longitudinal Review</h1>
-    <p>ระบบรวม Progress, Exercise Feedback, Exercise Memory, Lab ที่เกี่ยวข้อง และ Program history เพื่อทำ Review เป็นรอบ โดยจะเปลี่ยน Program เฉพาะเมื่อมี evidence และ approval ที่เหมาะสม.</p>
+    <h1>PRO Review</h1>
+    <p>PRO จะดูความคืบหน้า ผลการฝึก Exercise Memory ข้อมูล LAB และประวัติ Program ร่วมกัน ก่อนตัดสินใจว่าควรคงหรือปรับอะไร</p>
     <div className="grid">
       <div className="card"><div className="kicker">Tier</div><div className="metric cyan">PRO</div><p>ใช้ Program history เดิมต่อ พร้อม longitudinal layer ที่ลึกขึ้น.</p></div>
       <div className="card"><div className="kicker">Online Consult</div><div className="metric">{usedThisMonth}/2</div><p>สิทธิ์ที่ใช้ไปในเดือนนี้</p></div>

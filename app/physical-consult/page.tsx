@@ -30,8 +30,8 @@ export default async function PhysicalConsultPage() {
   const userId = claims?.claims?.sub as string | undefined;
   if (!userId) return <AppShell>
     <div className="topline">Physical Consult</div>
-    <h1>Trainer session</h1>
-    <div className="card"><p>เข้าสู่ระบบด้วย account ของ user ก่อนเริ่ม session.</p><Link className="btn primary" href="/login?physical=1">Physical Consult Login</Link></div>
+    <h1>Session สำหรับ Trainer</h1>
+    <div className="card"><p>เข้าสู่ระบบด้วยบัญชีของผู้ใช้ก่อนเริ่ม session</p><Link className="btn primary" href="/login?physical=1">Physical Consult Login</Link></div>
   </AppShell>;
 
   const [{ data: access }, { data: program }] = await Promise.all([
@@ -42,9 +42,9 @@ export default async function PhysicalConsultPage() {
 
   if (!isPro) return <AppShell>
     <div className="topline">Physical Consult</div>
-    <h1>PRO personalization workflow</h1>
+    <h1>การปรับเฉพาะบุคคลแบบ PRO</h1>
     <div className="card">
-      <p>Physical Consult ใช้ actual exercise response เป็นส่วนหนึ่งของ PRO personalization. Account นี้ยังเป็น FREE จึงยังบันทึก Physical Consult trial เข้า Exercise Memory ไม่ได้.</p>
+      <p>Physical Consult ใช้ผลการฝึกจริงเป็นส่วนหนึ่งของการปรับ Program บัญชีนี้ยังเป็น FREE จึงยังบันทึกผลการทดลองเข้า Exercise Memory ไม่ได้</p>
       <div className="cta-row"><Link className="btn" href="/lab">ใช้ LAB ต่อ</Link><Link className="btn" href="/home">กลับ Home</Link></div>
     </div>
   </AppShell>;
@@ -68,47 +68,47 @@ export default async function PhysicalConsultPage() {
 
   return <AppShell>
     <div className="topline">PRO · Physical Consult Session</div>
-    <h1>วัด → ทดลอง → บันทึกผลจริง</h1>
-    <p>Trainer กำลังใช้ session ของ user เดิม ข้อมูลทั้งหมดจึงต่อกับ LAB, Program และ Exercise Memory เดิมโดยไม่สร้าง Trainer account แยก.</p>
+    <h1>วัด → ลองจริง → ให้ระบบจำ</h1>
+    <p>ข้อมูลจาก session นี้จะต่อกับ LAB, Program และ Exercise Memory ของผู้ใช้คนเดิมทันที</p>
 
     <div className="notice" style={{ marginBottom: 18 }}>
-      <strong>Session rule</strong>
-      <p style={{ marginBottom: 0 }}>LAB ใช้ตั้งสมมติฐาน · ผลทดลองจริงมี priority สูงกว่า · ไม่ต้องกรอกข้อมูลที่ยังสังเกตไม่ได้.</p>
+      <strong>จำไว้ใน session นี้</strong>
+      <p style={{ marginBottom: 0 }}>LAB ช่วยบอกว่าควรลองอะไร · ผลตอนลองจริงสำคัญกว่า · บันทึกเฉพาะสิ่งที่สังเกตได้</p>
     </div>
 
     <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">STEP 1 · MEASURE / SCREEN</div>
+      <div className="kicker">ขั้นตอนที่ 1 · วัดและประเมิน</div>
       <h2>Exercise Fit</h2>
-      <p>เริ่มจาก movement ที่ต้องการประเมิน แล้วใช้ measurement เดิมต่อทันทีถ้าเคยวัดไว้แล้ว.</p>
+      <p>เลือกท่าที่ต้องการดู หากเคยวัดไว้แล้ว ระบบจะใช้ค่าเดิมให้ทันที</p>
       <div className="cta-row"><Link className="btn primary" href="/lab/exercise-fit?consult=1">เปิด Exercise Fit</Link><Link className="btn" href="/lab/squat-geometry?consult=1">Squat Setup Trial</Link></div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">STEP 2 · TRY LAB CANDIDATES</div>
-      <h2>ทดลอง candidate ที่ยังไม่อยู่ใน Program</h2>
-      <p>เฉพาะ candidate ปัจจุบันที่มาจาก LAB ของ user นี้เท่านั้นจึงจะบันทึกได้. ถ้าท่าอยู่ใน Active Program แล้ว ให้ใช้ Step 3 แทน.</p>
-      {!offProgramGroups.length ? <div className="notice">ตอนนี้ไม่มี off-program LAB candidate ที่ต้องทดลองเพิ่ม อาจเป็นเพราะยังไม่มี Exercise Fit result หรือ candidate ที่เกี่ยวข้องอยู่ใน Active Program แล้ว.</div> : null}
+      <div className="kicker">ขั้นตอนที่ 2 · ลองท่าที่ LAB แนะนำ</div>
+      <h2>ลองท่าที่น่าสนใจและยังไม่อยู่ใน Program</h2>
+      <p>บันทึกได้เฉพาะท่าตัวเลือกปัจจุบันที่มาจาก LAB ของผู้ใช้คนนี้ หากท่าอยู่ใน Active Program แล้ว ให้ใช้ขั้นตอนที่ 3 แทน</p>
+      {!offProgramGroups.length ? <div className="notice">ขณะนี้ไม่มีท่าตัวเลือกจาก LAB ที่อยู่นอก Program ให้ทดลองเพิ่ม อาจเป็นเพราะยังไม่มีผล Exercise Fit หรือท่าตัวเลือกที่เกี่ยวข้องอยู่ใน Active Program แล้ว</div> : null}
       {offProgramGroups.map((group) => <div key={group.slot ?? "movement"} style={{ marginTop: 18 }}>
         <div className="kicker">{slotLabel(group.slot)}</div>
         {group.candidates.map((candidate, index) => <div className="card" style={{ marginTop: 10 }} key={candidate.exercise_key}>
-          <small>{index === 0 ? "LAB PRIORITY" : "ALTERNATIVE"}{candidate.memory_status ? ` · MEMORY ${candidate.memory_status}` : ""}</small>
+          <small>{index === 0 ? "ควรลองก่อน" : "ทางเลือกอื่น"}{candidate.memory_status ? ` · MEMORY ${candidate.memory_status}` : ""}</small>
           <PhysicalConsultTrialForm exerciseKey={candidate.exercise_key ?? ""} label={candidate.display_name ?? candidate.exercise_key ?? "Exercise"} />
         </div>)}
       </div>)}
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">STEP 3 · ACTIVE PROGRAM RESPONSE</div>
+      <div className="kicker">ขั้นตอนที่ 3 · บันทึกผลจาก Program ปัจจุบัน</div>
       <h2>{program ? `Program v${program.program_version}` : "ยังไม่มี Active Program"}</h2>
-      <p>{program ? "เปิดหน้าสำหรับ Physical Consult โดยเฉพาะ ซึ่งแสดงท่าใน Active Program พร้อม Exercise Feedback ทันที ไม่ต้องเปิด details ทีละท่า." : "สร้าง Active Program ก่อน หากต้องการบันทึก response ของท่าที่อยู่ใน Program."}</p>
-      <div className="cta-row">{program ? <Link className="btn primary" href="/physical-consult/program">เปิด Active Program Feedback</Link> : <Link className="btn" href="/program/start">สร้าง Program</Link>}</div>
+      <p>{program ? "เปิดหน้าสำหรับ Physical Consult โดยเฉพาะ ซึ่งแสดงท่าใน Active Program พร้อมผลการฝึกทันที โดยไม่ต้องเปิดรายละเอียดทีละท่า" : "สร้าง Active Program ก่อน หากต้องการบันทึกผลของท่าที่อยู่ใน Program"}</p>
+      <div className="cta-row">{program ? <Link className="btn primary" href="/physical-consult/program">บันทึกผลของท่าใน Program</Link> : <Link className="btn" href="/program/start">สร้าง Program</Link>}</div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">STEP 4 · FINISH</div>
+      <div className="kicker">ขั้นตอนที่ 4 · จบเซสชัน</div>
       <h2>จบ session บนเครื่อง Trainer</h2>
-      <p>Sign out ด้านล่างจะปิดเฉพาะ session ของอุปกรณ์นี้ ไม่ได้ sign out user จากโทรศัพท์หรืออุปกรณ์อื่น.</p>
-      <LogoutButton label="จบ Physical Consult และ Sign out เครื่องนี้" />
+      <p>การออกจากระบบด้านล่างจะปิดเฉพาะ session ของอุปกรณ์นี้ ไม่ได้ออกจากระบบของผู้ใช้บนโทรศัพท์หรืออุปกรณ์อื่น</p>
+      <LogoutButton label="จบ Physical Consult และออกจากระบบเครื่องนี้" />
     </section>
   </AppShell>;
 }

@@ -50,11 +50,11 @@ export default async function ProgressPage(){
   const todayRow = latest.find((x) => x.entry_date === today) ?? null;
 
   return <AppShell>
-    <div className="topline">Progress · 30 วัน</div><h1>เช็กอินสั้น ๆ เพื่อให้ระบบเรียนรู้จากการฝึกจริง</h1>
+    <div className="topline">ความคืบหน้า · 30 วัน</div><h1>เช็กอินสั้น ๆ เพื่อให้ Program เรียนรู้จากการฝึกจริงของคุณ</h1>
     <div className="grid">
       <div className="card"><div className="kicker">น้ำหนักล่าสุด</div><div className="metric">{summary.latest_weight_kg ?? "–"} {summary.latest_weight_kg ? "kg" : ""}</div><p>เปลี่ยนแปลง: {summary.weight_change_kg ?? "–"} kg</p></div>
       <div className="card"><div className="kicker">จำนวนครั้งที่ฝึก</div><div className="metric cyan">{summary.training_completed_count ?? 0}</div><p>ดีขึ้น {summary.training_better_count ?? 0} · เท่าเดิม {summary.training_same_count ?? 0} · แย่ลง {summary.training_worse_count ?? 0}</p></div>
-      <div className="card"><div className="kicker">Program ที่ใช้อยู่</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "–"}</div><p>{activeProgram ? "Check-in ใหม่จะผูกกับ Program version นี้อัตโนมัติ." : "Activate Program ก่อนเพื่อเริ่มเก็บ longitudinal response."}</p></div>
+      <div className="card"><div className="kicker">Program ที่ใช้อยู่</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "–"}</div><p>{activeProgram ? "Check-in ใหม่จะผูกกับ Program version นี้อัตโนมัติ." : "เริ่มใช้ Program ก่อน เพื่อให้ระบบติดตามว่าร่างกายคุณตอบสนองอย่างไรต่อเนื่อง"}</p></div>
       <div className="card"><div className="kicker">Issue ใหม่</div><div className="metric">{summary.new_issue_count ?? 0}</div><p>{(summary.entries_count ?? 0) < 3 ? "ข้อมูลยังน้อยเกินไปสำหรับดูแนวโน้ม." : "ดูแนวโน้มหลายครั้ง ไม่ตัดสินจาก Check-in เดียว."}</p></div>
     </div>
     <div style={{marginTop:18}}><ProgressForm hasActiveProgram={Boolean(activeProgram)} initial={todayRow}/></div>

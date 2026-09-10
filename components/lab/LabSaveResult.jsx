@@ -197,10 +197,10 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
     </button>
 
     {saved && programOutcome?.kind === 'UPDATED' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? `PROGRAM UPDATED · v${programOutcome.programVersion}` : `PROGRAM อัปเดตแล้ว · v${programOutcome.programVersion}`}</strong>
-      <p>{language === 'en' ? 'Your new Exercise Fit result changed only the relevant Squat exercise.' : 'ผล Exercise Fit ใหม่ทำให้ระบบปรับเฉพาะท่า Squat ที่เกี่ยวข้อง'}</p>
+      <strong>{language === 'en' ? `PROGRAM UPDATED · v${programOutcome.programVersion}` : `Program อัปเดตแล้ว · เวอร์ชัน ${programOutcome.programVersion}`}</strong>
+      <p>{language === 'en' ? 'Your new Exercise Fit result changed only the relevant Squat exercise.' : 'ผล Exercise Fit นี้ทำให้ Program ปรับเฉพาะท่า Squat ที่เกี่ยวข้อง'}</p>
       {programOutcome.changes?.map((change, index) => <p key={`${change.from}-${change.to}-${index}`} style={{ margin: '4px 0' }}><strong>{change.from || '—'} → {change.to || '—'}</strong></p>)}
-      <p>{language === 'en' ? 'Other exercises, training volume, and nutrition stayed unchanged.' : 'ท่าอื่น ปริมาณการฝึก และ Nutrition คงเดิม'}</p>
+      <p>{language === 'en' ? 'Other exercises, training volume, and nutrition stayed unchanged.' : 'ท่าอื่น ปริมาณการฝึก และโภชนาการยังเหมือนเดิม'}</p>
       <Link className="lab-next" href="/program">{language === 'en' ? 'VIEW UPDATED PROGRAM' : 'ดู Program ที่อัปเดต'} <b>→</b></Link>
     </div>}
 
@@ -215,11 +215,11 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
     </div>}
 
     {saved && programOutcome?.kind === 'REAL_RESPONSE_OVERRIDES' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? 'PROGRAM KEPT FROM REAL TRAINING RESPONSE' : 'Program ยังไม่เปลี่ยน เพราะข้อมูลการฝึกจริงมีน้ำหนักสูงกว่า'}</strong>
+      <strong>{language === 'en' ? 'PROGRAM KEPT FROM REAL TRAINING RESPONSE' : 'Program ยังไม่เปลี่ยน เพราะผลการฝึกจริงของคุณมีน้ำหนักมากกว่าผลจาก LAB'}</strong>
       <p>{programOutcome.reason === 'ACTUAL_RESPONSE_CONFLICT_TARGET_DEPRIORITIZED'
         ? (language === 'en' ? 'LAB suggested an option that your prior training response had already deprioritized, so it was not added back automatically.' : 'LAB แนะนำท่าที่ข้อมูลการฝึกก่อนหน้าของคุณเคยลด priority ไว้ ระบบจึงไม่ใส่กลับอัตโนมัติ')
         : (language === 'en' ? 'LAB suggested a different direction, but your current exercise has already shown a good real-world fit, so the Program was preserved.' : 'LAB แนะนำอีกทาง แต่ท่าปัจจุบันมีผลตอบสนองจากการฝึกจริงที่ดีอยู่แล้ว ระบบจึงเก็บท่าเดิมไว้')}</p>
-      <small>{language === 'en' ? 'Real training response has higher authority than LAB prediction.' : 'ผลจากการฝึกจริงมี priority สูงกว่าการคาดการณ์จาก LAB'}</small>
+      <small>{language === 'en' ? 'Real training response has higher authority than LAB prediction.' : 'เมื่อผลจาก LAB กับการฝึกจริงไม่ตรงกัน ระบบจะเชื่อผลการฝึกจริงก่อน'}</small>
     </div>}
 
     {saved && programOutcome?.kind === 'NO_PROGRAM' && <div className="notice" style={{ marginTop: 12 }}>

@@ -48,9 +48,9 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
   }
 
   return <div className="form" style={{ marginTop: 12 }}>
-    <div className="kicker">PHYSICAL CONSULT · TRY & EVALUATE</div>
+    <div className="kicker">ลองท่านี้จริง</div>
     <h3 style={{ margin: "4px 0 8px" }}>{label}</h3>
-    <p style={{ marginTop: 0 }}>บันทึกสิ่งที่สังเกตได้จากการลองท่าจริงตอนนี้ ไม่ต้องรอให้ท่านี้ถูกใส่ใน Active Program ก่อน.</p>
+    <p style={{ marginTop: 0 }}>ลองท่านี้แล้วบันทึกสิ่งที่สังเกตได้ ระบบจะจำผลไว้แม้ท่านี้ยังไม่ได้อยู่ใน Program</p>
     <div className="form-grid">
       <label>เทียบกับท่าที่ใช้อยู่
         <select value={performance} onChange={(e) => { setPerformance(e.target.value); setSaved(false); }}>
@@ -60,7 +60,7 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
           <option value="WORSE">แย่กว่า</option>
         </select>
       </label>
-      <label>Control / Tolerance
+      <label>การควบคุม / ความสบาย
         <select value={tolerance} onChange={(e) => { setTolerance(e.target.value); setSaved(false); }}>
           <option value="">ไม่ระบุ</option>
           <option value="GOOD">ดี</option>
@@ -68,7 +68,7 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
           <option value="POOR">ไม่ดี</option>
         </select>
       </label>
-      <label>Preference
+      <label>ความชอบ
         <select value={preference} onChange={(e) => { setPreference(e.target.value); setSaved(false); }}>
           <option value="">ไม่ระบุ</option>
           <option value="LIKE">ชอบ</option>
@@ -77,15 +77,15 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
         </select>
       </label>
     </div>
-    <label>Trainer note (ไม่บังคับ)
+    <label>หมายเหตุของ Trainer (ไม่บังคับ)
       <input value={note} maxLength={500} onChange={(e) => { setNote(e.target.value); setSaved(false); }} placeholder="เช่น คุมแนวได้ง่ายกว่า แต่ช่วงล่างยังต้องปรับ setup" />
     </label>
-    <small>Recovery ไม่ถามในจุดนี้ เพราะยังประเมินจากการทดลองทันทีไม่ได้ หากมีข้อมูลภายหลังให้บันทึกจาก Active Program feedback.</small>
+    <small>การฟื้นตัวยังไม่ต้องกรอกตอนนี้ เพราะต้องดูหลังการฝึก หากมีข้อมูลภายหลังค่อยบันทึกจาก Program</small>
     <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
-      {busy ? "กำลังบันทึก..." : saved ? "บันทึก trial แล้ว" : "บันทึกผลทดลองจริง"}
+      {busy ? "กำลังบันทึก..." : saved ? "บันทึกการทดลองแล้ว" : "บันทึกผลการทดลองจริง"}
     </button>
-    {saved && <div className="notice">บันทึกแล้ว · Exercise Memory ใช้ผลทดลองจริงนี้เป็น evidence ที่มี priority สูงกว่า LAB prediction.</div>}
+    {saved && <div className="notice">บันทึกแล้ว · Exercise Memory จะจำผลที่เกิดขึ้นจริง และให้ความสำคัญมากกว่าคำคาดการณ์จาก LAB</div>}
     {error && <div className="notice warning">{error}</div>}
-    {busy && <ProcessingOverlay title="กำลังบันทึก Physical Consult trial..." detail="กำลังอัปเดต Exercise Memory จากผลทดลองจริง" />}
+    {busy && <ProcessingOverlay title="กำลังบันทึกผลการทดลองจาก Physical Consult..." detail="กำลังอัปเดต Exercise Memory จากผลการทดลองจริง" />}
   </div>;
 }
