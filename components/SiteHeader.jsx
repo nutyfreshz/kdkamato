@@ -5,8 +5,8 @@ import { useState } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const nav = {
-  th: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', kendo: 'KENDO', menu: 'เมนู', close: 'ปิด' },
-  en: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', kendo: 'KENDO', menu: 'MENU', close: 'CLOSE' }
+  th: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'คู่มือ', kendo: 'KENDO', menu: 'เมนู', close: 'ปิด' },
+  en: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'GUIDE', kendo: 'KENDO', menu: 'MENU', close: 'CLOSE' }
 };
 
 export default function SiteHeader({ language = 'th' }) {
@@ -24,6 +24,7 @@ export default function SiteHeader({ language = 'th' }) {
             <Link href="/knowledge">{c.knowledge}</Link>
             <Link href="/lab">{c.lab}</Link>
             <Link href="/training">{c.training}</Link>
+            <Link href="/guide">{c.guide}</Link>
           </nav>
           <LanguageSwitcher language={language} />
         </div>
@@ -36,6 +37,7 @@ export default function SiteHeader({ language = 'th' }) {
         <Link href="/knowledge" onClick={close}>{c.knowledge}</Link>
         <Link href="/lab" onClick={close}>{c.lab}</Link>
         <Link href="/training" onClick={close}>{c.training}</Link>
+        <Link href="/guide" onClick={close}>{c.guide}</Link>
         <Link href="/#kendo" onClick={close}>{c.kendo}</Link>
         <LanguageSwitcher language={language} mobile onChange={close} />
       </div>

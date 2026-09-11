@@ -7,6 +7,7 @@ const desktopNav = [
   ["LAB", "/lab"],
   ["ความคืบหน้า", "/progress"],
   ["PRO Review", "/consult"],
+  ["คู่มือ", "/guide"],
   ["บัญชี", "/account"],
 ] as const;
 
@@ -26,6 +27,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <nav className={styles.nav}>{desktopNav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
       </aside>
       <main className={styles.main}>{children}</main>
+      <Link className={styles.guideFab} href="/guide" aria-label="เปิดคู่มือการใช้งาน">คู่มือ</Link>
       <nav className={styles.bottomNav}>{bottomNav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
     </div>
   );
