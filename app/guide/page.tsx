@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import { GuideMotion } from "@/components/guide-motion";
 import {
@@ -59,7 +60,7 @@ export default async function GuidePage() {
 
           <div className={styles.journey}>
             {guideJourney.map((step, index) => (
-              <article key={step.key} className={styles.journeyCard} data-guide-reveal style={{ "--delay": `${index * 80}ms` } as React.CSSProperties}>
+              <article key={step.key} className={styles.journeyCard} data-guide-reveal style={{ "--delay": `${index * 80}ms` } as CSSProperties}>
                 <span className={styles.stepNumber}>{step.key}</span>
                 <h3>{t(step.title)}</h3>
                 <p>{t(step.copy)}</p>
@@ -76,7 +77,7 @@ export default async function GuidePage() {
           </div>
           <div className={styles.topicGrid}>
             {guideEntryCards.map((card, index) => (
-              <Link key={card.id} className={styles.topicCard} href={`#${card.id}`} data-guide-reveal style={{ "--delay": `${index * 55}ms` } as React.CSSProperties}>
+              <Link key={card.id} className={styles.topicCard} href={`#${card.id}`} data-guide-reveal style={{ "--delay": `${index * 55}ms` } as CSSProperties}>
                 <span className={`${styles.badge} ${card.audience === "PRO" ? styles.proBadge : ""}`}>{audienceLabel(language, card.audience)}</span>
                 <h3>{t(card.label)}</h3>
                 <p>{t(card.detail)}</p>
