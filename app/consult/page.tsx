@@ -44,7 +44,37 @@ const reportStatusLabel: Record<string, string> = {
   ADAPT: "ควรปรับ",
   MONITOR: "ติดตามต่อ",
   REVIEW_REQUIRED: "ต้องทบทวน",
+  "EARLY POSITIVE · LIMITED DATA": "แนวโน้มเริ่มดี · ข้อมูลยังไม่พอ",
+  EARLY_POSITIVE_LIMITED_DATA: "แนวโน้มเริ่มดี · ข้อมูลยังไม่พอ",
 };
+
+const reportTextLabel: Record<string, string> = {
+  "PRO access is active and the first real exercise-specific response was captured. Machine Chest Press was reported BETTER with GOOD tolerance, OK recovery, and NEUTRAL preference.":
+    "เปิดใช้ PRO แล้ว และมีผลตอบสนองจากการฝึกจริงของท่าแรกแล้ว: Machine Chest Press ให้ผลดีขึ้น ทนต่อท่าได้ดี การฟื้นตัวอยู่ในระดับพอใช้ และความชอบต่อท่ายังเป็นกลาง",
+  "The first exercise response is positive and Exercise Memory is now TRY. This is not enough longitudinal evidence to confirm a good-fit exercise or justify changing the program.":
+    "ผลตอบสนองครั้งแรกเป็นบวก และ Exercise Memory ตอนนี้อยู่ที่ ‘ควรลองต่อ’ แต่ข้อมูลระยะยาวยังไม่พอที่จะยืนยันว่าท่านี้เหมาะดี หรือใช้เป็นเหตุผลในการปรับ Program",
+  "Only one progress entry is available in the current review window, so body-weight and nutrition response trends are not yet interpretable.":
+    "ในรอบนี้มีข้อมูลความคืบหน้าเพียง 1 ครั้ง จึงยังสรุปแนวโน้มน้ำหนักตัวและการตอบสนองด้านโภชนาการไม่ได้",
+  "No saved KDKAMATO Lab result is available in this review window. Current exercise evidence therefore comes from actual observed response rather than Lab prediction.":
+    "รอบนี้ยังไม่มีผลจาก KDKAMATO LAB ที่บันทึกไว้ ดังนั้นข้อมูลเกี่ยวกับท่าฝึกในตอนนี้มาจากผลการฝึกจริง ไม่ใช่การคาดการณ์จาก LAB",
+  "Keep the current program unchanged. Evidence is currently positive but limited, so additional real training response should be collected before any material decision.":
+    "คง Program ปัจจุบันไว้ก่อน แนวโน้มตอนนี้ดี แต่ข้อมูลยังจำกัด จึงควรเก็บผลการฝึกจริงเพิ่มก่อนตัดสินใจเปลี่ยนอย่างมีนัยสำคัญ",
+  "Continue the current program without a material change.":
+    "ใช้ Program ปัจจุบันต่อ โดยยังไม่ต้องปรับใหญ่",
+  "Keep logging simple exercise feedback and Progress checks after real training sessions.":
+    "บันทึกผลท่าฝึกแบบสั้น ๆ และเช็กความคืบหน้าหลังการฝึกจริงต่อเนื่อง",
+  "Machine Chest Press response across additional sessions":
+    "ผลตอบสนองต่อ Machine Chest Press ในครั้งถัด ๆ ไป",
+  "Training performance, recovery and adherence trend":
+    "แนวโน้มผลการฝึก การฟื้นตัว และความสม่ำเสมอ",
+  "Body-weight trend as more Progress checks accumulate":
+    "แนวโน้มน้ำหนักตัวเมื่อมีข้อมูลความคืบหน้าเพิ่มขึ้น",
+};
+
+function displayReportText(value: string | null) {
+  if (!value) return null;
+  return reportTextLabel[value] ?? value;
+}
 
 function textList(value: unknown) {
   return Array.isArray(value) ? value.map((x) => String(x)).filter(Boolean) : [];
@@ -105,18 +135,18 @@ export default async function ConsultPage() {
     <div style={{ marginTop: 18 }}><ConsultRequestForm /></div>
 
     {reports.length === 0 ? <div className="notice" style={{ marginTop: 18 }}>ยังไม่มีรายงาน PRO ที่เผยแพร่ เมื่อการทบทวนรอบนี้เสร็จสิ้น รายงานจะแสดงที่นี่</div> : reports.map((r) => {
-      const actions = textList(r.next_actions);
-      const monitor = textList(r.monitor_items);
+      const actions = textList(r.next_actions).map((item) => displayReportText(item) ?? item);
+      const monitor = textList(r.monitor_items).map((item) => displayReportText(item) ?? item);
       const status = r.overall_status ? reportStatusLabel[r.overall_status] ?? r.overall_status : "รายงาน PRO";
       return <section className="card day" key={r.report_id}>
         <div className="kicker">{r.period_start ?? ""} → {r.period_end ?? ""}</div>
         <h2>{status}</h2>
-        {r.what_changed && <p><strong>สิ่งที่เปลี่ยน:</strong> {r.what_changed}</p>}
-        {r.training_review && <p><strong>การฝึก:</strong> {r.training_review}</p>}
-        {r.nutrition_review && <p><strong>โภชนาการ:</strong> {r.nutrition_review}</p>}
-        {r.lab_context && <p><strong>ข้อมูล LAB ที่เกี่ยวข้อง:</strong> {r.lab_context}</p>}
-        {r.professional_assessment && <p><strong>การประเมินโดยผู้เชี่ยวชาญ:</strong> {r.professional_assessment}</p>}
-        {r.program_update && <p><strong>การปรับ Program:</strong> {r.program_update}</p>}
+        {r.what_changed && <p><strong>สิ่งที่เปลี่ยน:</strong> {displayReportText(r.what_changed)}</p>}
+        {r.training_review && <p><strong>การฝึก:</strong> {displayReportText(r.training_review)}</p>}
+        {r.nutrition_review && <p><strong>โภชนาการ:</strong> {displayReportText(r.nutrition_review)}</p>}
+        {r.lab_context && <p><strong>ข้อมูล LAB ที่เกี่ยวข้อง:</strong> {displayReportText(r.lab_context)}</p>}
+        {r.professional_assessment && <p><strong>การประเมินโดยผู้เชี่ยวชาญ:</strong> {displayReportText(r.professional_assessment)}</p>}
+        {r.program_update && <p><strong>การปรับ Program:</strong> {displayReportText(r.program_update)}</p>}
         {actions.length > 0 && <p><strong>ทำต่อ:</strong> {actions.join(" · ")}</p>}
         {monitor.length > 0 && <p><strong>ติดตาม:</strong> {monitor.join(" · ")}</p>}
         {r.next_review_date && <small>ทบทวนครั้งถัดไป: {r.next_review_date}</small>}
