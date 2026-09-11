@@ -61,7 +61,7 @@ export function ConsultRequestForm() {
     <button className="btn primary" type="button" onClick={submit} disabled={busy || sent}>
       {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ส่งคำขอปรึกษา"}
     </button>
-    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} PRO จะทบทวนข้อมูลและแจ้งวันนัดกลับทางอีเมล</div>}
+    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} เก็บเลขคำขอนี้ไว้สำหรับอ้างอิง PRO จะทบทวนข้อมูลและแจ้งวันนัดกลับทางอีเมล</div>}
     {warning && <div className="notice warning">{warning}</div>}
     {error && <div className="notice warning">{error}</div>}
     {busy && <ProcessingOverlay title="กำลังส่งคำขอปรึกษา..." detail="กำลังสร้างคำขอเพื่อให้ PRO ทบทวน โดยยังไม่ตัดสิทธิ์การปรึกษา" />}
