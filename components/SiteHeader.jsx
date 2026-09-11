@@ -5,8 +5,8 @@ import { useState } from 'react';
 import LanguageSwitcher from './LanguageSwitcher';
 
 const nav = {
-  th: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'คู่มือ', kendo: 'KENDO', menu: 'เมนู', close: 'ปิด' },
-  en: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'GUIDE', kendo: 'KENDO', menu: 'MENU', close: 'CLOSE' }
+  th: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'KDKAMATO GUIDELINE', kendo: 'KENDO', menu: 'เมนู', close: 'ปิด' },
+  en: { manga: 'MANGA', knowledge: 'KNOWLEDGE', lab: 'LAB', training: 'TRAINING', guide: 'KDKAMATO GUIDELINE', kendo: 'KENDO', menu: 'MENU', close: 'CLOSE' }
 };
 
 export default function SiteHeader({ language = 'th' }) {
