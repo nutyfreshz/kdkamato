@@ -10,22 +10,39 @@ function errorText(error: unknown) {
   return "ส่งคำขอไม่สำเร็จ";
 }
 
+function requestCode(meetingId: string) {
+  return `PC-${meetingId.replaceAll("-", "").slice(0, 8).toUpperCase()}`;
+}
+
 export function ConsultRequestForm() {
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [requestId, setRequestId] = useState("");
+  const [warning, setWarning] = useState("");
   const [error, setError] = useState("");
 
   async function submit() {
     if (busy || sent) return;
     setBusy(true);
     setError("");
+    setWarning("");
     try {
       const supabase = createClient();
-      const { error: requestError } = await supabase.rpc("request_my_online_consult", {
+      const { data, error: requestError } = await supabase.rpc("request_my_online_consult", {
         p_user_reason: reason.trim() || null,
       });
       if (requestError) throw requestError;
+
+      const result = data as { meeting_id?: string } | null;
+      const meetingId = result?.meeting_id ?? "";
+      if (meetingId) {
+        setRequestId(requestCode(meetingId));
+        const { error: notifyError } = await supabase.functions.invoke("kdk-consult-email", {
+          body: { event: "REQUEST_CREATED", meetingId },
+        });
+        if (notifyError) setWarning("บันทึกคำขอแล้ว แต่ระบบแจ้งเตือนอีเมล PRO ยังไม่สำเร็จ ทีมงานยังสามารถเห็นคำขอนี้ใน PRO Consult ได้");
+      }
       setSent(true);
     } catch (e) {
       setError(errorText(e));
@@ -44,7 +61,8 @@ export function ConsultRequestForm() {
     <button className="btn primary" type="button" onClick={submit} disabled={busy || sent}>
       {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ส่งคำขอปรึกษา"}
     </button>
-    {sent && <div className="notice">รับคำขอแล้ว ระบบส่งเรื่องเข้าสู่การทบทวนโดย PRO เรียบร้อย</div>}
+    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} ระบบส่งเรื่องเข้าสู่การทบทวนโดย PRO เรียบร้อย</div>}
+    {warning && <div className="notice warning">{warning}</div>}
     {error && <div className="notice warning">{error}</div>}
     {busy && <ProcessingOverlay title="กำลังส่งคำขอปรึกษา..." detail="กำลังสร้างคำขอเพื่อให้ PRO ทบทวน โดยยังไม่ตัดสิทธิ์การปรึกษา" />}
   </div>;
