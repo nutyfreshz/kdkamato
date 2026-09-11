@@ -20,6 +20,7 @@
 .nav a:hover { background:var(--p-panel); color:var(--p-text); }
 .main { padding:44px clamp(24px,5vw,72px) 100px; max-width:1180px; width:100%; }
 .bottomNav { display:none; }
+.guideFab { display:none; }
 .standalone { min-height:100vh; padding:48px max(24px,calc((100vw - 900px)/2)) 100px; background:radial-gradient(circle at 80% 0%,#102128 0,var(--p-bg) 36rem); }
 .standaloneBrand { display:inline-block; margin-bottom:36px; font-weight:900; letter-spacing:.08em; }
 .standaloneBrand span { color:var(--p-orange); }
@@ -83,6 +84,7 @@
   .root { display:block; }
   .sidebar { display:none; }
   .main { padding:28px 20px 92px; }
+  .guideFab { position:fixed; z-index:79; right:14px; bottom:86px; display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:9px 13px; border:1px solid rgba(73,215,232,.35); border-radius:999px; background:rgba(8,11,13,.94); color:var(--p-cyan); font-size:.72rem; font-weight:900; letter-spacing:.04em; backdrop-filter:blur(12px); box-shadow:0 8px 28px rgba(0,0,0,.28); }
   .bottomNav { position:fixed; z-index:80; left:10px; right:10px; bottom:10px; display:grid; grid-template-columns:repeat(5,1fr); gap:4px; padding:8px; border:1px solid var(--p-line); border-radius:14px; background:rgba(8,11,13,.94); backdrop-filter:blur(14px); }
   .bottomNav a { text-align:center; font-size:.68rem; padding:9px 2px; color:var(--p-muted); }
   .root :global(.grid), .standalone :global(.grid), .root :global(.form-grid), .standalone :global(.form-grid) { grid-template-columns:1fr; }
