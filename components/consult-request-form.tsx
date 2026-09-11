@@ -41,7 +41,7 @@ export function ConsultRequestForm() {
         const { error: notifyError } = await supabase.functions.invoke("kdk-consult-email", {
           body: { event: "REQUEST_CREATED", meetingId },
         });
-        if (notifyError) setWarning("บันทึกคำขอแล้ว แต่ระบบแจ้งเตือนอีเมล PRO ยังไม่สำเร็จ ทีมงานยังสามารถเห็นคำขอนี้ใน PRO Consult ได้");
+        if (notifyError) setWarning("บันทึกคำขอแล้ว แต่ระบบแจ้งเตือนอีเมล PRO ยังไม่สำเร็จ คำขอยังอยู่ในระบบและค้นได้จากเลขคำขอ");
       }
       setSent(true);
     } catch (e) {
@@ -61,7 +61,7 @@ export function ConsultRequestForm() {
     <button className="btn primary" type="button" onClick={submit} disabled={busy || sent}>
       {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ส่งคำขอปรึกษา"}
     </button>
-    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} ระบบส่งเรื่องเข้าสู่การทบทวนโดย PRO เรียบร้อย</div>}
+    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} PRO จะทบทวนข้อมูลและแจ้งวันนัดกลับทางอีเมล</div>}
     {warning && <div className="notice warning">{warning}</div>}
     {error && <div className="notice warning">{error}</div>}
     {busy && <ProcessingOverlay title="กำลังส่งคำขอปรึกษา..." detail="กำลังสร้างคำขอเพื่อให้ PRO ทบทวน โดยยังไม่ตัดสิทธิ์การปรึกษา" />}
