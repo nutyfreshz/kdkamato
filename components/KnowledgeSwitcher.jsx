@@ -22,7 +22,7 @@ export default function KnowledgeSwitcher({ language = 'th' }) {
   const content = items[language] || items.th;
   return (
     <div className="knowledge-stage">
-      <div className="knowledge-list" role="tablist" aria-label={language === 'en' ? 'Knowledge territories' : 'หมวดความรู้'}>
+      <div className="knowledge-list" role="group" aria-label={language === 'en' ? 'Knowledge territories' : 'หมวดความรู้'}>
         {content.map((item, index) => (
           <button
             key={item[0]}
@@ -30,14 +30,13 @@ export default function KnowledgeSwitcher({ language = 'th' }) {
             onMouseEnter={() => setActive(index)}
             onFocus={() => setActive(index)}
             onClick={() => setActive(index)}
-            role="tab"
-            aria-selected={active === index}
+            aria-pressed={active === index}
           >
             <span>0{index + 1}</span>{item[0]}
           </button>
         ))}
       </div>
-      <div className="knowledge-visual">
+      <div className="knowledge-visual" aria-live="polite">
         {content.map((item, index) => (
           <img key={item[1]} className={`knowledge-image ${active === index ? 'is-active' : ''}`} src={item[1]} alt="" />
         ))}
