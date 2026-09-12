@@ -1,0 +1,45 @@
+/* KDKAMATO responsive type tuning
+   Keep editorial scale strong while reducing large jumps between clamp min/max. */
+
+h1{font-size:clamp(56px,6.2vw,104px)}
+h2{font-size:clamp(46px,5vw,84px)}
+.hero-copy h1{font-size:clamp(58px,5.8vw,96px)}
+.manga-feature-copy h3{font-size:clamp(30px,3vw,48px)}
+.knowledge-item{font-size:clamp(18px,1.6vw,26px)}
+.lab-form h3{font-size:clamp(28px,3vw,44px)}
+.result-number{font-size:clamp(84px,10vw,144px)}
+.portal-links a{font-size:clamp(26px,3vw,44px)}
+.reader-head h1{font-size:clamp(42px,5vw,72px)}
+.article-page h1{font-size:clamp(44px,5.2vw,76px)}
+
+/* Guideline uses CSS modules, so target the page structure with higher specificity. */
+main[class*="guide-module"][class*="__page"] > section:first-child h1{
+  font-size:clamp(54px,6vw,96px);
+}
+main[class*="guide-module"][class*="__page"] h2{
+  font-size:clamp(38px,4.4vw,64px);
+}
+
+@media(max-width:900px){
+  h1{font-size:clamp(48px,10vw,68px)}
+  h2{font-size:clamp(40px,8vw,58px)}
+  .hero-copy h1{font-size:clamp(48px,11vw,68px)}
+  .descent-copy h2{font-size:clamp(42px,10vw,60px)}
+  .result-number{font-size:clamp(84px,18vw,108px)}
+}
+
+@media(max-width:680px){
+  h1{font-size:clamp(46px,11vw,62px)}
+  h2{font-size:clamp(38px,9vw,52px)}
+  .hero-copy h1{font-size:clamp(46px,11.5vw,62px)}
+  .descent-copy h2{font-size:clamp(40px,10.5vw,56px)}
+  .manga-feature-copy h3{font-size:clamp(28px,8vw,40px)}
+  .lab-form h3{font-size:clamp(28px,8vw,40px)}
+  .reader-head h1,.article-page h1{font-size:clamp(38px,10vw,54px)}
+  main[class*="guide-module"][class*="__page"] > section:first-child h1{
+    font-size:clamp(46px,11.5vw,62px);
+  }
+  main[class*="guide-module"][class*="__page"] h2{
+    font-size:clamp(36px,9vw,50px);
+  }
+}
