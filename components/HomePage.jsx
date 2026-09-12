@@ -17,7 +17,7 @@ const copy = {
     noArticleTitle: 'พื้นที่สำหรับบทความที่พร้อมใช้งาน', noArticleText: 'บทความเชิงลึกเผยแพร่แยกจาก Manga จึงไม่จำเป็นต้องมีบทความคู่กับทุกตอน',
     labTitle: <>ลองใช้ข้อมูลของคุณ</>, labIntro: 'เริ่มจากคำถามที่อยากรู้ กรอกค่าที่วัดได้ แล้วดูว่าค่าเหล่านั้นส่งผลต่อการจัดท่า สัดส่วน หรือการตีความอย่างไร โดยไม่ต้องรู้ศัพท์เฉพาะทางมาก่อน',
     c1: 'ทำไมบางท่าถึงรู้สึกไม่เข้ากับโครงสร้างร่างกายของคุณ?', c2: 'ท่า Squat แบบไหนควรลองก่อน?', c3: 'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V (V-shape) จะเปลี่ยนอย่างไร?',
-    trainingTitle: <>เปลี่ยนความรู้ให้เป็นการลงมือทำ</>, trainingText: 'ส่วน Training จะรวมโปรแกรมและแนวทางนำความรู้ไปใช้จริง เมื่อเนื้อหาผ่านการตรวจสอบและพร้อมเผยแพร่', trainingCta: 'ดู TRAINING',
+    trainingTitle: <>เปลี่ยนความรู้ให้เป็นการลงมือทำ</>, trainingText: 'ตั้งค่าโปรแกรมฝึกจากเป้าหมาย เวลาฝึก และอุปกรณ์ของคุณ แล้วติดตามผลการฝึกต่อได้', trainingCta: 'ดู TRAINING',
     kendoTitle: <>คนจริงเบื้องหลัง KDKAMATO</>, kendoText: 'หลักฐาน ประสบการณ์ และการนำไปใช้',
     portal: <>อยากดูอะไรต่อ?</>
   },
@@ -31,7 +31,7 @@ const copy = {
     noArticleTitle: 'ARTICLE LIBRARY READY', noArticleText: 'Deep dives publish independently. Daily Manga does not require a matching article.',
     labTitle: <>TEST<br/>YOURSELF.</>, labIntro: 'Start with a question, enter measurements you can actually take, and see how they change movement, proportions, or interpretation without needing technical vocabulary first.',
     c1: 'Why do some exercises feel awkward for your structure?', c2: 'Which Squat setup is worth testing first?', c3: 'Want a stronger V-shape? What should change?',
-    trainingTitle: <>KNOWLEDGE<br/>INTO<br/>APPLICATION.</>, trainingText: 'Training programs and practical application will live here once the material has been reviewed and is ready to publish.', trainingCta: 'EXPLORE TRAINING',
+    trainingTitle: <>KNOWLEDGE<br/>INTO<br/>APPLICATION.</>, trainingText: 'Set your training goal, time, and equipment to build your program, then keep tracking how it goes.', trainingCta: 'EXPLORE TRAINING',
     kendoTitle: <>THE HUMAN<br/>BEHIND<br/>KDKAMATO.</>, kendoText: 'Evidence. Experience. Application.',
     portal: <>WHERE DO YOU<br/>WANT TO GO NEXT?</>
   }
