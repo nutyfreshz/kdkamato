@@ -1,0 +1,59 @@
+.pageRoot{
+  position:relative;
+  isolation:isolate;
+  background:transparent !important;
+}
+
+.fixedBackdrop{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-color:#08090a;
+  background-image:
+    radial-gradient(circle at 78% 38%,rgba(72,220,232,.08),transparent 34rem),
+    linear-gradient(90deg,rgba(8,9,10,.98) 0%,rgba(8,9,10,.76) 34%,rgba(8,9,10,.24) 67%,rgba(8,9,10,.72) 100%),
+    var(--brand-bg);
+  background-repeat:no-repeat;
+  background-size:
+    cover,
+    cover,
+    clamp(880px,64vw,1040px) auto;
+  background-position:
+    center,
+    center,
+    78% 44%;
+  filter:contrast(1.07) saturate(1.04);
+  transform:translateZ(0);
+}
+
+.pageRoot > :not(.fixedBackdrop){
+  position:relative;
+  z-index:1;
+}
+
+@media(max-width:900px){
+  .fixedBackdrop{
+    background-size:
+      cover,
+      cover,
+      180vw auto;
+    background-position:
+      center,
+      center,
+      64% 18%;
+  }
+}
+
+@media(max-width:560px){
+  .fixedBackdrop{
+    background-size:
+      cover,
+      cover,
+      205vw auto;
+    background-position:
+      center,
+      center,
+      62% 14%;
+  }
+}
