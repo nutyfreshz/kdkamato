@@ -7,6 +7,7 @@ const viewports = [
 ];
 
 const routes = ['/', '/manga', '/knowledge', '/lab', '/training', '/guide', '/home', '/program', '/progress', '/account'];
+const protectedRoutes = new Set(['/home', '/program', '/progress', '/account']);
 
 async function settle(page) {
   await page.waitForLoadState('domcontentloaded');
@@ -35,6 +36,25 @@ async function assertNoClippedKeyText(page, label) {
   expect(bad, `${label} clipped key text ${JSON.stringify(bad)}`).toEqual([]);
 }
 
+async function assertLoginShell(page, vp, route) {
+  console.log(`AUTH-BLOCKED ${route} -> ${new URL(page.url()).pathname}`);
+  const login = page.locator('.program-standalone');
+  await expect(login).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  if (vp.width <= 820) {
+    const controls = page.locator('input,button,.btn');
+    const n = await controls.count();
+    for (let i = 0; i < n; i++) {
+      const el = controls.nth(i);
+      if (!(await el.isVisible())) continue;
+      const b = await el.boundingBox();
+      expect(b.height, `${vp.name} ${route} login target ${i}`).toBeGreaterThanOrEqual(44);
+      expect(b.x).toBeGreaterThanOrEqual(0);
+      expect(b.x + b.width).toBeLessThanOrEqual(vp.width + 1);
+    }
+  }
+}
+
 for (const vp of viewports) {
   test.describe(vp.name, () => {
     test.use({ viewport: { width: vp.width, height: vp.height }, reducedMotion: 'reduce' });
@@ -47,6 +67,11 @@ for (const vp of viewports) {
         await assertNoClippedKeyText(page, `${vp.name} ${route}`);
         const safe = route === '/' ? 'home-root' : route.slice(1).replace(/\//g,'-');
         await page.screenshot({ path:`test-results/production/${vp.name}__${safe}.png`, fullPage:true });
+
+        if (protectedRoutes.has(route) && new URL(page.url()).pathname.startsWith('/login')) {
+          await assertLoginShell(page, vp, route);
+          return;
+        }
 
         if (route === '/' && vp.width <= 900) {
           const toggle = page.locator('.menu-toggle');
@@ -67,7 +92,7 @@ for (const vp of viewports) {
           await expect(toggle).toBeFocused();
         }
 
-        if (['/home','/program','/progress','/account'].includes(route)) {
+        if (protectedRoutes.has(route)) {
           const shell = page.locator('.app-shell');
           await expect(shell).toBeVisible();
           const bottom = page.locator('.app-bottom-nav');
