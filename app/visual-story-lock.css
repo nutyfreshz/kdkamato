@@ -1,0 +1,40 @@
+/* Approved visual-story lock.
+   Purpose: keep Training -> Real Kendo as a deliberate two-beat showcase.
+   This does not introduce a new motion system; it only gives the existing crossfade enough scroll runway and a stable Kendo hold. */
+
+.visual-story[data-visual-story]{
+  height:250svh;
+}
+
+.visual-story-anchor-kendo{
+  top:124svh;
+}
+
+/* The existing JS still owns the crossfade. We only accelerate Kendo's visual settle
+   so it reaches a readable full state well before the sticky stage releases. */
+.visual-story[data-visual-story] .visual-scene-kendo{
+  opacity:clamp(0,calc(var(--kendo-scene-opacity,0) * 1.8),1);
+}
+
+.visual-story[data-visual-story] .visual-scene-kendo .kendo-copy{
+  opacity:clamp(0,calc(var(--kendo-copy-opacity,0) * 1.65),1);
+}
+
+@media(max-width:900px){
+  .visual-story[data-visual-story]{
+    height:220svh;
+  }
+  .visual-story-anchor-kendo{
+    top:102svh;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .visual-story[data-visual-story]{
+    height:auto;
+  }
+  .visual-story[data-visual-story] .visual-scene-kendo,
+  .visual-story[data-visual-story] .visual-scene-kendo .kendo-copy{
+    opacity:1;
+  }
+}
