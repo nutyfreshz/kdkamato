@@ -31,7 +31,7 @@ export default async function GuidePage() {
       <SiteHeader language={language} />
       <GuideMotion />
       <main className={styles.page}>
-        <section className={styles.hero}>
+        <section className={`${styles.hero} guide-brand-hero`}>
           <div className={styles.gridGlow} aria-hidden="true" />
           <div className={styles.heroInner} data-guide-reveal>
             <p className={styles.eyebrow}>{t(guideHero.eyebrow)}</p>
