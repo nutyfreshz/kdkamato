@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Descent from './Descent';
+import { useHomeMotion } from './use-home-motion';
 import styles from './home-story.module.css';
 import KnowledgeSwitcher from './KnowledgeSwitcher';
 import LabPreview from './LabPreview';
@@ -48,11 +49,12 @@ function MangaPlaceholder({ language }) {
 }
 
 export default function HomePage({ manga = [], articles = [], language = 'th' }) {
+  const motionRoot = useHomeMotion();
   const c = copy[language] || copy.th;
   const latest = manga[0];
   const previous = manga.slice(1, 4);
   return (
-    <main className="home-page">
+    <main className="home-page" ref={motionRoot}>
       <section className="hero">
         <div className="hero-image" />
         <div className="hero-vignette" />
@@ -65,7 +67,6 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
       </section>
 
       <Descent language={language} />
-      <div className="breather" />
 
       <section className="manga section shell" id="manga">
         <div className="section-heading"><p className="eyebrow">{c.latestEyebrow}</p><h2>{c.latestTitle}</h2></div>

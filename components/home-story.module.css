@@ -1,10 +1,10 @@
 /* One opaque frame per chapter. Native sticky release keeps adjacent images
    in separate rectangles, including reverse scroll and direct hash navigation. */
-.story { background: #0e1214; }
-.chapter { position: relative; height: 150svh; scroll-margin-top: 0; }
+.story { position: relative; isolation: isolate; background: #0e1214; padding-bottom: 45svh; }
+.chapter { position: sticky; top: 0; height: 100svh; scroll-margin-top: 0; background: #0e1214; }
+.chapter:first-child { margin-bottom: 45svh; }
 .frame {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100svh;
   min-height: 640px;
   overflow: clip;
@@ -56,7 +56,9 @@
 /* Portrait devices get a dedicated image area and readable editorial caption.
    No viewport-height text clipping, no sticky trapping at larger font sizes. */
 @media (max-width: 900px), (max-height: 640px) {
-  .chapter { height: auto; scroll-margin-top: 88px; }
+  .story { padding-bottom: 0; }
+  .chapter { position: relative; height: auto; scroll-margin-top: 88px; }
+  .chapter:first-child { margin-bottom: 0; }
   .frame { position: relative; height: auto; min-height: 0; }
   .art {
     position: relative;
@@ -75,7 +77,9 @@
   .note { max-width: 540px; margin-top: 24px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .chapter { height: auto; }
+  .story { padding-bottom: 0; }
+  .chapter { position: relative; height: auto; }
+  .chapter:first-child { margin-bottom: 0; }
   .frame { position: relative; }
   .art, .copy { transform: none; }
 }

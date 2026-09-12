@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 
 const content = {
   th: [
@@ -18,56 +17,25 @@ const content = {
 };
 
 export default function Descent({ language = 'th' }) {
-  const root = useRef(null);
-  const [stage, setStage] = useState(0);
-  const [progress, setProgress] = useState(0);
   const stages = content[language] || content.th;
-
-  useEffect(() => {
-    let ticking = false;
-    const update = () => {
-      ticking = false;
-      const el = root.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const travel = Math.max(1, rect.height - window.innerHeight);
-      const p = Math.min(1, Math.max(0, -rect.top / travel));
-      setProgress(p);
-      setStage(Math.min(stages.length - 1, Math.floor(p * stages.length)));
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [stages.length]);
-
   return (
-    <section className="descent" ref={root} id="descent" aria-label={language === 'en' ? 'Beneath the surface' : 'สิ่งที่เกิดขึ้นใต้สิ่งที่มองเห็น'}>
+    <section className="descent" id="descent" aria-label={language === 'en' ? 'Beneath the surface' : 'สิ่งที่เกิดขึ้นใต้สิ่งที่มองเห็น'}>
       <div className="descent-sticky">
         <div className="descent-media" aria-hidden="true">
           {stages.map((item, index) => (
-            <img key={item.image} className={`descent-frame ${stage === index ? 'is-active' : ''}`} src={item.image} alt="" />
+            <img key={item.image} className={`descent-frame ${index === 0 ? 'is-active' : ''}`} src={item.image} alt="" />
           ))}
           <div className="descent-shade" />
         </div>
         <div className="shell descent-copy-wrap">
           {stages.map((item, index) => (
-            <div key={item.eyebrow} className={`descent-copy ${stage === index ? 'is-active' : ''}`}>
+            <div key={item.eyebrow} aria-hidden={index !== 0} className={`descent-copy ${index === 0 ? 'is-active' : ''}`}>
               <p className="eyebrow">{item.eyebrow}</p>
               <h2>{item.title}</h2>
             </div>
           ))}
         </div>
-        <div className="descent-progress" aria-hidden="true"><span style={{ transform: `scaleX(${progress})` }} /></div>
+        <div className="descent-progress" aria-hidden="true"><span /></div>
       </div>
     </section>
   );

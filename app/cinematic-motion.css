@@ -27,86 +27,6 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   filter:none;
 }
 
-/* Opening sequence dissolve. */
-.hero::after{
-  content:"";
-  position:absolute;
-  z-index:1;
-  left:0;
-  right:0;
-  bottom:0;
-  height:18svh;
-  pointer-events:none;
-  background:linear-gradient(180deg,rgba(8,9,10,0),rgba(8,9,10,.34) 48%,#08090a 100%);
-}
-.descent{isolation:isolate}
-.descent::before{
-  content:"";
-  position:absolute;
-  z-index:6;
-  top:0;
-  left:0;
-  right:0;
-  height:18svh;
-  pointer-events:none;
-  background:linear-gradient(180deg,#08090a 0%,rgba(8,9,10,.54) 46%,rgba(8,9,10,0) 100%);
-}
-
-/* Content sections share edge colors so the page never exposes a hard section band. */
-.knowledge{
-  background:
-    radial-gradient(110% 58% at 78% 10%,rgba(72,220,232,.018),transparent 56%),
-    linear-gradient(180deg,#08090a 0%,#090b0c 11%,#0b0d0e 27%,#0b0d0e 100%);
-}
-.lab{
-  background:
-    radial-gradient(95% 54% at 22% 18%,rgba(72,220,232,.025),transparent 60%),
-    linear-gradient(180deg,#0b0d0e 0%,#0c0f11 10%,#0e1214 27%,#0e1214 100%);
-}
-.lab-grid-bg{
-  opacity:.5;
-  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 9%,rgba(0,0,0,.72) 23%,#000 36%,#000 100%);
-  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 9%,rgba(0,0,0,.72) 23%,#000 36%,#000 100%);
-}
-
-/* Scroll-driven Descent sequence. */
-.descent-frame{
-  transform:translate3d(0,10px,0) scale(1.075);
-  filter:saturate(.92) brightness(.88);
-  transition:
-    opacity .95s cubic-bezier(.22,.72,.2,1),
-    transform 1.8s cubic-bezier(.16,.78,.18,1),
-    filter .95s ease;
-  will-change:opacity,transform,filter;
-}
-.descent-frame.is-active{
-  transform:translate3d(0,var(--descent-motion-y,0px),0) scale(1.018);
-  filter:saturate(1) brightness(1);
-}
-.descent-copy{
-  transform:translate3d(0,38px,0) scale(.985);
-  filter:blur(5px);
-  transition:
-    opacity .7s cubic-bezier(.22,.72,.2,1),
-    transform .82s cubic-bezier(.16,.78,.18,1),
-    filter .65s ease;
-  will-change:opacity,transform,filter;
-}
-.descent-copy.is-active{
-  transform:translate3d(0,0,0) scale(1);
-  filter:none;
-}
-.descent-progress span{
-  box-shadow:0 0 18px rgba(72,220,232,.42);
-  transition:transform .08s linear;
-}
-
-/* Scroll-linked depth for large visual sections. */
-.knowledge-visual,.manga-cover.real-cover{
-  transform:translate3d(0,var(--motion-y,0px),0);
-  will-change:transform;
-}
-
 /* Keep hover motion alive after reveal. */
 .manga-card .mini-cover,.tool-teasers a,.portal-links a,.article-grid article{
   transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .28s ease,color .28s ease,background .28s ease;
@@ -116,41 +36,9 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
 .article-grid article:hover{transform:translate3d(0,-4px,0)}
 .portal-links a:hover{transform:translate3d(8px,0,0);padding-left:0}
 
-@media(max-width:900px){
-  .hero::after,.descent::before{height:14svh}
-  html.kdk-motion-ready [data-motion-reveal="true"]{
-    transform:translate3d(0,24px,0) scale(.992);
-    filter:blur(3px);
-  }
-  .knowledge{
-    background:
-      radial-gradient(125% 42% at 72% 8%,rgba(72,220,232,.016),transparent 58%),
-      linear-gradient(180deg,#08090a 0%,#090b0c 9%,#0b0d0e 22%,#0b0d0e 100%);
-  }
-  .lab{
-    background:
-      radial-gradient(115% 44% at 18% 14%,rgba(72,220,232,.022),transparent 60%),
-      linear-gradient(180deg,#0b0d0e 0%,#0c0f11 9%,#0e1214 22%,#0e1214 100%);
-  }
-  .lab-grid-bg{
-    -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
-    mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
-  }
-}
-
 @media(prefers-reduced-motion:reduce){
   body.kdk-route-enter main{animation:none}
-  html.kdk-motion-ready [data-motion-reveal="true"],
-  html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
-    opacity:1;
-    transform:none;
-    filter:none;
-    transition:none;
-  }
-  .hero::after,.descent::before{display:none}
-  .descent-frame,.descent-copy,.descent-progress span,.knowledge-visual,.manga-cover.real-cover{
-    transition:none;
-    transform:none;
-    filter:none;
+  html.kdk-motion-ready [data-motion-reveal="true"]{
+    opacity:1;transform:none;filter:none;transition:none;
   }
 }
