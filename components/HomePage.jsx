@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Descent from './Descent';
 import KnowledgeSwitcher from './KnowledgeSwitcher';
 import LabPreview from './LabPreview';
+import backdropStyles from './FixedBrandBackdrop.module.css';
 import { localizedField } from '../lib/localize';
 import { kdkBackground } from '../lib/kdk-background';
 
@@ -52,10 +53,15 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
   const latest = manga[0];
   const previous = manga.slice(1, 4);
   return (
-    <main>
+    <main className={backdropStyles.pageRoot}>
+      <div
+        className={backdropStyles.fixedBackdrop}
+        aria-hidden="true"
+        style={{ '--brand-bg': `url("${kdkBackground}")` }}
+      />
+
       <section className="hero">
-        <div className="hero-image" style={{ backgroundImage: `url("${kdkBackground}")` }} />
-        <div className="hero-vignette" style={{ opacity: .88 }} />
+        <div className="hero-vignette" style={{ opacity: .78 }} />
         <div className="hero-copy shell">
           <p className="eyebrow">KDKAMATO / REBIRTH</p>
           <h1>{c.heroTitle}</h1>
@@ -65,7 +71,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
       </section>
 
       <Descent language={language} />
-      <div className="breather" />
+      <div className="breather" style={{ background: 'rgba(8,9,10,.34)' }} />
 
       <section className="manga section shell" id="manga">
         <div className="section-heading"><p className="eyebrow">{c.latestEyebrow}</p><h2>{c.latestTitle}</h2></div>
@@ -89,7 +95,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         <Link className="section-link" href="/manga">{c.viewManga} <span>→</span></Link>
       </section>
 
-      <section className="knowledge section" id="knowledge">
+      <section className="knowledge section" id="knowledge" style={{ background: 'rgba(11,13,14,.86)' }}>
         <div className="shell">
           <div className="section-heading compact"><p className="eyebrow">KNOWLEDGE</p><h2>{c.knowledgeTitle}</h2><p className="section-intro">{c.knowledgeIntro}</p></div>
           <KnowledgeSwitcher language={language} />
@@ -103,7 +109,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         </div>
       </section>
 
-      <section className="lab section" id="lab">
+      <section className="lab section" id="lab" style={{ background: 'rgba(14,18,20,.84)' }}>
         <div className="lab-grid-bg" />
         <div className="shell lab-shell">
           <div className="section-heading compact"><p className="eyebrow cyan">KDKAMATO LAB</p><h2>{c.labTitle}</h2><p className="section-intro">{c.labIntro}</p></div>
