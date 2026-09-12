@@ -61,7 +61,8 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
       />
 
       <section className="hero">
-        <div className="hero-vignette" style={{ opacity: .78 }} />
+        <div className="hero-image" />
+        <div className="hero-vignette" />
         <div className="hero-copy shell">
           <p className="eyebrow">KDKAMATO / REBIRTH</p>
           <h1>{c.heroTitle}</h1>
