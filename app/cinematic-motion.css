@@ -1,27 +1,30 @@
 /* KDKAMATO cinematic motion layer.
-   Premium motion is deliberately built from opacity, transform and composited gradients.
-   No artwork, content, engine, auth or data behavior changes. */
+   Motion is deliberately built from opacity + transform + composited gradients.
+   No artwork, content, engine, auth, or data behavior changes. */
 
 body.kdk-route-enter main{
-  animation:kdk-route-enter .32s cubic-bezier(.22,.72,.2,1) both;
+  animation:kdk-route-enter .42s cubic-bezier(.22,.72,.2,1) both;
 }
 @keyframes kdk-route-enter{
-  from{opacity:.84}
-  to{opacity:1}
+  from{opacity:.72;transform:translate3d(0,10px,0)}
+  to{opacity:1;transform:none}
 }
 
-/* Editorial reveal: restrained, no blur-heavy template effect. */
+/* Reveal only after the client motion controller is active, so no-JS content stays visible. */
 html.kdk-motion-ready [data-motion-reveal="true"]{
   opacity:0;
-  transform:translate3d(0,18px,0);
+  transform:translate3d(0,34px,0) scale(.988);
+  filter:blur(4px);
   transition:
-    opacity .62s cubic-bezier(.22,.72,.2,1) var(--motion-delay,0ms),
-    transform .82s cubic-bezier(.16,.78,.18,1) var(--motion-delay,0ms);
-  will-change:opacity,transform;
+    opacity .82s cubic-bezier(.22,.72,.2,1) var(--motion-delay,0ms),
+    transform .96s cubic-bezier(.16,.78,.18,1) var(--motion-delay,0ms),
+    filter .72s ease var(--motion-delay,0ms);
+  will-change:opacity,transform,filter;
 }
 html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   opacity:1;
   transform:none;
+  filter:none;
 }
 
 /* Opening sequence dissolve. */
@@ -49,155 +52,83 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   background:linear-gradient(180deg,#08090a 0%,rgba(8,9,10,.54) 46%,rgba(8,9,10,0) 100%);
 }
 
-/* Quiet content transitions: no visible horizontal section bars. */
-.home-page .knowledge{
+/* Content sections share edge colors so the page never exposes a hard section band. */
+.knowledge{
   background:
     radial-gradient(110% 58% at 78% 10%,rgba(72,220,232,.018),transparent 56%),
     linear-gradient(180deg,#08090a 0%,#090b0c 11%,#0b0d0e 27%,#0b0d0e 100%);
 }
-.home-page .lab{
+.lab{
   background:
     radial-gradient(95% 54% at 22% 18%,rgba(72,220,232,.025),transparent 60%),
     linear-gradient(180deg,#0b0d0e 0%,#0c0f11 10%,#0e1214 27%,#0e1214 100%);
 }
-.home-page .lab-grid-bg{
-  opacity:.46;
+.lab-grid-bg{
+  opacity:.5;
   -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 9%,rgba(0,0,0,.72) 23%,#000 36%,#000 100%);
   mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 9%,rgba(0,0,0,.72) 23%,#000 36%,#000 100%);
 }
 
-/* Premium full-screen visual story.
-   Training and Real Kendo are no longer two stacked rectangles. They share one pinned stage,
-   crossfade over the same viewport, and hand copy/image emphasis to each other on scroll. */
-.visual-story{
-  --story-veil:0;
-  position:relative;
-  height:188svh;
-  margin-top:-1px;
-  background:#08090a;
-}
-.visual-story-stage{
-  position:sticky;
-  top:0;
-  height:100svh;
-  min-height:720px;
-  overflow:hidden;
-  isolation:isolate;
-  background:#08090a;
-}
-.visual-story-stage::after{
-  content:"";
-  position:absolute;
-  z-index:20;
-  inset:0;
-  pointer-events:none;
-  opacity:var(--story-veil,0);
-  background:
-    radial-gradient(80% 68% at 62% 48%,rgba(0,0,0,.12),rgba(0,0,0,.58) 78%),
-    #08090a;
-}
-.visual-story-anchor{
-  position:absolute;
-  width:1px;
-  height:1px;
-  left:0;
-  pointer-events:none;
-}
-.visual-story-anchor-kendo{top:92svh}
-.visual-story .visual-scene{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  min-height:0;
-  padding:0 !important;
-  margin:0;
-  overflow:hidden;
-}
-
-.visual-scene-training{
-  --training-dim:0;
+/* LAB -> TRAINING: the image enters from underneath the UI instead of appearing as a new rectangle. */
+.training{
+  --scene-out-dim:0;
+  --scene-out-copy:1;
   z-index:1;
-  background:#08090a;
+  isolation:isolate;
 }
-.visual-scene-training::before{
+.training::before{
   content:"";
   position:absolute;
   z-index:2;
   inset:0 0 auto;
-  height:30svh;
+  height:28svh;
   pointer-events:none;
-  background:linear-gradient(180deg,#0e1214 0%,rgba(14,18,20,.84) 18%,rgba(14,18,20,.3) 60%,transparent 100%);
+  background:linear-gradient(180deg,#0e1214 0%,rgba(14,18,20,.82) 18%,rgba(14,18,20,.28) 62%,transparent 100%);
 }
-.visual-scene-training::after{
+.training::after{
   content:"";
   position:absolute;
   z-index:2;
   inset:0;
   pointer-events:none;
-  background:
-    radial-gradient(80% 90% at 72% 46%,transparent 20%,rgba(8,9,10,.12) 62%,rgba(8,9,10,.42) 100%),
-    #08090a;
-  opacity:var(--training-dim,0);
-}
-.visual-scene-training .training-image{
-  transform:translate3d(0,var(--training-y,0px),0) scale(var(--training-scale,1.035));
-  transform-origin:58% 46%;
-  will-change:transform;
-}
-.visual-scene-training .training-shade{
-  z-index:1;
-  background:
-    linear-gradient(90deg,rgba(8,9,10,.97) 0%,rgba(8,9,10,.7) 31%,rgba(8,9,10,.1) 66%,rgba(8,9,10,.18) 100%),
-    linear-gradient(180deg,rgba(8,9,10,.04),rgba(8,9,10,.18));
-}
-.visual-scene-training .training-copy{
-  z-index:4;
-  opacity:var(--training-copy-opacity,1);
-  transform:translate3d(0,var(--training-copy-y,0px),0);
-  will-change:opacity,transform;
-}
-
-.visual-scene-kendo{
-  --kendo-scene-opacity:0;
-  z-index:3;
-  opacity:var(--kendo-scene-opacity,0);
-  pointer-events:none;
   background:#08090a;
-  will-change:opacity;
+  opacity:var(--scene-out-dim,0);
 }
-.visual-scene-kendo .kendo-image{
-  opacity:1;
-  transform:translate3d(0,var(--kendo-y,34px),0) scale(var(--kendo-scale,1.095));
-  transform-origin:64% 44%;
-  will-change:transform;
-}
-.visual-scene-kendo .kendo-shade{
-  z-index:1;
-  background:
-    linear-gradient(90deg,rgba(8,9,10,.98) 0%,rgba(8,9,10,.75) 29%,rgba(8,9,10,.13) 64%,rgba(8,9,10,.2) 100%),
-    radial-gradient(68% 70% at 68% 44%,rgba(255,106,26,.035),transparent 70%);
-}
-.visual-scene-kendo::after{
-  content:"";
-  position:absolute;
-  z-index:2;
-  left:0;
-  right:0;
-  bottom:0;
-  height:24svh;
-  pointer-events:none;
-  background:linear-gradient(180deg,transparent 0%,rgba(8,9,10,.24) 42%,#08090a 100%);
-}
-.visual-scene-kendo .kendo-copy{
-  z-index:4;
-  padding-top:22svh;
-  opacity:var(--kendo-copy-opacity,0);
-  transform:translate3d(0,var(--kendo-copy-y,28px),0);
-  will-change:opacity,transform;
+.training-copy{
+  opacity:var(--scene-out-copy,1);
+  transition:opacity .08s linear;
 }
 
-/* Scroll-driven Descent sequence keeps its more expressive depth because it is the narrative opener. */
+/* TRAINING -> REAL KENDO
+   These two full-screen photographs now behave as one stacked cinematic scene.
+   Kendo overlaps the final part of Training, is feather-masked at its leading edge,
+   then fades/lifts in while Training dims underneath. This removes the horizontal cut completely. */
+.kendo{
+  --scene-in-opacity:1;
+  --scene-in-y:0px;
+  z-index:3;
+  isolation:isolate;
+  margin-top:-24svh;
+  background:transparent;
+}
+.kendo-image{
+  opacity:var(--scene-in-opacity,1);
+  transform:translate3d(0,calc(var(--motion-y,0px) + var(--scene-in-y,0px)),0) scale(1.075);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 6%,rgba(0,0,0,.34) 13%,rgba(0,0,0,.76) 23%,#000 34%,#000 100%);
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 6%,rgba(0,0,0,.34) 13%,rgba(0,0,0,.76) 23%,#000 34%,#000 100%);
+  will-change:transform,opacity;
+}
+.kendo-shade{
+  z-index:1;
+  background:
+    linear-gradient(180deg,rgba(8,9,10,0) 0%,rgba(8,9,10,.05) 18%,rgba(8,9,10,.12) 32%,rgba(8,9,10,.08) 100%),
+    linear-gradient(90deg,rgba(8,9,10,.97) 0%,rgba(8,9,10,.72) 31%,rgba(8,9,10,.12) 66%,rgba(8,9,10,.22) 100%);
+}
+.kendo-copy{
+  padding-top:32svh;
+}
+
+/* Scroll-driven Descent sequence. */
 .descent-frame{
   transform:translate3d(0,10px,0) scale(1.075);
   filter:saturate(.92) brightness(.88);
@@ -212,8 +143,8 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   filter:saturate(1) brightness(1);
 }
 .descent-copy{
-  transform:translate3d(0,32px,0) scale(.988);
-  filter:blur(4px);
+  transform:translate3d(0,38px,0) scale(.985);
+  filter:blur(5px);
   transition:
     opacity .7s cubic-bezier(.22,.72,.2,1),
     transform .82s cubic-bezier(.16,.78,.18,1),
@@ -229,48 +160,52 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   transition:transform .08s linear;
 }
 
-/* Minimal depth on static content. */
+/* Scroll-linked depth for large visual sections. */
+.training-image{
+  transform:translate3d(0,var(--motion-y,0px),0) scale(1.065);
+  will-change:transform;
+}
 .knowledge-visual,.manga-cover.real-cover{
   transform:translate3d(0,var(--motion-y,0px),0);
   will-change:transform;
 }
 
-/* Hover motion stays subtle and consistent with the editorial system. */
+/* Keep hover motion alive after reveal. */
 .manga-card .mini-cover,.tool-teasers a,.portal-links a,.article-grid article{
   transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .28s ease,color .28s ease,background .28s ease;
 }
-.manga-card:hover .mini-cover{transform:translate3d(0,-6px,0) scale(1.008)}
-.tool-teasers a:hover{transform:translate3d(0,-3px,0);border-color:rgba(72,220,232,.42);background:rgba(72,220,232,.035)}
-.article-grid article:hover{transform:translate3d(0,-3px,0)}
-.portal-links a:hover{transform:translate3d(7px,0,0);padding-left:0}
+.manga-card:hover .mini-cover{transform:translate3d(0,-8px,0) scale(1.01)}
+.tool-teasers a:hover{transform:translate3d(0,-4px,0);border-color:rgba(72,220,232,.42);background:rgba(72,220,232,.035)}
+.article-grid article:hover{transform:translate3d(0,-4px,0)}
+.portal-links a:hover{transform:translate3d(8px,0,0);padding-left:0}
 
 @media(max-width:900px){
   .hero::after,.descent::before{height:14svh}
-  html.kdk-motion-ready [data-motion-reveal="true"]{transform:translate3d(0,14px,0)}
-
-  .home-page .knowledge{
+  html.kdk-motion-ready [data-motion-reveal="true"]{
+    transform:translate3d(0,24px,0) scale(.992);
+    filter:blur(3px);
+  }
+  .knowledge{
     background:
       radial-gradient(125% 42% at 72% 8%,rgba(72,220,232,.016),transparent 58%),
       linear-gradient(180deg,#08090a 0%,#090b0c 9%,#0b0d0e 22%,#0b0d0e 100%);
   }
-  .home-page .lab{
+  .lab{
     background:
       radial-gradient(115% 44% at 18% 14%,rgba(72,220,232,.022),transparent 60%),
       linear-gradient(180deg,#0b0d0e 0%,#0c0f11 9%,#0e1214 22%,#0e1214 100%);
   }
-  .home-page .lab-grid-bg{
+  .lab-grid-bg{
     -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
     mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
   }
-
-  .visual-story{height:170svh}
-  .visual-story-stage{min-height:680px}
-  .visual-story-anchor-kendo{top:82svh}
-  .visual-scene-training::before{height:24svh}
-  .visual-scene-training .training-image{transform-origin:68% 48%}
-  .visual-scene-kendo .kendo-image{transform-origin:66% 44%}
-  .visual-scene-kendo .kendo-copy{padding-top:24svh}
-  .visual-scene-kendo::after{height:20svh}
+  .training::before{height:20svh}
+  .kendo{margin-top:-16svh}
+  .kendo-image{
+    -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 8%,rgba(0,0,0,.58) 18%,#000 30%,#000 100%);
+    mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 8%,rgba(0,0,0,.58) 18%,#000 30%,#000 100%);
+  }
+  .kendo-copy{padding-top:27svh}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -279,27 +214,17 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
     opacity:1;
     transform:none;
+    filter:none;
     transition:none;
   }
   .hero::after,.descent::before{display:none}
   .descent-frame,.descent-copy,.descent-progress span,
-  .knowledge-visual,.manga-cover.real-cover{
+  .training-image,.knowledge-visual,.manga-cover.real-cover{
     transition:none;
     transform:none;
     filter:none;
   }
-  .visual-story{height:auto}
-  .visual-story-stage{position:relative;height:auto;min-height:0;overflow:visible}
-  .visual-story .visual-scene{position:relative;height:100svh;min-height:720px}
-  .visual-story-stage::after{display:none}
-  .visual-scene-training::after{opacity:0}
-  .visual-scene-training .training-image,
-  .visual-scene-training .training-copy,
-  .visual-scene-kendo .kendo-image,
-  .visual-scene-kendo .kendo-copy{
-    transform:none;
-    opacity:1;
-  }
-  .visual-scene-kendo{opacity:1}
-  .visual-story-anchor{display:none}
+  .training::after{opacity:0}
+  .training-copy{opacity:1}
+  .kendo-image{opacity:1;transform:none}
 }

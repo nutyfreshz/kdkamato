@@ -6,7 +6,6 @@ import './ui-final-polish.css';
 import './ui-final-polish-overrides.css';
 import './cinematic-motion.css';
 import './worldclass-polish.css';
-import './visual-story-lock.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';
 
