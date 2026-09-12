@@ -51,7 +51,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
   const latest = manga[0];
   const previous = manga.slice(1, 4);
   return (
-    <main>
+    <main className="home-page">
       <section className="hero">
         <div className="hero-image" />
         <div className="hero-vignette" />
@@ -111,15 +111,20 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         </div>
       </section>
 
-      <section className="training section" id="training">
-        <div className="training-image" /><div className="training-shade" />
-        <div className="shell training-copy"><p className="eyebrow orange">TRAINING</p><h2>{c.trainingTitle}</h2><div className="program-note"><p className="meta">KDKAMATO TRAINING</p><h3>KDKAMATO TRAINING</h3><p>{c.trainingText}</p><Link className="text-cta" href="/training">{c.trainingCta} <span>→</span></Link></div></div>
-      </section>
+      <div className="visual-story" data-visual-story>
+        <span className="visual-story-anchor visual-story-anchor-kendo" id="kendo" aria-hidden="true" />
+        <div className="visual-story-stage">
+          <section className="training section visual-scene visual-scene-training" id="training">
+            <div className="training-image" /><div className="training-shade" />
+            <div className="shell training-copy"><p className="eyebrow orange">TRAINING</p><h2>{c.trainingTitle}</h2><div className="program-note"><p className="meta">KDKAMATO TRAINING</p><h3>KDKAMATO TRAINING</h3><p>{c.trainingText}</p><Link className="text-cta" href="/training">{c.trainingCta} <span>→</span></Link></div></div>
+          </section>
 
-      <section className="kendo section" id="kendo">
-        <div className="kendo-image" /><div className="kendo-shade" />
-        <div className="shell kendo-copy"><p className="eyebrow orange">REAL KENDO</p><h2>{c.kendoTitle}</h2><p>{c.kendoText}</p></div>
-      </section>
+          <section className="kendo section visual-scene visual-scene-kendo" aria-label={language === 'en' ? 'The human behind KDKAMATO' : 'คนจริงเบื้องหลัง KDKAMATO'}>
+            <div className="kendo-image" /><div className="kendo-shade" />
+            <div className="shell kendo-copy"><p className="eyebrow orange">REAL KENDO</p><h2>{c.kendoTitle}</h2><p>{c.kendoText}</p></div>
+          </section>
+        </div>
+      </div>
 
       <section className="portal section shell"><p className="eyebrow">{language === 'en' ? 'EXPLORE' : 'ไปต่อ'}</p><h2>{c.portal}</h2><div className="portal-links"><Link href="/manga"><span>MANGA</span><b>→</b></Link><Link href="/knowledge"><span>KNOWLEDGE</span><b>→</b></Link><Link href="/lab"><span>LAB</span><b>→</b></Link><Link href="/training"><span>TRAINING</span><b>→</b></Link></div></section>
     </main>
