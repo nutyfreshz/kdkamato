@@ -72,7 +72,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
       </section>
 
       <Descent language={language} />
-      <div className="breather" style={{ background: 'rgba(8,9,10,.34)' }} />
+      <div className="breather" style={{ background: 'rgba(8,9,10,.12)' }} />
 
       <section className="manga section shell" id="manga">
         <div className="section-heading"><p className="eyebrow">{c.latestEyebrow}</p><h2>{c.latestTitle}</h2></div>
@@ -96,7 +96,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         <Link className="section-link" href="/manga">{c.viewManga} <span>→</span></Link>
       </section>
 
-      <section className="knowledge section" id="knowledge" style={{ background: 'rgba(11,13,14,.68)' }}>
+      <section className="knowledge section" id="knowledge" style={{ background: 'rgba(11,13,14,.28)' }}>
         <div className="shell">
           <div className="section-heading compact"><p className="eyebrow">KNOWLEDGE</p><h2>{c.knowledgeTitle}</h2><p className="section-intro">{c.knowledgeIntro}</p></div>
           <KnowledgeSwitcher language={language} />
@@ -110,7 +110,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         </div>
       </section>
 
-      <section className="lab section" id="lab" style={{ background: 'rgba(14,18,20,.66)' }}>
+      <section className="lab section" id="lab" style={{ background: 'rgba(14,18,20,.24)' }}>
         <div className="lab-grid-bg" />
         <div className="shell lab-shell">
           <div className="section-heading compact"><p className="eyebrow cyan">KDKAMATO LAB</p><h2>{c.labTitle}</h2><p className="section-intro">{c.labIntro}</p></div>
