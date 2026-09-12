@@ -9,6 +9,7 @@ import {
   textFor,
 } from "@/lib/guide-registry";
 import { getLanguage } from "@/lib/language";
+import { kdkBackground } from "@/lib/kdk-background";
 import styles from "./guide.module.css";
 
 export const metadata = {
@@ -25,13 +26,18 @@ function audienceLabel(language, audience) {
 export default async function GuidePage() {
   const language = await getLanguage();
   const t = (value) => textFor(language, value);
+  const heroBackground = {
+    backgroundImage: `linear-gradient(90deg, rgba(8,9,10,.90) 0%, rgba(8,9,10,.64) 40%, rgba(8,9,10,.30) 70%, rgba(8,9,10,.48) 100%), url("${kdkBackground}")`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  };
 
   return (
     <>
       <SiteHeader language={language} />
       <GuideMotion />
       <main className={styles.page}>
-        <section className={styles.hero}>
+        <section className={styles.hero} style={heroBackground}>
           <div className={styles.gridGlow} aria-hidden="true" />
           <div className={styles.heroInner} data-guide-reveal>
             <p className={styles.eyebrow}>{t(guideHero.eyebrow)}</p>

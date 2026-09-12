@@ -5,6 +5,7 @@ import Descent from './Descent';
 import KnowledgeSwitcher from './KnowledgeSwitcher';
 import LabPreview from './LabPreview';
 import { localizedField } from '../lib/localize';
+import { kdkBackground } from '../lib/kdk-background';
 
 const copy = {
   th: {
@@ -53,8 +54,8 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
   return (
     <main>
       <section className="hero">
-        <div className="hero-image" />
-        <div className="hero-vignette" />
+        <div className="hero-image" style={{ backgroundImage: `url("${kdkBackground}")` }} />
+        <div className="hero-vignette" style={{ opacity: .88 }} />
         <div className="hero-copy shell">
           <p className="eyebrow">KDKAMATO / REBIRTH</p>
           <h1>{c.heroTitle}</h1>
