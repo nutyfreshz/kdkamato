@@ -9,7 +9,7 @@
   --guide-cyan:#48dce8;
   min-height:100vh;
   overflow:hidden;
-  background:var(--guide-bg);
+  background:transparent;
   color:var(--guide-text);
 }
 
@@ -29,8 +29,7 @@
   isolation:isolate;
   background:
     radial-gradient(circle at 74% 30%,rgba(72,220,232,.12),transparent 28rem),
-    radial-gradient(circle at 22% 78%,rgba(255,106,26,.08),transparent 28rem),
-    #08090a;
+    radial-gradient(circle at 22% 78%,rgba(255,106,26,.08),transparent 28rem);
 }
 .gridGlow{
   position:absolute;
