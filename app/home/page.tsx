@@ -65,8 +65,8 @@ export default async function HomePage() {
 
   const tier = access?.tier ?? "FREE";
   if (!baseline) return <AppShell>
-    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>เริ่มจากข้อมูลที่นำไปใช้สร้าง Program จริง</h1>
-    <div className="card"><h2>ยังไม่มีข้อมูลพื้นฐาน</h2><p>เลือกเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้งก่อน</p><Link className="btn primary" href="/program/start">เริ่ม Program ของฉัน</Link></div>
+    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>เริ่มจากข้อมูลที่นำไปใช้สร้างโปรแกรมจริง</h1>
+    <div className="card"><h2>ยังไม่มีข้อมูลพื้นฐาน</h2><p>เลือกเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้งก่อน</p><Link className="btn primary" href="/program/start">เริ่มโปรแกรมของฉัน</Link></div>
   </AppShell>;
 
   const snapshot = (activeProgram?.goal_snapshot ?? {}) as GoalSnapshot;
@@ -81,16 +81,16 @@ export default async function HomePage() {
   );
 
   return <AppShell>
-    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>{activeProgram ? "Program พร้อมใช้งาน" : "ข้อมูลพื้นฐานพร้อมสำหรับสร้าง Program"}</h1>
+    <div className="topline">ข้อมูลพื้นฐาน ({tier})</div><h1>{activeProgram ? "โปรแกรมของคุณพร้อมแล้ว" : "ข้อมูลพื้นฐานพร้อมสำหรับสร้างโปรแกรม"}</h1>
     <div className="grid">
       <div className="card"><div className="kicker">เป้าหมาย</div><div className="metric">{valueLabel[String(baseline.goal)] ?? String(baseline.goal)}</div></div>
       <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{(focusLabel[currentFocus] ?? currentFocus) || "–"}</div></div>
       <div className="card"><div className="kicker">การฝึก</div><div className="metric">{String(baseline.training_days_per_week)} วัน/สัปดาห์</div><p>{training?.session_duration_min ?? "–"} นาที/ครั้ง</p></div>
-      <div className="card"><div className="kicker">Program</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "ดูตัวอย่าง"}</div><p>{activeProgram ? snapshot.program_family ?? "Program ปัจจุบัน" : "ยังไม่ได้เปิดใช้งาน"}</p></div>
+      <div className="card"><div className="kicker">โปรแกรม</div><div className="metric">{activeProgram ? `v${activeProgram.program_version}` : "ดูตัวอย่าง"}</div><p>{activeProgram ? snapshot.program_family ?? "โปรแกรมปัจจุบัน" : "ยังไม่ได้เปิดใช้งาน"}</p></div>
     </div>
-    {pending && <div className="notice warning" style={{marginTop:18}}>ข้อมูลพื้นฐานเปลี่ยนจาก Program ที่ใช้อยู่ Program เดิมจะยังคงใช้งานจนกว่าคุณจะเปิดใช้เวอร์ชันใหม่</div>}
+    {pending && <div className="notice warning" style={{marginTop:18}}>ข้อมูลพื้นฐานเปลี่ยนจากโปรแกรมที่ใช้อยู่ โปรแกรมเดิมจะยังคงใช้งานจนกว่าคุณจะเปิดใช้เวอร์ชันใหม่</div>}
     <div className="cta-row">
-      {activeProgram ? <Link className="btn primary" href="/program">เปิด Program ปัจจุบัน</Link> : <Link className="btn primary" href="/program/preview">ดูตัวอย่าง Program</Link>}
+      {activeProgram ? <Link className="btn primary" href="/program">เปิดโปรแกรมปัจจุบัน</Link> : <Link className="btn primary" href="/program/preview">ดูตัวอย่างโปรแกรม</Link>}
       {pending && <Link className="btn" href="/program/preview">ดูตัวอย่างเวอร์ชันใหม่</Link>}
       {tier === "PRO" && <Link className="btn" href="/physical-consult">Physical Consult</Link>}
       <Link className="btn" href="/progress">ความคืบหน้า</Link>
