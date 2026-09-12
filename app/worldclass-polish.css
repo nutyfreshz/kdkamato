@@ -35,19 +35,6 @@
   position:relative;
   isolation:isolate;
 }
-.home-page .manga::before,
-.home-page .knowledge::before,
-.home-page .lab::before,
-.home-page .portal::before{
-  content:"";
-  position:absolute;
-  inset:-1px 0 auto;
-  height:120px;
-  pointer-events:none;
-  z-index:-1;
-  background:linear-gradient(180deg,rgba(8,9,10,.92),rgba(8,9,10,0));
-}
-
 .home-page .manga-feature{
   position:relative;
 }

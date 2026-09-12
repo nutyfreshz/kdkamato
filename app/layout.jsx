@@ -5,6 +5,7 @@ import './typography-tuning.css';
 import './ui-final-polish.css';
 import './ui-final-polish-overrides.css';
 import './cinematic-motion.css';
+import './home-scroll.css';
 import './worldclass-polish.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';

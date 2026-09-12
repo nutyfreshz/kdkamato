@@ -13,8 +13,6 @@ h2{
 }
 .hero-copy h1,
 .descent-copy h2,
-.training-copy h2,
-.kendo-copy h2,
 .portal h2,
 .training-page-copy h1{
   font-size:clamp(2.5rem,calc(2rem + 2.2vw),4rem);
@@ -34,8 +32,6 @@ html:lang(th) h3{
 html:lang(th) h1,
 html:lang(th) .hero-copy h1,
 html:lang(th) .descent-copy h2,
-html:lang(th) .training-copy h2,
-html:lang(th) .kendo-copy h2,
 html:lang(th) .portal h2,
 html:lang(th) .training-page-copy h1{
   line-height:1.22;
@@ -47,8 +43,6 @@ html:lang(th) h3{line-height:1.35}
   h1,
   .hero-copy h1,
   .descent-copy h2,
-  .training-copy h2,
-  .kendo-copy h2,
   .portal h2,
   .training-page-copy h1,
   .reader-head h1,

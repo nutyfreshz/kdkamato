@@ -1,0 +1,75 @@
+/* Homepage choreography. useHomeMotion is the only writer of these variables.
+   Section surfaces are continuous; reveals use space, clipping and camera movement. */
+.home-page { background: #0e1214; }
+.home-page .manga, .home-page .knowledge, .home-page .lab { background: transparent; }
+.home-page .hero-image { transform: translate3d(0,var(--hero-pan,0px),0) scale(1.04); }
+.home-page .hero-copy { transform: translate3d(0,var(--hero-copy-y,0px),0); }
+.home-page .manga { padding-top: clamp(56px,6vw,100px); }
+.home-page .section-heading,
+.home-page .manga-feature,
+.home-page .manga-row,
+.home-page .knowledge-stage,
+.home-page .article-grid,
+.home-page .lab-demo,
+.home-page .tool-teasers,
+.home-page .portal-links {
+  transform: translate3d(0,var(--home-lift,0px),0);
+}
+.home-page .manga-feature .manga-cover {
+  clip-path: inset(0 calc((1 - var(--home-open,1)) * 5%) calc((1 - var(--home-open,1)) * 8%) round 16px);
+}
+.home-page .knowledge-visual {
+  clip-path: inset(0 calc((1 - var(--home-open,1)) * 8%) 0 round 16px);
+}
+.home-page .lab-demo {
+  clip-path: inset(0 calc((1 - var(--home-open,1)) * 3%) 0 round 20px);
+}
+.home-page .portal {
+  position: relative;
+  padding-top: clamp(64px,8vw,120px);
+  padding-bottom: clamp(64px,8vw,120px);
+}
+.home-page .portal-links a { min-height: 64px; }
+
+/* The Descent is four full, opaque visual planes. Each next plane opens
+   from below; previous planes never bleed through the incoming artwork. */
+.descent-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #0e1214;
+  clip-path: inset(var(--descent-reveal,100%) 0 0);
+  transform: translate3d(0,var(--descent-camera,0px),0) scale(1.04);
+}
+.descent-frame:first-child { --descent-reveal: 0%; }
+.descent-copy {
+  position: absolute;
+  left: 0;
+  top: 32%;
+  max-width: 700px;
+  visibility: hidden;
+  clip-path: inset(0 0 100%);
+  transform: translateY(28px);
+  transition: transform .45s cubic-bezier(.2,.7,.2,1), clip-path .45s cubic-bezier(.2,.7,.2,1), visibility .45s;
+}
+.descent-copy.is-active { visibility: visible; clip-path: inset(0 0 0); transform: none; }
+.descent-copy[aria-hidden="true"] { pointer-events: none; }
+.descent-progress { position: absolute; inset: auto 0 0; height: 2px; z-index: 4; background: #203036; }
+.descent-progress span { display: block; height: 100%; background: var(--cyan); transform: scaleX(var(--descent-progress,0)); transform-origin: left; }
+@media (max-width: 900px) {
+  .descent-frame { object-position: 65% center; }
+  .descent-copy { top: auto; bottom: 12%; max-width: 90%; }
+  .descent-copy h2 { font-size: clamp(32px,8vw,54px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hero-image, .home-page .hero-copy,
+  .home-page .section-heading, .home-page .manga-feature,
+  .home-page .manga-row, .home-page .knowledge-stage,
+  .home-page .article-grid, .home-page .lab-demo,
+  .home-page .tool-teasers, .home-page .portal-links { transform: none; }
+  .home-page .manga-cover, .home-page .knowledge-visual, .home-page .lab-demo { clip-path: none; }
+  .descent-frame { transform: none; }
+  .descent-copy { transition: none; }
+}

@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import Descent from './Descent';
+import { useHomeMotion } from './use-home-motion';
+import styles from './home-story.module.css';
 import KnowledgeSwitcher from './KnowledgeSwitcher';
 import LabPreview from './LabPreview';
 import { localizedField } from '../lib/localize';
@@ -47,11 +49,12 @@ function MangaPlaceholder({ language }) {
 }
 
 export default function HomePage({ manga = [], articles = [], language = 'th' }) {
+  const motionRoot = useHomeMotion();
   const c = copy[language] || copy.th;
   const latest = manga[0];
   const previous = manga.slice(1, 4);
   return (
-    <main className="home-page">
+    <main className="home-page" ref={motionRoot}>
       <section className="hero">
         <div className="hero-image" />
         <div className="hero-vignette" />
@@ -64,7 +67,6 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
       </section>
 
       <Descent language={language} />
-      <div className="breather" />
 
       <section className="manga section shell" id="manga">
         <div className="section-heading"><p className="eyebrow">{c.latestEyebrow}</p><h2>{c.latestTitle}</h2></div>
@@ -111,15 +113,32 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
         </div>
       </section>
 
-      <section className="training section" id="training">
-        <div className="training-image" /><div className="training-shade" />
-        <div className="shell training-copy"><p className="eyebrow orange">TRAINING</p><h2>{c.trainingTitle}</h2><div className="program-note"><p className="meta">KDKAMATO TRAINING</p><h3>KDKAMATO TRAINING</h3><p>{c.trainingText}</p><Link className="text-cta" href="/training">{c.trainingCta} <span>→</span></Link></div></div>
-      </section>
-
-      <section className="kendo section" id="kendo">
-        <div className="kendo-image" /><div className="kendo-shade" />
-        <div className="shell kendo-copy"><p className="eyebrow orange">REAL KENDO</p><h2>{c.kendoTitle}</h2><p>{c.kendoText}</p></div>
-      </section>
+      <div className={styles.story} data-home-story>
+        <section className={styles.chapter} id="training" data-story-chapter>
+          <div className={styles.frame}>
+            <img className={styles.art} src="/assets/a10_training.webp" alt="" decoding="async" />
+            <div className={styles.copy}>
+              <p className="eyebrow orange">TRAINING</p>
+              <h2>{c.trainingTitle}</h2>
+              <div className={styles.note}>
+                <p className="meta">KDKAMATO TRAINING</p>
+                <p>{c.trainingText}</p>
+                <Link className={styles.cta} href="/training">{c.trainingCta} <span>↗</span></Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className={styles.chapter} id="kendo" data-story-chapter>
+          <div className={styles.frame}>
+            <img className={styles.art} src="/assets/a11_real_kendo.webp" alt="" decoding="async" />
+            <div className={styles.copy}>
+              <p className="eyebrow orange">REAL KENDO</p>
+              <h2>{c.kendoTitle}</h2>
+              <p>{c.kendoText}</p>
+            </div>
+          </div>
+        </section>
+      </div>
 
       <section className="portal section shell"><p className="eyebrow">{language === 'en' ? 'EXPLORE' : 'ไปต่อ'}</p><h2>{c.portal}</h2><div className="portal-links"><Link href="/manga"><span>MANGA</span><b>→</b></Link><Link href="/knowledge"><span>KNOWLEDGE</span><b>→</b></Link><Link href="/lab"><span>LAB</span><b>→</b></Link><Link href="/training"><span>TRAINING</span><b>→</b></Link></div></section>
     </main>
