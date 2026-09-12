@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { ProcessingOverlay } from "@/components/processing-overlay";
 
 function errorText(error: unknown) {
   if (error instanceof Error) return error.message;
@@ -84,8 +83,8 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
     <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
       {busy ? "กำลังบันทึก..." : saved ? "บันทึกการทดลองแล้ว" : "บันทึกผลการทดลองจริง"}
     </button>
-    {saved && <div className="notice">บันทึกแล้ว · Exercise Memory จะจำผลที่เกิดขึ้นจริง และให้ความสำคัญมากกว่าคำคาดการณ์จาก LAB</div>}
-    {error && <div className="notice warning">{error}</div>}
-    {busy && <ProcessingOverlay title="กำลังบันทึกผลการทดลองจาก Physical Consult..." detail="กำลังอัปเดต Exercise Memory จากผลการทดลองจริง" />}
+    {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลการทดลอง</div>}
+    {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว · Exercise Memory จะจำผลที่เกิดขึ้นจริง และให้ความสำคัญมากกว่าคำคาดการณ์จาก LAB</div>}
+    {error && <div className="notice warning" role="alert">{error}</div>}
   </div>;
 }
