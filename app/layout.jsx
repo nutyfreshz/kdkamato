@@ -3,6 +3,7 @@ import './i18n.css';
 import './lab-ui.css';
 import './typography-tuning.css';
 import './ui-final-polish.css';
+import './ui-final-polish-overrides.css';
 import { getLanguage } from '../lib/language';
 
 export const metadata = {
