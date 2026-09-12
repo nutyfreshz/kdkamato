@@ -37,6 +37,7 @@ export default async function PhysicalConsultProgramPage() {
   ]);
   if (access?.tier !== "PRO") return <AppShell><div className="notice warning">Physical Consult และ Exercise Memory ใช้ได้กับบัญชี PRO</div></AppShell>;
   if (!program) return <AppShell>
+    <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><Link href="/physical-consult">ประเมินกับเทรนเนอร์</Link><span>›</span><span>บันทึกผลรายท่า</span></div>
     <div className="topline">Physical Consult · Program ปัจจุบัน</div>
     <h1>ยังไม่มี Program ปัจจุบัน</h1>
     <div className="cta-row"><Link className="btn" href="/physical-consult">กลับสู่ Physical Consult</Link><Link className="btn primary" href="/program/start">สร้าง Program</Link></div>
@@ -52,6 +53,7 @@ export default async function PhysicalConsultProgramPage() {
   const completedCount = feedback.filter((row) => row.performance_status || row.tolerance_status || row.recovery_status || row.preference_status || row.optional_note).length;
 
   return <AppShell>
+    <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><Link href="/physical-consult">ประเมินกับเทรนเนอร์</Link><span>›</span><span>บันทึกผลรายท่า</span></div>
     <div className="topline">PRO · Physical Consult · Program v{program.program_version}</div>
     <h1>บันทึกผลจาก Program</h1>
     <p>เลือกเฉพาะท่าที่ต้องการประเมิน ไม่ต้องกรอกทุกท่า</p>
