@@ -27,14 +27,17 @@ const REVEAL_GROUPS = [
 ];
 
 const PARALLAX_SELECTORS = [
-  [".training-image", 34],
-  [".kendo-image", 30],
-  [".knowledge-visual", 16],
-  [".manga-cover.real-cover", 12],
+  [".knowledge-visual", 12],
+  [".manga-cover.real-cover", 10],
 ] as const;
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
+}
+
+function smoothstep(value: number) {
+  const t = clamp(value);
+  return t * t * (3 - 2 * t);
 }
 
 export function SiteMotion() {
@@ -53,7 +56,7 @@ export function SiteMotion() {
       const group = Array.from(document.querySelectorAll<HTMLElement>(selector));
       group.forEach((node, index) => {
         node.dataset.motionReveal = "true";
-        node.style.setProperty("--motion-delay", `${Math.min(index * 70, 280)}ms`);
+        node.style.setProperty("--motion-delay", `${Math.min(index * 55, 220)}ms`);
         revealNodes.push(node);
       });
     });
@@ -76,7 +79,7 @@ export function SiteMotion() {
           observer.unobserve(node);
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -7% 0px" },
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
     );
 
     revealNodes.forEach((node) => observer.observe(node));
@@ -85,8 +88,13 @@ export function SiteMotion() {
       Array.from(document.querySelectorAll<HTMLElement>(selector)).map((node) => ({ node, strength })),
     );
     const descent = document.querySelector<HTMLElement>(".descent");
-    const training = document.querySelector<HTMLElement>(".training");
-    const kendo = document.querySelector<HTMLElement>(".kendo");
+    const visualStory = document.querySelector<HTMLElement>(".visual-story");
+    const training = document.querySelector<HTMLElement>(".visual-scene-training");
+    const trainingImage = document.querySelector<HTMLElement>(".visual-scene-training .training-image");
+    const trainingCopy = document.querySelector<HTMLElement>(".visual-scene-training .training-copy");
+    const kendo = document.querySelector<HTMLElement>(".visual-scene-kendo");
+    const kendoImage = document.querySelector<HTMLElement>(".visual-scene-kendo .kendo-image");
+    const kendoCopy = document.querySelector<HTMLElement>(".visual-scene-kendo .kendo-copy");
 
     let frame = 0;
     const updateScrollMotion = () => {
@@ -107,22 +115,34 @@ export function SiteMotion() {
         const entry = clamp((viewport - rect.top) / viewport);
         descent.style.setProperty("--descent-motion-progress", progress.toFixed(4));
         descent.style.setProperty("--descent-entry", entry.toFixed(4));
-        descent.style.setProperty("--descent-motion-y", `${((0.5 - progress) * 22).toFixed(2)}px`);
+        descent.style.setProperty("--descent-motion-y", `${((0.5 - progress) * 18).toFixed(2)}px`);
       }
 
-      /* Training -> Kendo is treated as one cinematic handoff instead of two stacked blocks.
-         The incoming scene feathers in while the outgoing scene is gently dimmed. */
-      if (training && kendo) {
-        const rect = kendo.getBoundingClientRect();
-        const transition = clamp((viewport - rect.top) / (viewport * 0.72));
-        const eased = 1 - Math.pow(1 - transition, 3);
+      if (visualStory && training && trainingImage && trainingCopy && kendo && kendoImage && kendoCopy) {
+        const rect = visualStory.getBoundingClientRect();
+        const travel = Math.max(1, rect.height - viewport);
+        const progress = clamp(-rect.top / travel);
 
-        kendo.style.setProperty("--scene-in", eased.toFixed(4));
-        kendo.style.setProperty("--scene-in-opacity", (0.18 + eased * 0.82).toFixed(4));
-        kendo.style.setProperty("--scene-in-y", `${((1 - eased) * 42).toFixed(2)}px`);
-        training.style.setProperty("--scene-out", eased.toFixed(4));
-        training.style.setProperty("--scene-out-dim", (eased * 0.64).toFixed(4));
-        training.style.setProperty("--scene-out-copy", Math.max(0.18, 1 - eased * 0.86).toFixed(4));
+        const imageHandoff = smoothstep((progress - 0.12) / 0.56);
+        const trainingExit = smoothstep((progress - 0.16) / 0.42);
+        const kendoCopyIn = smoothstep((progress - 0.5) / 0.24);
+        const veilProgress = clamp((progress - 0.1) / 0.72);
+        const veil = Math.sin(Math.PI * veilProgress) * 0.16;
+
+        visualStory.style.setProperty("--story-progress", progress.toFixed(4));
+        visualStory.style.setProperty("--story-veil", veil.toFixed(4));
+
+        training.style.setProperty("--training-dim", (imageHandoff * 0.68).toFixed(4));
+        trainingImage.style.setProperty("--training-scale", (1.035 + imageHandoff * 0.035).toFixed(4));
+        trainingImage.style.setProperty("--training-y", `${(-imageHandoff * 18).toFixed(2)}px`);
+        trainingCopy.style.setProperty("--training-copy-opacity", (1 - trainingExit * 0.94).toFixed(4));
+        trainingCopy.style.setProperty("--training-copy-y", `${(-trainingExit * 24).toFixed(2)}px`);
+
+        kendo.style.setProperty("--kendo-scene-opacity", imageHandoff.toFixed(4));
+        kendoImage.style.setProperty("--kendo-scale", (1.095 - imageHandoff * 0.045).toFixed(4));
+        kendoImage.style.setProperty("--kendo-y", `${((1 - imageHandoff) * 34).toFixed(2)}px`);
+        kendoCopy.style.setProperty("--kendo-copy-opacity", kendoCopyIn.toFixed(4));
+        kendoCopy.style.setProperty("--kendo-copy-y", `${((1 - kendoCopyIn) * 28).toFixed(2)}px`);
       }
     };
 
@@ -149,12 +169,18 @@ export function SiteMotion() {
       descent?.style.removeProperty("--descent-motion-progress");
       descent?.style.removeProperty("--descent-entry");
       descent?.style.removeProperty("--descent-motion-y");
-      training?.style.removeProperty("--scene-out");
-      training?.style.removeProperty("--scene-out-dim");
-      training?.style.removeProperty("--scene-out-copy");
-      kendo?.style.removeProperty("--scene-in");
-      kendo?.style.removeProperty("--scene-in-opacity");
-      kendo?.style.removeProperty("--scene-in-y");
+      visualStory?.style.removeProperty("--story-progress");
+      visualStory?.style.removeProperty("--story-veil");
+      training?.style.removeProperty("--training-dim");
+      trainingImage?.style.removeProperty("--training-scale");
+      trainingImage?.style.removeProperty("--training-y");
+      trainingCopy?.style.removeProperty("--training-copy-opacity");
+      trainingCopy?.style.removeProperty("--training-copy-y");
+      kendo?.style.removeProperty("--kendo-scene-opacity");
+      kendoImage?.style.removeProperty("--kendo-scale");
+      kendoImage?.style.removeProperty("--kendo-y");
+      kendoCopy?.style.removeProperty("--kendo-copy-opacity");
+      kendoCopy?.style.removeProperty("--kendo-copy-y");
       document.documentElement.classList.remove("kdk-motion-ready");
       body.classList.remove("kdk-route-enter");
     };
