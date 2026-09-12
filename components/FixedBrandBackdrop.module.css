@@ -32,8 +32,57 @@
   z-index:1;
 }
 
+/* Home hero only: keep the original hero artwork as its own layer,
+   and reveal the user-selected KDKAMATO science BG underneath it. */
+.pageRoot :global(.hero)::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background-color:#08090a;
+  background-image:
+    radial-gradient(circle at 78% 38%,rgba(72,220,232,.08),transparent 34rem),
+    linear-gradient(90deg,rgba(8,9,10,.92) 0%,rgba(8,9,10,.54) 34%,rgba(8,9,10,.10) 67%,rgba(8,9,10,.42) 100%),
+    url('/images/kdkamato-program-bg.webp');
+  background-repeat:no-repeat;
+  background-size:
+    cover,
+    cover,
+    clamp(880px,64vw,1040px) auto;
+  background-position:
+    center,
+    center,
+    78% 44%;
+  filter:contrast(1.07) saturate(1.04);
+}
+
+.pageRoot :global(.hero-image){
+  z-index:1;
+  mix-blend-mode:lighten;
+}
+
+.pageRoot :global(.hero-vignette){
+  z-index:2;
+}
+
+.pageRoot :global(.hero-copy){
+  z-index:3;
+}
+
 @media(max-width:900px){
   .fixedBackdrop{
+    background-size:
+      cover,
+      cover,
+      180vw auto;
+    background-position:
+      center,
+      center,
+      64% 18%;
+  }
+
+  .pageRoot :global(.hero)::before{
     background-size:
       cover,
       cover,
@@ -47,6 +96,17 @@
 
 @media(max-width:560px){
   .fixedBackdrop{
+    background-size:
+      cover,
+      cover,
+      205vw auto;
+    background-position:
+      center,
+      center,
+      62% 14%;
+  }
+
+  .pageRoot :global(.hero)::before{
     background-size:
       cover,
       cover,
