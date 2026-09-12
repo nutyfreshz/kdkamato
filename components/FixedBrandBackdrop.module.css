@@ -9,13 +9,15 @@
   inset:0;
   z-index:0;
   pointer-events:none;
-  background-color:#08090a;
+  opacity:1;
+  background-color:#050708;
   background-image:var(--brand-bg);
   background-repeat:no-repeat;
   background-size:cover;
   background-position:center center;
-  filter:contrast(1.04) saturate(1.04);
+  filter:brightness(1.14) contrast(1.06) saturate(1.10);
   transform:translateZ(0);
+  will-change:transform;
 }
 
 .pageRoot > :not(.fixedBackdrop){
@@ -23,7 +25,7 @@
   z-index:1;
 }
 
-/* Home hero is an independent artwork layer above the global backdrop. */
+/* Keep Home hero artwork independent and above the global science backdrop. */
 .pageRoot :global(.hero){
   z-index:2;
 }
@@ -41,14 +43,28 @@
   z-index:2;
 }
 
+/* Non-artwork Home sections stay translucent so the fixed backdrop remains visible. */
+.pageRoot :global(.manga),
+.pageRoot :global(.portal){
+  background:transparent;
+}
+
 @media(max-width:900px){
   .fixedBackdrop{
-    background-position:62% center;
+    background-position:64% center;
+    filter:brightness(1.18) contrast(1.05) saturate(1.08);
   }
 }
 
 @media(max-width:560px){
   .fixedBackdrop{
-    background-position:64% center;
+    background-position:68% center;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fixedBackdrop{
+    transform:none;
+    will-change:auto;
   }
 }
