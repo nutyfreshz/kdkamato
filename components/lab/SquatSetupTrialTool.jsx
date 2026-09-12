@@ -106,7 +106,7 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       id="C2_SQUAT_GEOMETRY"
       role="CORE"
       technicalName="Squat Setup Trial"
-      title={th ? 'Squat setup แบบไหนควรลองก่อน?' : 'Which Squat setup should you test first?'}
+      title={th ? 'ควรลองปรับท่า Squat แบบไหนก่อน?' : 'Which Squat setup should you test first?'}
       question={th
         ? 'เลือกท่า Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับการเปรียบเทียบ 2 แบบที่ควรลองก่อนจากสัดส่วนช่วงขา โดยเปลี่ยนทีละอย่าง'
         : 'Choose the Squat variant you actually use. The system prioritizes two setup comparisons from your leg proportions, changing one thing at a time.'}
