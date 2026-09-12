@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ProcessingOverlay } from "@/components/processing-overlay";
 
 type InitialFoundation = {
   goal?: string;
@@ -104,9 +103,9 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
 
       <div className="notice">การประมาณพลังงานเป็นข้อมูลเสริม หากข้อมูลที่วัดได้ยังไม่เพียงพอ ระบบจะไม่เดาระดับกิจกรรมหรือแสดงตัวเลขที่ดูแม่นยำเกินจริง</div>
 
-      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังประมวลผล..." : "สร้าง Program"}</button>
-      {busy && <ProcessingOverlay title="กำลังสร้าง Program..." detail="กำลังบันทึกข้อมูลพื้นฐานและคำนวณการฝึก/โภชนาการ กรุณารอสักครู่" />}
-      {error && <div className="notice warning">{error}</div>}
+      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังบันทึกข้อมูล..." : "บันทึกข้อมูลและดูตัวอย่าง"}</button>
+      {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกข้อมูลและเตรียมตัวอย่างโปรแกรม</div>}
+      {error && <div className="notice warning" role="alert">{error}</div>}
     </div>
   );
 }
