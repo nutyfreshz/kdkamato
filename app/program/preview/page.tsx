@@ -5,6 +5,8 @@ import { ProgramWeek } from "@/components/program-week";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
+export const metadata = { title: "ตัวอย่างโปรแกรม" };
+
 const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.2";
 const EXPECTED_CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
 
@@ -118,16 +120,30 @@ function validPreview(data: unknown): data is PreviewData {
 
 export default async function ProgramPreviewPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const params = await searchParams;
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว จึงยังสร้างตัวอย่างจากข้อมูลจริงไม่ได้</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell>
+    <div className="topline">ตัวอย่างโปรแกรม</div>
+    <h1>ยังแสดงตัวอย่างโปรแกรมไม่ได้</h1>
+    <div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div>
+    <div className="cta-row"><Link className="btn" href="/home">กลับหน้าแรก</Link></div>
+  </AppShell>;
 
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
-  if (!userId) return <AppShell><div className="notice warning">กรุณาเข้าสู่ระบบก่อน</div></AppShell>;
+  if (!userId) return <AppShell>
+    <div className="topline">ตัวอย่างโปรแกรม</div>
+    <h1>กรุณาเข้าสู่ระบบก่อน</h1>
+    <div className="cta-row"><Link className="btn primary" href="/login">เข้าสู่ระบบ</Link></div>
+  </AppShell>;
 
   const { data: sessionData } = await supabase.auth.getSession();
   const accessToken = sessionData.session?.access_token;
-  if (!accessToken) return <AppShell><div className="notice warning">เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่</div></AppShell>;
+  if (!accessToken) return <AppShell>
+    <div className="topline">ตัวอย่างโปรแกรม</div>
+    <h1>เซสชันหมดอายุ</h1>
+    <div className="notice warning">เข้าสู่ระบบใหม่เพื่อดูตัวอย่างโปรแกรมต่อ</div>
+    <div className="cta-row"><Link className="btn primary" href="/login">เข้าสู่ระบบ</Link></div>
+  </AppShell>;
 
   const { data, error } = await supabase.functions.invoke("kdk-free-program", {
     body: { mode: "preview" },
@@ -139,28 +155,34 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
     const code = payload?.error ?? "UNKNOWN_ERROR";
     if (code === "BASELINE_REQUIRED" || code === "FOUNDATION_INVALID") {
       return <AppShell>
-        <div className="topline">ต้องตั้งค่า Program ก่อน</div>
-        <h1>ยังสร้างตัวอย่าง Program ไม่ได้</h1>
-        <div className="notice warning">{code === "BASELINE_REQUIRED" ? "ยังไม่มีข้อมูลตั้งค่า Program" : `ข้อมูลตั้งค่า Program ไม่ผ่านการตรวจสอบ${payload?.fields?.length ? `: ${payload.fields.join(", ")}` : ""}`}</div>
-        <div className="cta-row"><Link className="btn primary" href="/program/start">กลับไปแก้ไขการตั้งค่า Program</Link></div>
+        <div className="topline">ต้องตั้งค่าโปรแกรมก่อน</div>
+        <h1>ยังแสดงตัวอย่างโปรแกรมไม่ได้</h1>
+        <div className="notice warning">{code === "BASELINE_REQUIRED" ? "ยังไม่มีข้อมูลสำหรับสร้างโปรแกรม" : "ข้อมูลตั้งค่ายังไม่ครบหรือไม่ผ่านการตรวจสอบ"}</div>
+        <div className="cta-row"><Link className="btn primary" href="/program/start">ตรวจสอบการตั้งค่า</Link></div>
       </AppShell>;
     }
     if (code === "ENGINE_VERSION_MISMATCH" || code === "PROGRAM_CONTRACT_INCONSISTENT" || code === "PROGRAM_VALIDATION_FAILED") {
       return <AppShell>
         <div className="topline">การตรวจสอบความถูกต้องของระบบ</div>
-        <h1>ตัวอย่าง Program ถูกระงับชั่วคราว</h1>
-        <div className="notice warning">ระบบตรวจพบว่าข้อมูลสำหรับสร้าง Program ไม่สอดคล้องกัน จึงยังไม่อนุญาตให้เปิดใช้เวอร์ชันนี้</div>
+        <h1>ยังเปิดใช้ตัวอย่างนี้ไม่ได้</h1>
+        <div className="notice warning">ระบบตรวจพบว่าข้อมูลสำหรับสร้างโปรแกรมไม่สอดคล้องกัน จึงยังไม่อนุญาตให้เปิดใช้เวอร์ชันนี้</div>
+        <div className="cta-row"><Link className="btn" href="/program">กลับไปโปรแกรมปัจจุบัน</Link></div>
       </AppShell>;
     }
-    return <AppShell><div className="notice warning">ยังสร้างตัวอย่างไม่ได้ กรุณาลองใหม่อีกครั้ง</div></AppShell>;
+    return <AppShell>
+      <div className="topline">ตัวอย่างโปรแกรม</div>
+      <h1>ยังแสดงตัวอย่างโปรแกรมไม่ได้</h1>
+      <div className="notice warning">ลองเปิดหน้านี้อีกครั้ง หรือกลับไปตรวจสอบการตั้งค่า</div>
+      <div className="cta-row"><Link className="btn primary" href="/program/preview">ลองเปิดหน้านี้อีกครั้ง</Link><Link className="btn" href="/program/start">ตรวจสอบการตั้งค่า</Link></div>
+    </AppShell>;
   }
 
   if (!validPreview(data)) {
     return <AppShell>
       <div className="topline">การตรวจสอบความถูกต้องของระบบ</div>
-      <h1>ตัวอย่าง Program ถูกระงับชั่วคราว</h1>
-      <div className="notice warning">ข้อมูลระหว่างหน้าเว็บและระบบคำนวณ Program ไม่ตรงกัน ระบบจะไม่ใช้ค่าทดแทน และยังไม่อนุญาตให้เปิดใช้ Program</div>
-      <div className="cta-row"><Link className="btn primary" href="/program/start">สร้าง Program ใหม่</Link></div>
+      <h1>ยังเปิดใช้ตัวอย่างนี้ไม่ได้</h1>
+      <div className="notice warning">ข้อมูลระหว่างหน้าเว็บและระบบคำนวณโปรแกรมไม่ตรงกัน ระบบจะไม่ใช้ค่าทดแทนและจะไม่เปิดใช้โปรแกรมนี้</div>
+      <div className="cta-row"><Link className="btn" href="/program">กลับไปโปรแกรมปัจจุบัน</Link></div>
     </AppShell>;
   }
 
@@ -179,16 +201,16 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
   const activationError = params.error ? decodeURIComponent(params.error) : null;
 
   return <AppShell>
-    <div className="topline">ตัวอย่าง Program</div>
+    <div className="topline">ตัวอย่างโปรแกรม</div>
     <h1>{preview.family}</h1>
     <p>{valueLabel[snapshot.goal] ?? snapshot.goal} · {valueLabel[snapshot.training_experience] ?? snapshot.training_experience} · {valueLabel[snapshot.equipment_profile] ?? snapshot.equipment_profile} · {preview.focus_label} · {preview.days} วัน · {preview.session_duration_min} นาที</p>
-    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "ข้อมูลหรือระบบคำนวณเปลี่ยนหลังจากสร้างตัวอย่างนี้ กรุณาตรวจสอบตัวอย่างล่าสุดแล้วเปิดใช้อีกครั้ง" : "เปิดใช้ Program ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"}</div>}
+    {activationError && <div className="notice warning" style={{ marginBottom: 16 }}>{activationError === "PREVIEW_STALE" ? "ข้อมูลหรือระบบคำนวณเปลี่ยนหลังจากสร้างตัวอย่างนี้ กรุณาตรวจสอบตัวอย่างล่าสุดแล้วเปิดใช้อีกครั้ง" : "เปิดใช้โปรแกรมไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"}</div>}
 
     <div className="grid">
       <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{preview.focus_label}</div></div>
       <div className="card"><div className="kicker">ตารางฝึก</div><div className="metric">{preview.days} วัน</div><p>{preview.session_duration_min} นาทีต่อครั้ง</p></div>
-      <div className="card"><div className="kicker">โปรตีน</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
-      <div className="card"><div className="kicker">พลังงาน</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `พลังงานคงน้ำหนัก ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "จะแสดงเมื่อข้อมูลที่วัดได้เพียงพอแล้วเท่านั้น"}</p></div>
+      <div className="card"><div className="kicker">โปรตีน (กรัม/วัน)</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
+      <div className="card"><div className="kicker">พลังงาน (กิโลแคลอรี/วัน)</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `พลังงานคงน้ำหนัก ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "จะแสดงเมื่อข้อมูลที่วัดได้เพียงพอแล้วเท่านั้น"}</p></div>
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}>
@@ -220,7 +242,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       </section>;
     })}
 
-    {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>ยังประเมินพลังงานไม่ได้ เพราะข้อมูลที่จำเป็นยังไม่ครบ: {preview.energy_estimate.missing_inputs.join(", ")}</div> : null}
+    {!energyReady && preview.energy_estimate?.missing_inputs?.length ? <div className="notice" style={{ marginTop: 18 }}>ยังประเมินพลังงานไม่ได้ เพราะข้อมูลที่จำเป็นยังไม่ครบ</div> : null}
     <div className="cta-row"><ActivateProgramButton fingerprint={preview.program_fingerprint} /></div>
   </AppShell>;
 }

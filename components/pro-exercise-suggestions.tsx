@@ -53,7 +53,7 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
   return <section className="card" style={{ marginTop: 18 }}>
     <div className="kicker">PRO · คำแนะนำท่าจาก LAB</div>
     <h2>คำแนะนำท่าฝึก</h2>
-    <p>LAB ช่วยเลือกว่าควรลองท่าไหนก่อน แต่เมื่อคุณลองจริงแล้ว Exercise Memory จะให้ความสำคัญกับผลการฝึกของคุณมากกว่า</p>
+    <p>LAB ช่วยแนะนำท่าที่ควรลองก่อน เมื่อมีประวัติการลองท่าแล้ว ระบบจะให้น้ำหนักกับผลการฝึกจริงมากขึ้น</p>
     {suggestions.map((s) => {
       const top = s.suggested;
       const current = names(s.current_exercises);

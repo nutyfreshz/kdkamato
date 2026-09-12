@@ -134,7 +134,13 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
 }
 
 export function ToolHeader({ id, title, question, technicalName, role = 'LAB TOOL', language = 'th' }) {
-  return <header className="lab-tool-head"><p className="eyebrow cyan">KDKAMATO LAB / {role}</p><p className="meta">{id}{technicalName ? ` · ${technicalName}` : ''}</p><h1>{title}</h1><p className="lab-tool-question">{question}</p></header>;
+  const th = language !== 'en';
+  const userFacingMeta = id === 'C1_EXERCISE_FIT'
+    ? (th ? 'ปรับท่าให้เข้ากับร่างกาย' : 'EXERCISE FIT')
+    : id === 'C2_SQUAT_GEOMETRY'
+      ? (th ? 'ทดลองปรับท่า Squat' : 'SQUAT SETUP TRIAL')
+      : technicalName || id;
+  return <header className="lab-tool-head"><p className="eyebrow cyan">KDKAMATO LAB / {role}</p><p className="meta">{userFacingMeta}</p><h1>{title}</h1><p className="lab-tool-question">{question}</p></header>;
 }
 
 export function MeasurementField({ label, unit, value, onChange, step = '0.1', guide, mistake, why, language = 'th' }) {
@@ -154,7 +160,7 @@ export function MeasurementField({ label, unit, value, onChange, step = '0.1', g
 }
 
 export function ResultContract({ result, metric, meaning, use, watch, nextHref, nextLabel, resultCode, children, language = 'th' }) {
-  if (!result) return <div className="lab-empty-result"><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><p>{language === 'en' ? 'Complete the required measurements to calculate your result.' : 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน ระบบจะคำนวณผลตามสูตรและเงื่อนไขที่กำหนดไว้'}</p></div>;
+  if (!result) return <div className="lab-empty-result"><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><p>{language === 'en' ? 'Complete the required measurements, then see the result and what to try next here.' : 'กรอกค่าที่จำเป็นให้ครบ แล้วดูผลและสิ่งที่ควรลองต่อได้ที่นี่'}</p></div>;
   return <div className="result-contract" aria-live="polite">
     <section><span>{language === 'en' ? 'YOUR RESULT' : 'ผลของคุณ'}</span><h2>{result}</h2>{metric && <p className="technical-metric">{metric}</p>}{resultCode && <small>RESULT CODE: {resultCode}</small>}</section>
     <section><span>{language === 'en' ? 'WHAT IT MEANS' : 'หมายความว่าอะไร'}</span><p>{meaning}</p></section>

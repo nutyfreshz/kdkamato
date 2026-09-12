@@ -22,6 +22,12 @@ function audienceLabel(language, audience) {
   return language === "en" ? "ALL" : "ทุกคน";
 }
 
+function stepText(language, sectionId, index, value) {
+  if (language === "th" && sectionId === "program" && index === 1) return "ดูตัวอย่างโปรแกรมใหม่ก่อนเปิดใช้";
+  if (language === "th" && sectionId === "program" && index === 2) return "กดเปิดใช้เมื่อพร้อม จึงเริ่มใช้โปรแกรมเวอร์ชันใหม่";
+  return textFor(language, value);
+}
+
 export default async function GuidePage() {
   const language = await getLanguage();
   const t = (value) => textFor(language, value);
@@ -30,8 +36,8 @@ export default async function GuidePage() {
     <>
       <SiteHeader language={language} />
       <GuideMotion />
-      <main className={styles.page}>
-        <section className={styles.hero}>
+      <main className={`${styles.page} guide-page`}>
+        <section className={`${styles.hero} guide-hero`}>
           <div className={styles.gridGlow} aria-hidden="true" />
           <div className={styles.heroInner} data-guide-reveal>
             <p className={styles.eyebrow}>{t(guideHero.eyebrow)}</p>
@@ -45,7 +51,7 @@ export default async function GuidePage() {
           <div className={styles.signal} aria-hidden="true"><span /><span /><span /></div>
         </section>
 
-        <section className={styles.journeySection} id="start">
+        <section className={`${styles.journeySection} guide-journey`} id="start">
           <div className={styles.sectionHead} data-guide-reveal>
             <p className={styles.eyebrow}>{language === "en" ? "ONE SIMPLE MODEL" : "หลักการทำงาน"}</p>
             <h2>{language === "en" ? "KDKAMATO turns information into a testable decision." : "KDKAMATO ไม่ได้ตัดสินจากตัวเลขเดียว"}</h2>
@@ -63,7 +69,7 @@ export default async function GuidePage() {
           </div>
         </section>
 
-        <section className={styles.topicSection} id="topics">
+        <section className={`${styles.topicSection} guide-topics`} id="topics">
           <div className={styles.sectionHead} data-guide-reveal>
             <p className={styles.eyebrow}>{language === "en" ? "CHOOSE BY INTENT" : "เลือกจากสิ่งที่อยากรู้"}</p>
             <h2>{language === "en" ? "You do not need to learn the whole system first." : "เลือกเรื่องที่ต้องใช้ แล้วเริ่มจากตรงนั้นได้เลย"}</h2>
@@ -80,7 +86,7 @@ export default async function GuidePage() {
           </div>
         </section>
 
-        <section className={styles.tierSection}>
+        <section className={`${styles.tierSection} guide-tiers`}>
           <div className={styles.tierIntro} data-guide-reveal>
             <p className={styles.eyebrow}>FREE / PRO</p>
             <h2>{language === "en" ? "Not two separate systems." : "FREE และ PRO ใช้ระบบเดียวกัน"}</h2>
@@ -102,15 +108,15 @@ export default async function GuidePage() {
           </div>
         </section>
 
-        <section className={styles.detailSection}>
-          <aside className={styles.detailNav} aria-label={language === "en" ? "Guideline sections" : "หัวข้อ Guideline"}>
+        <section className={`${styles.detailSection} guide-details`}>
+          <aside className={`${styles.detailNav} guide-detail-nav`} aria-label={language === "en" ? "Guideline sections" : "หัวข้อ Guideline"}>
             <p>{language === "en" ? "JUMP TO" : "ไปที่"}</p>
             {guideSections.map((section) => <Link key={section.id} href={`#${section.id}`}>{section.number} · {t(section.eyebrow)}</Link>)}
           </aside>
 
           <div className={styles.detailList}>
             {guideSections.map((section) => (
-              <article key={section.id} className={styles.detailCard} id={section.id} data-guide-reveal>
+              <article key={section.id} className={`${styles.detailCard} guide-detail-card`} id={section.id} data-guide-reveal>
                 <div className={styles.detailMeta}>
                   <span>{section.number}</span>
                   <b className={section.audience === "PRO" ? styles.proText : ""}>{t(section.eyebrow)}</b>
@@ -122,7 +128,7 @@ export default async function GuidePage() {
                 </div>
                 <ol className={styles.steps}>
                   {section.steps.map((step, index) => (
-                    <li key={`${section.id}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><p>{t(step)}</p></li>
+                    <li key={`${section.id}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><p>{stepText(language, section.id, index, step)}</p></li>
                   ))}
                 </ol>
                 <div className={styles.outcome}>
@@ -143,7 +149,7 @@ export default async function GuidePage() {
           </div>
         </section>
 
-        <section className={styles.finalCta} data-guide-reveal>
+        <section className={`${styles.finalCta} guide-final`} data-guide-reveal>
           <p className={styles.eyebrow}>{language === "en" ? "START WHERE YOU ARE" : "พร้อมแล้วค่อยไปใช้จริง"}</p>
           <h2>{language === "en" ? "The guide should disappear once you know your next action." : "ถ้าเข้าใจแล้วว่าควรเริ่มตรงไหน ก็ไปใช้เครื่องมือได้เลย"}</h2>
           <div className={styles.heroActions}>

@@ -1,5 +1,3 @@
-import { ProcessingOverlay } from "@/components/processing-overlay";
-
 export default function Loading() {
-  return <ProcessingOverlay title="กำลังโหลด..." detail="กำลังเปิดหน้าถัดไป กรุณารอสักครู่" />;
+  return <div className="route-loading" role="status" aria-live="polite">กำลังเปิดหน้า…</div>;
 }

@@ -88,6 +88,11 @@ const valueLabel: Record<string, string> = {
   FULL_GYM: "ฟิตเนสครบวงจร", LIMITED_GYM: "ฟิตเนสจำกัดอุปกรณ์", HOME_BASIC: "อุปกรณ์พื้นฐานที่บ้าน",
 };
 
+const focusLabel: Record<string, string> = {
+  BALANCED: "สมดุลทั้งร่างกาย", CHEST: "เน้นอก", BACK: "เน้นหลัง", SHOULDERS: "เน้นหัวไหล่", ARMS: "เน้นแขน", LEGS: "เน้นขา",
+  QUADS: "เน้นต้นขาด้านหน้า", HAMSTRINGS: "เน้นต้นขาด้านหลัง", GLUTES: "เน้นก้น", REPOSTURE: "เน้นสมดุลหัวไหล่และสะบัก",
+};
+
 function currentFocus(profile: TrainingProfile | null) {
   const p = profile?.priority_muscles;
   if (typeof p === "string") return p.toUpperCase();
@@ -138,8 +143,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     .eq("user_id", userId).eq("status", "ACTIVE").maybeSingle();
 
   if (!program) return <AppShell>
-    <div className="topline">Program</div><h1>Program ของคุณ</h1>
-    <div className="card"><h2>ยังไม่มี Program ปัจจุบัน</h2><p>ตั้งค่าเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้ง แล้วดูตัวอย่างก่อนเปิดใช้ Program เวอร์ชันแรก</p><div className="cta-row"><Link className="btn primary" href="/program/start">สร้าง Program</Link></div></div>
+    <div className="topline">โปรแกรม</div><h1>โปรแกรมของคุณ</h1>
+    <div className="card"><h2>ยังไม่มีโปรแกรมปัจจุบัน</h2><p>ตั้งค่าเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้ง แล้วดูตัวอย่างก่อนเปิดใช้โปรแกรมเวอร์ชันแรก</p><div className="cta-row"><Link className="btn primary" href="/program/start">สร้างโปรแกรม</Link></div></div>
   </AppShell>;
 
   const today = bangkokDate();
@@ -187,6 +192,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
   const autoUpdatedExercises = (autoUpdate?.changes ?? [])
     .map((change) => change.exercise_name ?? change.exercise_key)
     .filter(Boolean);
+  const displayFocus = focusLabel[snapshot.primary_focus ?? ""] ?? snapshot.focus_label ?? "–";
 
   let previousItems: TrainingProgramItem[] = [];
   if (autoUpdate?.previous_program_id) {
@@ -206,8 +212,8 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   return <AppShell>
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
-    <h1>{snapshot.program_family ?? "Program ปัจจุบัน"}</h1>
-    <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {snapshot.focus_label ?? "–"} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
+    <h1>{snapshot.program_family ?? "โปรแกรมปัจจุบัน"}</h1>
+    <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {displayFocus} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
     {params.activated && <div className="notice" style={{ marginBottom: 16 }}>เปิดใช้ Program สำเร็จ · เวอร์ชันก่อนหน้าจะถูกเก็บไว้ในประวัติเมื่อมีเวอร์ชันใหม่</div>}
     {autoUpdate && <div className="notice" style={{ marginBottom: 16 }}>
       <strong>Program อัปเดตจากผล LAB · เวอร์ชัน {program.program_version}</strong>
@@ -220,10 +226,10 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูลตั้งค่า Program ปัจจุบันต่างจาก Program v{program.program_version} ที่ใช้อยู่ Program จะยังไม่เปลี่ยนจนกว่าคุณจะดูตัวอย่างและเปิดใช้เวอร์ชันใหม่</div>}
 
     <div className="grid">
-      <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{snapshot.focus_label ?? "–"}</div></div>
+      <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{displayFocus}</div></div>
       <div className="card"><div className="kicker">เวลาต่อครั้ง</div><div className="metric">{snapshot.session_duration_min ?? "–"} นาที</div></div>
-      <div className="card"><div className="kicker">โปรตีน</div><div className="metric">{nutrition?.protein_low_g ?? "–"}–{nutrition?.protein_high_g ?? "–"} g</div></div>
-      <div className="card"><div className="kicker">พลังงาน</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "กำลังปรับเทียบ"}</div><p>{nutrition?.maintenance_low != null ? `พลังงานคงน้ำหนัก ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับการประมาณครั้งแรก"}</p></div>
+      <div className="card"><div className="kicker">โปรตีน (กรัม/วัน)</div><div className="metric">{nutrition?.protein_low_g ?? "–"}–{nutrition?.protein_high_g ?? "–"} g</div></div>
+      <div className="card"><div className="kicker">พลังงาน (กิโลแคลอรี/วัน)</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "กำลังปรับเทียบ"}</div><p>{nutrition?.maintenance_low != null ? `พลังงานคงน้ำหนัก ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับการประมาณครั้งแรก"}</p></div>
     </div>
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">เซตหนักโดยตรงต่อสัปดาห์</div><h2>ปริมาณการฝึกรายสัปดาห์</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}

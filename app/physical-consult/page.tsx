@@ -38,6 +38,7 @@ export default async function PhysicalConsultPage() {
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
   if (!userId) return <AppShell>
+    <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">Physical Consult</div>
     <h1>เซสชันสำหรับ Trainer</h1>
     <div className="card"><p>เข้าสู่ระบบด้วยบัญชีของผู้ใช้ก่อนเริ่มเซสชัน</p><Link className="btn primary" href="/login?physical=1">เข้าสู่ Physical Consult</Link></div>
@@ -50,6 +51,7 @@ export default async function PhysicalConsultPage() {
   const isPro = access?.tier === "PRO";
 
   if (!isPro) return <AppShell>
+    <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">Physical Consult</div>
     <h1>Physical Consult สำหรับ PRO</h1>
     <div className="card">
@@ -76,9 +78,10 @@ export default async function PhysicalConsultPage() {
   }).filter((g) => g.candidates.length > 0);
 
   return <AppShell>
+    <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">PRO · Physical Consult</div>
     <h1>วัด → ลองจริง → ให้ระบบจำ</h1>
-    <p>ข้อมูลจากเซสชันนี้จะต่อกับ LAB, Program และ Exercise Memory ของผู้ใช้คนเดิมทันที</p>
+    <p>ข้อมูลที่บันทึกในครั้งนี้จะเชื่อมกับ LAB โปรแกรมฝึก และประวัติการลองท่าของผู้ใช้คนเดิม</p>
 
     <div className="notice" style={{ marginBottom: 18 }}>
       <strong>จำไว้ในเซสชันนี้</strong>
@@ -89,7 +92,7 @@ export default async function PhysicalConsultPage() {
       <div className="kicker">ขั้นตอนที่ 1 · วัดและประเมิน</div>
       <h2>Exercise Fit</h2>
       <p>เลือกท่าที่ต้องการดู หากเคยวัดไว้แล้ว ระบบจะใช้ค่าเดิมให้ทันที</p>
-      <div className="cta-row"><Link className="btn primary" href="/lab/exercise-fit?consult=1">เปิด Exercise Fit</Link><Link className="btn" href="/lab/squat-geometry?consult=1">Squat Setup Trial</Link></div>
+      <div className="cta-row"><Link className="btn primary" href="/lab/exercise-fit?consult=1">เปิด Exercise Fit</Link><Link className="btn" href="/lab/squat-geometry?consult=1">ลองปรับท่า Squat</Link></div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>

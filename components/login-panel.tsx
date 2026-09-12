@@ -7,7 +7,7 @@ import { ProcessingOverlay } from "@/components/processing-overlay";
 
 function authErrorText(error: unknown) {
   const message = error instanceof Error ? error.message : String(error ?? "");
-  if (/invalid login credentials/i.test(message)) return "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+  if (/invalid login credentials/i.test(message)) return "อีเมลหรือรหัสผ่านไม่ถูกต้อง ตรวจสอบแล้วลองอีกครั้ง";
   if (/email not confirmed/i.test(message)) return "กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ";
   if (/user already registered/i.test(message)) return "อีเมลนี้มีบัญชีอยู่แล้ว กรุณาเข้าสู่ระบบ";
   if (/password.*at least/i.test(message)) return "รหัสผ่านสั้นเกินไป กรุณาตั้งรหัสผ่านให้ยาวขึ้น";
@@ -82,7 +82,7 @@ export function LoginPanel({ redirectTo = "/home", physicalMode = false }: { red
       </div>}
       {physicalMode && <div className="help" style={{ marginTop: 14 }}>เมื่อจบการปรึกษา ให้ใช้ปุ่ม “จบ Physical Consult และออกจากระบบเครื่องนี้” เพื่อปิดเฉพาะเซสชันบนเครื่อง Trainer</div>}
       {busy && <ProcessingOverlay title={busyLabel} detail="กรุณารอสักครู่ และไม่จำเป็นต้องกดซ้ำ" />}
-      {message && <div className="notice warning">{message}</div>}
+      {message && <div className="notice warning" role="alert">{message}</div>}
     </div>
   );
 }

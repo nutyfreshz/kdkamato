@@ -14,9 +14,9 @@ export default function LanguageSwitcher({ language = 'th', mobile = false, onCh
   }
 
   return (
-    <div className={mobile ? 'mobile-language-switch' : 'language-switch'} aria-label="Language">
-      <button type="button" className={language === 'th' ? 'is-active' : ''} onClick={() => setLanguage('th')}>TH</button>
-      <button type="button" className={language === 'en' ? 'is-active' : ''} onClick={() => setLanguage('en')}>EN</button>
+    <div className={mobile ? 'mobile-language-switch' : 'language-switch'} aria-label={language === 'en' ? 'Language' : 'ภาษา'}>
+      <button type="button" aria-label="ภาษาไทย" aria-pressed={language === 'th'} className={language === 'th' ? 'is-active' : ''} onClick={() => setLanguage('th')}>TH</button>
+      <button type="button" aria-label="English" aria-pressed={language === 'en'} className={language === 'en' ? 'is-active' : ''} onClick={() => setLanguage('en')}>EN</button>
     </div>
   );
 }

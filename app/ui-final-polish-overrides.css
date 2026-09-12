@@ -1,0 +1,17 @@
+.skip-link:focus,
+.skip-link:focus-visible{
+  transform:none !important;
+  transition:none !important;
+}
+
+@media(max-width:900px){
+  .menu-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:44px;
+    min-height:44px;
+    padding:8px 10px;
+    border-radius:8px;
+  }
+}

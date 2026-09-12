@@ -21,11 +21,11 @@ export default async function AccountPage(){
   const email = userData.user?.email ?? "";
 
   return <AppShell>
-    <div className="topline">บัญชี</div><h1>บัญชีเดียว ประวัติ Program ต่อเนื่อง</h1>
+    <div className="topline">บัญชี</div><h1>บัญชีของคุณ</h1>
     <div className="grid">
       <div className="card"><div className="kicker">อีเมล</div><div className="metric" style={{fontSize:"1rem"}}>{email || "–"}</div></div>
       <div className="card"><div className="kicker">ระดับบัญชี</div><div className="metric cyan">{access?.tier ?? "FREE"}</div></div>
-      <div className="card"><div className="kicker">เวอร์ชัน Program</div><div className="metric">{programCount ?? 0}</div></div>
+      <div className="card"><div className="kicker">เวอร์ชันโปรแกรม</div><div className="metric">{programCount ?? 0}</div></div>
       <div className="card"><div className="kicker">การเช็กอินความคืบหน้า</div><div className="metric">{progressCount ?? 0}</div></div>
     </div>
     {email ? <PhysicalConsultAccess email={email} /> : null}
