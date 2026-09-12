@@ -74,7 +74,12 @@ export default function SiteHeader({ language = 'th' }) {
         </button>
       </header>
       {open && (
-        <nav id="mobile-navigation" className="mobile-menu is-open" aria-label={language === 'en' ? 'Mobile navigation' : 'เมนูมือถือ'}>
+        <nav
+          id="mobile-navigation"
+          className="mobile-menu is-open"
+          aria-label={language === 'en' ? 'Mobile navigation' : 'เมนูมือถือ'}
+          style={{ top: '84px', maxHeight: 'calc(100svh - 100px - env(safe-area-inset-bottom, 0px))' }}
+        >
           {primaryLinks.map(([href, label]) => (
             <Link key={href} href={href} onClick={close} aria-current={isActive(href) ? 'page' : undefined}>{label}</Link>
           ))}
