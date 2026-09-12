@@ -4,34 +4,32 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const REVEAL_GROUPS = [
-  { selector: ".hero-copy > *", x: 0, y: 16, scale: 0.995, step: 58 },
-  { selector: ".manga .section-heading > *", x: -10, y: 22, scale: 0.994, step: 54 },
-  { selector: ".manga-feature", x: 0, y: 28, scale: 0.988, step: 0 },
-  { selector: ".manga-row .manga-card", x: 0, y: 24, scale: 0.992, step: 70 },
-  { selector: ".manga .section-link", x: 10, y: 12, scale: 1, step: 0 },
-  { selector: ".knowledge .section-heading > *", x: -12, y: 20, scale: 0.994, step: 52 },
-  { selector: ".knowledge-stage", x: 0, y: 30, scale: 0.989, step: 0 },
-  { selector: ".article-grid article", x: 0, y: 24, scale: 0.992, step: 72 },
-  { selector: ".lab .section-heading > *", x: -10, y: 20, scale: 0.994, step: 52 },
-  { selector: ".lab-demo", x: 0, y: 30, scale: 0.989, step: 0 },
-  { selector: ".tool-teasers a", x: 0, y: 20, scale: 0.994, step: 66 },
-  { selector: ".training-copy > *", x: -8, y: 20, scale: 0.995, step: 56 },
-  { selector: ".kendo-copy > *", x: -8, y: 20, scale: 0.995, step: 56 },
-  { selector: ".portal > .eyebrow", x: -8, y: 16, scale: 1, step: 0 },
-  { selector: ".portal > h2", x: -12, y: 22, scale: 0.995, step: 0 },
-  { selector: ".portal-links a", x: 0, y: 18, scale: 0.996, step: 62 },
-  { selector: ".listing-page > *", x: 0, y: 18, scale: 0.996, step: 50 },
-  { selector: ".reader-head > *", x: 0, y: 18, scale: 0.996, step: 50 },
-  { selector: ".article-page > header > *", x: 0, y: 18, scale: 0.996, step: 50 },
-  { selector: ".footer > *", x: 0, y: 16, scale: 0.997, step: 60 },
-] as const;
+  ".hero-copy > *",
+  ".manga .section-heading",
+  ".manga-feature",
+  ".manga-row .manga-card",
+  ".manga .section-link",
+  ".knowledge .section-heading",
+  ".knowledge-stage",
+  ".article-grid article",
+  ".lab .section-heading",
+  ".lab-demo",
+  ".tool-teasers a",
+  ".training-copy > *",
+  ".kendo-copy > *",
+  ".portal > .eyebrow",
+  ".portal > h2",
+  ".portal-links",
+  ".listing-page > *",
+  ".reader-head > *",
+  ".article-page > header > *",
+  ".footer > *",
+];
 
 const PARALLAX_SELECTORS = [
-  [".knowledge-visual", 14],
-  [".manga-cover.real-cover", 12],
+  [".knowledge-visual", 12],
+  [".manga-cover.real-cover", 10],
 ] as const;
-
-const HOME_SCENE_SELECTORS = [".manga", ".knowledge", ".lab", ".portal"] as const;
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -54,14 +52,11 @@ export function SiteMotion() {
     body.classList.add("kdk-route-enter");
 
     const revealNodes: HTMLElement[] = [];
-    REVEAL_GROUPS.forEach(({ selector, x, y, scale, step }) => {
+    REVEAL_GROUPS.forEach((selector) => {
       const group = Array.from(document.querySelectorAll<HTMLElement>(selector));
       group.forEach((node, index) => {
         node.dataset.motionReveal = "true";
-        node.style.setProperty("--motion-delay", `${Math.min(index * step, 240)}ms`);
-        node.style.setProperty("--motion-x-start", `${x}px`);
-        node.style.setProperty("--motion-y-start", `${y}px`);
-        node.style.setProperty("--motion-scale-start", String(scale));
+        node.style.setProperty("--motion-delay", `${Math.min(index * 55, 220)}ms`);
         revealNodes.push(node);
       });
     });
@@ -84,7 +79,7 @@ export function SiteMotion() {
           observer.unobserve(node);
         });
       },
-      { threshold: 0.08, rootMargin: "0px 0px -5% 0px" },
+      { threshold: 0.1, rootMargin: "0px 0px -6% 0px" },
     );
 
     revealNodes.forEach((node) => observer.observe(node));
@@ -92,11 +87,6 @@ export function SiteMotion() {
     const parallaxNodes = PARALLAX_SELECTORS.flatMap(([selector, strength]) =>
       Array.from(document.querySelectorAll<HTMLElement>(selector)).map((node) => ({ node, strength })),
     );
-    const homeScenes = HOME_SCENE_SELECTORS.flatMap((selector) =>
-      Array.from(document.querySelectorAll<HTMLElement>(selector)),
-    );
-    const hero = document.querySelector<HTMLElement>(".hero");
-    const breather = document.querySelector<HTMLElement>(".breather");
     const descent = document.querySelector<HTMLElement>(".descent");
     const visualStory = document.querySelector<HTMLElement>(".visual-story");
     const training = document.querySelector<HTMLElement>(".visual-scene-training");
@@ -111,15 +101,6 @@ export function SiteMotion() {
       frame = 0;
       const viewport = Math.max(1, window.innerHeight);
 
-      if (hero) {
-        const rect = hero.getBoundingClientRect();
-        const exit = smoothstep(-rect.top / Math.max(1, viewport * 0.72));
-        hero.style.setProperty("--hero-exit", exit.toFixed(4));
-        hero.style.setProperty("--hero-copy-opacity", (1 - exit * 0.72).toFixed(4));
-        hero.style.setProperty("--hero-copy-y", `${(-exit * 30).toFixed(2)}px`);
-        hero.style.setProperty("--hero-handoff", (0.26 + exit * 0.74).toFixed(4));
-      }
-
       parallaxNodes.forEach(({ node, strength }) => {
         const rect = node.getBoundingClientRect();
         const progress = clamp((viewport - rect.top) / (viewport + rect.height));
@@ -127,34 +108,11 @@ export function SiteMotion() {
         node.style.setProperty("--motion-y", `${y.toFixed(2)}px`);
       });
 
-      homeScenes.forEach((node) => {
-        const rect = node.getBoundingClientRect();
-        const enter = smoothstep((viewport - rect.top) / Math.max(1, viewport * 0.55));
-        const exit = smoothstep((viewport - rect.bottom) / Math.max(1, viewport * 0.55));
-        const center = clamp((viewport - rect.top) / Math.max(1, viewport + rect.height));
-        const sheen = Math.sin(Math.PI * center);
-        node.style.setProperty("--scene-enter", enter.toFixed(4));
-        node.style.setProperty("--scene-exit", exit.toFixed(4));
-        node.style.setProperty("--scene-top-opacity", (1 - enter).toFixed(4));
-        node.style.setProperty("--scene-bottom-opacity", exit.toFixed(4));
-        node.style.setProperty("--scene-ambient-y", `${((0.5 - center) * 26).toFixed(2)}px`);
-        node.style.setProperty("--scene-sheen-opacity", (sheen * 0.58).toFixed(4));
-      });
-
-      if (breather) {
-        const rect = breather.getBoundingClientRect();
-        const progress = clamp((viewport - rect.top) / Math.max(1, viewport + rect.height));
-        const glow = Math.sin(Math.PI * progress);
-        breather.style.setProperty("--breather-progress", progress.toFixed(4));
-        breather.style.setProperty("--breather-glow", (glow * 0.82).toFixed(4));
-        breather.style.setProperty("--breather-y", `${((0.5 - progress) * 34).toFixed(2)}px`);
-      }
-
       if (descent) {
         const rect = descent.getBoundingClientRect();
         const travel = Math.max(1, rect.height - viewport);
         const progress = clamp(-rect.top / travel);
-        const entry = smoothstep((viewport - rect.top) / Math.max(1, viewport * 0.72));
+        const entry = clamp((viewport - rect.top) / viewport);
         descent.style.setProperty("--descent-motion-progress", progress.toFixed(4));
         descent.style.setProperty("--descent-entry", entry.toFixed(4));
         descent.style.setProperty("--descent-motion-y", `${((0.5 - progress) * 18).toFixed(2)}px`);
@@ -164,7 +122,6 @@ export function SiteMotion() {
         const rect = visualStory.getBoundingClientRect();
         const travel = Math.max(1, rect.height - viewport);
         const progress = clamp(-rect.top / travel);
-        const storyEntry = smoothstep((viewport - rect.top) / Math.max(1, viewport * 0.58));
 
         const imageHandoff = smoothstep((progress - 0.12) / 0.56);
         const trainingExit = smoothstep((progress - 0.16) / 0.42);
@@ -173,8 +130,6 @@ export function SiteMotion() {
         const veil = Math.sin(Math.PI * veilProgress) * 0.16;
 
         visualStory.style.setProperty("--story-progress", progress.toFixed(4));
-        visualStory.style.setProperty("--story-entry", storyEntry.toFixed(4));
-        visualStory.style.setProperty("--story-entry-y", `${((1 - storyEntry) * 22).toFixed(2)}px`);
         visualStory.style.setProperty("--story-veil", veil.toFixed(4));
 
         training.style.setProperty("--training-dim", (imageHandoff * 0.68).toFixed(4));
@@ -209,32 +164,12 @@ export function SiteMotion() {
         delete node.dataset.motionReveal;
         delete node.dataset.motionVisible;
         node.style.removeProperty("--motion-delay");
-        node.style.removeProperty("--motion-x-start");
-        node.style.removeProperty("--motion-y-start");
-        node.style.removeProperty("--motion-scale-start");
       });
       parallaxNodes.forEach(({ node }) => node.style.removeProperty("--motion-y"));
-      homeScenes.forEach((node) => {
-        node.style.removeProperty("--scene-enter");
-        node.style.removeProperty("--scene-exit");
-        node.style.removeProperty("--scene-top-opacity");
-        node.style.removeProperty("--scene-bottom-opacity");
-        node.style.removeProperty("--scene-ambient-y");
-        node.style.removeProperty("--scene-sheen-opacity");
-      });
-      hero?.style.removeProperty("--hero-exit");
-      hero?.style.removeProperty("--hero-copy-opacity");
-      hero?.style.removeProperty("--hero-copy-y");
-      hero?.style.removeProperty("--hero-handoff");
-      breather?.style.removeProperty("--breather-progress");
-      breather?.style.removeProperty("--breather-glow");
-      breather?.style.removeProperty("--breather-y");
       descent?.style.removeProperty("--descent-motion-progress");
       descent?.style.removeProperty("--descent-entry");
       descent?.style.removeProperty("--descent-motion-y");
       visualStory?.style.removeProperty("--story-progress");
-      visualStory?.style.removeProperty("--story-entry");
-      visualStory?.style.removeProperty("--story-entry-y");
       visualStory?.style.removeProperty("--story-veil");
       training?.style.removeProperty("--training-dim");
       trainingImage?.style.removeProperty("--training-scale");
