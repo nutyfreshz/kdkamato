@@ -1,6 +1,7 @@
 import './globals.css';
 import './i18n.css';
 import './lab-ui.css';
+import './brand-hero-bg.css';
 import { getLanguage } from '../lib/language';
 
 export const metadata = {
