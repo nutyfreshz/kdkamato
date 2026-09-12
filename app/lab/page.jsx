@@ -25,7 +25,7 @@ const content = {
       },
       {
         href:'/lab/squat-geometry', tag:'SQUAT',
-        title:'Squat setup แบบไหนควรลองก่อน?',
+        title:'ควรลองปรับท่า Squat แบบไหนก่อน?',
         copy:'เลือก Squat ที่คุณใช้อยู่ แล้วลองเปรียบเทียบ 2 setup ตามลำดับ โดยเปลี่ยนทีละอย่างเพื่อดูว่าแบบไหนควบคุมได้ดีกว่า',
         result:'ผลลัพธ์: ลำดับ setup ที่นำไปลองในยิมได้ทันที'
       }
@@ -39,8 +39,8 @@ const content = {
     ],
     quick: [
       { href:'/lab/knee-to-wall', title:'เข่าของคุณเดินหน้าได้แค่ไหน?', technical:'Knee-to-Wall', copy:'วัดซ้ายและขวาเพื่อดูบริบทของข้อเท้าและการเคลื่อนที่ของเข่าไปข้างหน้า' },
-      { href:'/lab/ape-index', title:'แขนยาวแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'Ape Index', copy:'วัดระยะเอื้อม (reach) แล้ว C1 จะนำค่าไปใช้กับ Bench Press หรือ Deadlift ต่อ' },
-      { href:'/lab/femur-tibia', title:'ต้นขายาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?', technical:'Femur:Tibia', copy:'วัดสัดส่วนช่วงขา แล้ว C1 หรือ C2 จะนำค่าไปใช้ต่อ' },
+      { href:'/lab/ape-index', title:'แขนยาวแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'Ape Index', copy:'วัดช่วงแขน แล้วใช้ค่านี้ต่อในเครื่องมือปรับท่า Bench Press หรือ Deadlift' },
+      { href:'/lab/femur-tibia', title:'ต้นขายาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?', technical:'Femur:Tibia', copy:'วัดสัดส่วนช่วงขา แล้วใช้ต่อในเครื่องมือปรับท่าฝึกหรือทดลองท่า Squat' },
       { href:'/lab/v-taper', title:'สัดส่วนไหล่ต่อเอวของคุณตอนนี้เป็นเท่าไร?', technical:'V-Taper', copy:'ดูค่าปัจจุบัน แล้วนำค่าเดิมไปใช้ต่อในสถานการณ์จำลองสัดส่วนได้' },
       { href:'/lab/ffmi', title:'มวลไร้ไขมันของคุณมากแค่ไหนเมื่อเทียบกับส่วนสูง?', technical:'FFMI', copy:'ตัววัดสั้น ๆ สำหรับติดตามตัวเองตามเวลา' }
     ]
@@ -76,8 +76,8 @@ const content = {
     ],
     quick: [
       { href:'/lab/knee-to-wall', title:'How far can your knee travel forward?', technical:'Knee-to-Wall', copy:'Measure left/right ankle and knee-travel context.' },
-      { href:'/lab/ape-index', title:'How long are your arms relative to height?', technical:'Ape Index', copy:'Measure reach only. C1 can reuse it for Bench/Deadlift context.' },
-      { href:'/lab/femur-tibia', title:'How long is your thigh relative to lower leg?', technical:'Femur:Tibia', copy:'Measure leg proportions only. C1/C2 can reuse them.' },
+      { href:'/lab/ape-index', title:'How long are your arms relative to height?', technical:'Ape Index', copy:'Measure reach only. Exercise Fit can reuse it for Bench Press or Deadlift.' },
+      { href:'/lab/femur-tibia', title:'How long is your thigh relative to lower leg?', technical:'Femur:Tibia', copy:'Measure leg proportions once, then reuse them in Exercise Fit or the Squat setup tool.' },
       { href:'/lab/v-taper', title:'What is your current shoulder-to-waist ratio?', technical:'V-Taper', copy:'See the current snapshot. Explore can reuse it for scenarios.' },
       { href:'/lab/ffmi', title:'How much fat-free mass do you carry for height?', technical:'FFMI', copy:'A quick metric for self-tracking over time.' }
     ]
@@ -143,7 +143,7 @@ export default async function LabPage() {
     </div>
 
     <style>{`
-      .lab-simple-rule{margin:34px 0 0;padding:16px 18px;border:1px solid rgba(72,220,232,.22);background:rgba(72,220,232,.04);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}.lab-simple-rule b{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-simple-rule span{color:#c6cdcf;font-size:14px}.lab-intent-section{margin-top:64px}.lab-section-copy{max-width:760px;color:#8f999c;margin:8px 0 24px}.lab-core-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:980px}.lab-core-card{display:flex;flex-direction:column;min-height:330px;padding:24px;border:1px solid rgba(72,220,232,.2);background:#0c1113;text-decoration:none}.lab-core-card>span{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-core-card h2{font-size:30px;line-height:1.05;margin:24px 0 14px;color:#f3f4f2}.lab-core-card p{color:#aeb6b8;line-height:1.6}.lab-core-card small{margin-top:auto;padding-top:20px;color:#7f898c}.lab-core-card strong{margin-top:18px;color:#48dce8;font-size:12px;letter-spacing:.08em}.lab-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lab-quick-card{display:flex;flex-direction:column;min-height:220px;padding:18px;border:1px solid rgba(255,255,255,.1);background:#0b0f10;text-decoration:none}.lab-quick-card small{color:#ff6a1a;letter-spacing:.08em}.lab-explore-section .lab-quick-card small{color:#b9c0c2}.lab-quick-card h3{font-size:21px;line-height:1.15;margin:16px 0 10px;color:#eef0ef}.lab-quick-card p{font-size:13px;color:#8f989a;line-height:1.55}.lab-quick-card strong{margin-top:auto;padding-top:16px;color:#aeb5b7;font-size:11px;letter-spacing:.06em}@media(max-width:900px){.lab-core-grid{grid-template-columns:1fr}.lab-core-card{min-height:260px}}
+      .lab-simple-rule{margin:34px 0 0;padding:16px 18px;border:1px solid rgba(72,220,232,.22);background:rgba(72,220,232,.04);display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}.lab-simple-rule b{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-simple-rule span{color:#c6cdcf;font-size:14px}.lab-intent-section{margin-top:64px}.lab-section-copy{max-width:760px;color:#8f999c;margin:8px 0 24px}.lab-core-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:980px}.lab-core-card{display:flex;flex-direction:column;min-height:330px;padding:24px;border:1px solid rgba(72,220,232,.2);background:#0c1113;text-decoration:none}.lab-core-card>span{font-size:10px;letter-spacing:.12em;color:#48dce8}.lab-core-card h2{font-size:30px;line-height:1.05;margin:24px 0 14px;color:#f3f4f2}.lab-core-card p{color:#aeb6b8;line-height:1.6}.lab-core-card small{margin-top:auto;padding-top:20px;color:#a0a9ad}.lab-core-card strong{margin-top:18px;color:#48dce8;font-size:12px;letter-spacing:.08em}.lab-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.lab-quick-card{display:flex;flex-direction:column;min-height:220px;padding:18px;border:1px solid rgba(255,255,255,.1);background:#0b0f10;text-decoration:none}.lab-quick-card small{color:#ff6a1a;letter-spacing:.08em}.lab-explore-section .lab-quick-card small{color:#b9c0c2}.lab-quick-card h3{font-size:21px;line-height:1.15;margin:16px 0 10px;color:#eef0ef}.lab-quick-card p{font-size:14px;color:#a0a9ad;line-height:1.55}.lab-quick-card strong{margin-top:auto;padding-top:16px;color:#aeb5b7;font-size:12px;letter-spacing:.06em}@media(max-width:900px){.lab-core-grid{grid-template-columns:1fr}.lab-core-card{min-height:260px}}
     `}</style>
   </main></>;
 }
