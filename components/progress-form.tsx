@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ProcessingOverlay } from "@/components/processing-overlay";
 
 type InitialProgress = {
   body_weight_kg?: number | string | null;
@@ -78,8 +77,8 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
     <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มีปัญหาใหม่</label>
     <label>หมายเหตุ (ไม่บังคับ)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
     <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก..." : "บันทึกการเช็กอิน"}</button>
-    {busy && <ProcessingOverlay title="กำลังบันทึกความคืบหน้า..." detail="กำลังผูกการเช็กอินกับ Program เวอร์ชันที่ใช้งานอยู่" />}
-    {saved && <div className="notice">บันทึกแล้ว หากบันทึกซ้ำในวันเดียวกัน ระบบจะอัปเดตการเช็กอินเดิม</div>}
-    {error && <div className="notice warning">{error}</div>}
+    {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลการฝึก</div>}
+    {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว หากบันทึกซ้ำในวันเดียวกัน ระบบจะอัปเดตการเช็กอินเดิม</div>}
+    {error && <div className="notice warning" role="alert">{error}</div>}
   </div>;
 }
