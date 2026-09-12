@@ -1,6 +1,7 @@
 import './globals.css';
 import './i18n.css';
 import './lab-ui.css';
+import './typography-tuning.css';
 import { getLanguage } from '../lib/language';
 
 export const metadata = {
