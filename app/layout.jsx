@@ -2,6 +2,7 @@ import './globals.css';
 import './i18n.css';
 import './lab-ui.css';
 import './typography-tuning.css';
+import './ui-final-polish.css';
 import { getLanguage } from '../lib/language';
 
 export const metadata = {
@@ -16,6 +17,10 @@ export const metadata = {
     description: 'Manga. Knowledge. LAB. Training.',
     type: 'website'
   }
+};
+
+export const viewport = {
+  themeColor: '#08090a'
 };
 
 export default async function RootLayout({ children }) {
