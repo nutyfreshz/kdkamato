@@ -4,7 +4,9 @@ import './lab-ui.css';
 import './typography-tuning.css';
 import './ui-final-polish.css';
 import './ui-final-polish-overrides.css';
+import './cinematic-motion.css';
 import { getLanguage } from '../lib/language';
+import { SiteMotion } from '../components/site-motion';
 
 export const metadata = {
   title: {
@@ -28,7 +30,10 @@ export default async function RootLayout({ children }) {
   const language = await getLanguage();
   return (
     <html lang={language}>
-      <body>{children}</body>
+      <body>
+        <SiteMotion />
+        {children}
+      </body>
     </html>
   );
 }
