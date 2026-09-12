@@ -42,7 +42,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
 
   return <div className="card" style={{ marginTop: 18 }}>
     <div className="kicker">การเข้าถึง Physical Consult</div>
-    <h2>ให้ Trainer ใช้ Physical Consult โดยไม่ต้องเปิด Gmail ของคุณบนเครื่อง Trainer</h2>
+    <h2>การเข้าใช้ Physical Consult บนอุปกรณ์เทรนเนอร์</h2>
     <p>ใช้อีเมลเดิมของบัญชี <b>{email}</b> แล้วตั้งรหัสผ่านสำหรับ Physical Consult วิธีนี้ใช้บัญชีเดิมและไม่สร้างผู้ใช้ใหม่</p>
     <div className="form" style={{ maxWidth: 520 }}>
       <label>รหัสผ่าน Physical Consult
@@ -55,7 +55,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
         {busy ? "กำลังตั้งค่า..." : saved ? "ตั้งค่าแล้ว" : "ตั้ง / เปลี่ยนรหัสผ่าน Physical Consult"}
       </button>
       <small>รหัสนี้ใช้เข้าสู่บัญชีของคุณสำหรับ Physical Consult เท่านั้น ควรให้เฉพาะ Trainer ที่คุณอนุญาต และเปลี่ยนได้จากหน้านี้ทุกเมื่อ</small>
-      {message && <div className="notice warning">{message}</div>}
+      {message && <div className="notice warning" role={saved ? "status" : "alert"}>{message}</div>}
     </div>
     <div className="cta-row" style={{ marginTop: 14 }}>
       <Link className="btn" href="/login?physical=1">ดูหน้าเข้าสู่ระบบ Physical Consult</Link>
