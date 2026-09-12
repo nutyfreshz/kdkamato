@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import { GuideMotion } from "@/components/guide-motion";
+import backdropStyles from "@/components/FixedBrandBackdrop.module.css";
 import {
   guideEntryCards,
   guideHero,
@@ -26,18 +27,24 @@ function audienceLabel(language, audience) {
 export default async function GuidePage() {
   const language = await getLanguage();
   const t = (value) => textFor(language, value);
-  const heroBackground = {
-    backgroundImage: `linear-gradient(90deg, rgba(8,9,10,.90) 0%, rgba(8,9,10,.64) 40%, rgba(8,9,10,.30) 70%, rgba(8,9,10,.48) 100%), url("${kdkBackground}")`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  };
 
   return (
     <>
       <SiteHeader language={language} />
       <GuideMotion />
-      <main className={styles.page}>
-        <section className={styles.hero} style={heroBackground}>
+      <main className={`${styles.page} ${backdropStyles.pageRoot}`}>
+        <div
+          className={backdropStyles.fixedBackdrop}
+          aria-hidden="true"
+          style={{ "--brand-bg": `url("${kdkBackground}")` }}
+        />
+
+        <section
+          className={styles.hero}
+          style={{
+            background: "radial-gradient(circle at 74% 30%,rgba(72,220,232,.12),transparent 28rem), radial-gradient(circle at 22% 78%,rgba(255,106,26,.08),transparent 28rem)",
+          }}
+        >
           <div className={styles.gridGlow} aria-hidden="true" />
           <div className={styles.heroInner} data-guide-reveal>
             <p className={styles.eyebrow}>{t(guideHero.eyebrow)}</p>
