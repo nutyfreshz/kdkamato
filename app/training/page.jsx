@@ -23,8 +23,8 @@ export default async function TrainingPage() {
           </h1>
           <p>
             {en
-              ? 'Your Training + Nutrition system lives here. Start with the Free Foundation, then continue with the same account and history as the system develops.'
-              : 'การฝึกและโภชนาการของคุณเริ่มจากตรงนี้ สร้าง Free Foundation แล้วใช้บัญชีและประวัติเดียวกันต่อเนื่องกับระบบ'}
+              ? 'Set your goal, training time, and equipment to build your program, then keep tracking your results with the same account.'
+              : 'ตั้งค่าเป้าหมายและเวลาฝึก เพื่อสร้างโปรแกรมของคุณ แล้วติดตามผลต่อในบัญชีเดิม'}
           </p>
           <div style={{display:'flex',gap:'12px',flexWrap:'wrap',marginTop:'28px'}}>
             <Link className="text-cta" href="/home">
