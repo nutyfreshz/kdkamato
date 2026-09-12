@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ProcessingOverlay } from "@/components/processing-overlay";
 
 type InitialFeedback = {
   performance_status?: string | null;
@@ -113,9 +112,9 @@ export function ExerciseFeedbackForm({
       <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
         {busy ? "กำลังบันทึก..." : "บันทึกผลของท่านี้"}
       </button>
-      {saved && <div className="notice">บันทึกแล้ว · Exercise Memory จะจำผลของท่านี้ไว้ใช้ครั้งต่อไป</div>}
-      {error && <div className="notice warning">{error}</div>}
-      {busy && <ProcessingOverlay title="กำลังบันทึกผลของท่านี้..." detail="กำลังอัปเดต Exercise Memory ของท่านี้" />}
+      {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลของท่านี้</div>}
+      {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว · Exercise Memory จะจำผลของท่านี้ไว้ใช้ครั้งต่อไป</div>}
+      {error && <div className="notice warning" role="alert">{error}</div>}
     </div>
   );
 }
