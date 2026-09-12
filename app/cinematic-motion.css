@@ -1,0 +1,131 @@
+/* KDKAMATO cinematic motion layer.
+   Restores motion without changing artwork, content, engine, auth, or data behavior. */
+
+body.kdk-route-enter main{
+  animation:kdk-route-enter .42s cubic-bezier(.22,.72,.2,1) both;
+}
+@keyframes kdk-route-enter{
+  from{opacity:.72;transform:translate3d(0,10px,0)}
+  to{opacity:1;transform:none}
+}
+
+/* Reveal only after the client motion controller is active, so no-JS content stays visible. */
+html.kdk-motion-ready [data-motion-reveal="true"]{
+  opacity:0;
+  transform:translate3d(0,34px,0) scale(.988);
+  filter:blur(4px);
+  transition:
+    opacity .82s cubic-bezier(.22,.72,.2,1) var(--motion-delay,0ms),
+    transform .96s cubic-bezier(.16,.78,.18,1) var(--motion-delay,0ms),
+    filter .72s ease var(--motion-delay,0ms);
+  will-change:opacity,transform,filter;
+}
+html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+
+/* Give the opening sequence a deliberate dissolve instead of a hard image-to-image cut. */
+.hero::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  left:0;
+  right:0;
+  bottom:0;
+  height:18svh;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,9,10,0),rgba(8,9,10,.34) 48%,#08090a 100%);
+}
+.descent{
+  isolation:isolate;
+}
+.descent::before{
+  content:"";
+  position:absolute;
+  z-index:6;
+  top:0;
+  left:0;
+  right:0;
+  height:18svh;
+  pointer-events:none;
+  background:linear-gradient(180deg,#08090a 0%,rgba(8,9,10,.54) 46%,rgba(8,9,10,0) 100%);
+}
+
+/* Restore depth and slower cinematic blending inside the scroll-driven Descent sequence. */
+.descent-frame{
+  transform:translate3d(0,10px,0) scale(1.075);
+  filter:saturate(.92) brightness(.88);
+  transition:
+    opacity .95s cubic-bezier(.22,.72,.2,1),
+    transform 1.8s cubic-bezier(.16,.78,.18,1),
+    filter .95s ease;
+  will-change:opacity,transform,filter;
+}
+.descent-frame.is-active{
+  transform:translate3d(0,var(--descent-motion-y,0px),0) scale(1.018);
+  filter:saturate(1) brightness(1);
+}
+.descent-copy{
+  transform:translate3d(0,38px,0) scale(.985);
+  filter:blur(5px);
+  transition:
+    opacity .7s cubic-bezier(.22,.72,.2,1),
+    transform .82s cubic-bezier(.16,.78,.18,1),
+    filter .65s ease;
+  will-change:opacity,transform,filter;
+}
+.descent-copy.is-active{
+  transform:translate3d(0,0,0) scale(1);
+  filter:none;
+}
+.descent-progress span{
+  box-shadow:0 0 18px rgba(72,220,232,.42);
+  transition:transform .08s linear;
+}
+
+/* Scroll-linked depth for large visual sections. */
+.training-image,.kendo-image{
+  transform:translate3d(0,var(--motion-y,0px),0) scale(1.065);
+  will-change:transform;
+}
+.knowledge-visual,.manga-cover.real-cover{
+  transform:translate3d(0,var(--motion-y,0px),0);
+  will-change:transform;
+}
+
+/* Keep hover motion alive after the scroll reveal finishes. */
+.manga-card .mini-cover,.tool-teasers a,.portal-links a,.article-grid article{
+  transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .28s ease,color .28s ease,background .28s ease;
+}
+.manga-card:hover .mini-cover{transform:translate3d(0,-8px,0) scale(1.01)}
+.tool-teasers a:hover{transform:translate3d(0,-4px,0);border-color:rgba(72,220,232,.42);background:rgba(72,220,232,.035)}
+.article-grid article:hover{transform:translate3d(0,-4px,0)}
+.portal-links a:hover{transform:translate3d(8px,0,0);padding-left:0}
+
+@media(max-width:900px){
+  .hero::after,.descent::before{height:14svh}
+  html.kdk-motion-ready [data-motion-reveal="true"]{
+    transform:translate3d(0,24px,0) scale(.992);
+    filter:blur(3px);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.kdk-route-enter main{animation:none}
+  html.kdk-motion-ready [data-motion-reveal="true"],
+  html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
+    opacity:1;
+    transform:none;
+    filter:none;
+    transition:none;
+  }
+  .hero::after,.descent::before{display:none}
+  .descent-frame,.descent-copy,.descent-progress span,
+  .training-image,.kendo-image,.knowledge-visual,.manga-cover.real-cover{
+    transition:none;
+    transform:none;
+    filter:none;
+  }
+}
