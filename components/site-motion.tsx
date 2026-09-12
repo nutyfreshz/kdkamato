@@ -81,7 +81,7 @@ export function SiteMotion() {
       Array.from(document.querySelectorAll<HTMLElement>(selector)).map((node) => ({ node, strength })),
     );
     const descent = document.querySelector<HTMLElement>(".descent");
-    const chapters = Array.from(document.querySelectorAll<HTMLElement>("[data-story-chapter]"));
+    let chapters: HTMLElement[] = [];
     let chapterBounds: { node: HTMLElement; top: number; height: number }[] = [];
     let dimensionsDirty = true;
     const storyLayout = window.matchMedia("(min-width: 901px) and (min-height: 641px)");
@@ -115,6 +115,8 @@ export function SiteMotion() {
       // Cache untransformed chapter geometry only after a layout change.
       // Native sticky owns the handoff; this controller only reframes the camera.
       if (dimensionsDirty) {
+        // Streamed page content can mount after the root layout effect.
+        chapters = Array.from(document.querySelectorAll<HTMLElement>("[data-story-chapter]"));
         chapterBounds = chapters.map((node) => ({
           node, top: node.getBoundingClientRect().top + window.scrollY, height: node.offsetHeight,
         }));

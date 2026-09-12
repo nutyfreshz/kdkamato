@@ -13,9 +13,9 @@
 }
 .art {
   position: absolute;
-  inset: 0;
+  inset: 88px 0 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 88px);
   max-width: none;
   object-fit: cover;
   object-position: 65% center;
@@ -60,6 +60,7 @@
   .frame { position: relative; height: auto; min-height: 0; }
   .art {
     position: relative;
+    inset: auto;
     height: clamp(330px, 62svh, 740px);
     object-position: 72% top;
     transform: none;
