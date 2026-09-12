@@ -15,8 +15,6 @@ const REVEAL_GROUPS = [
   ".lab .section-heading",
   ".lab-demo",
   ".tool-teasers a",
-  ".training-copy > *",
-  ".kendo-copy > *",
   ".portal > .eyebrow",
   ".portal > h2",
   ".portal-links",
@@ -27,8 +25,6 @@ const REVEAL_GROUPS = [
 ];
 
 const PARALLAX_SELECTORS = [
-  [".training-image", 34],
-  [".kendo-image", 30],
   [".knowledge-visual", 16],
   [".manga-cover.real-cover", 12],
 ] as const;
@@ -85,8 +81,14 @@ export function SiteMotion() {
       Array.from(document.querySelectorAll<HTMLElement>(selector)).map((node) => ({ node, strength })),
     );
     const descent = document.querySelector<HTMLElement>(".descent");
-    const training = document.querySelector<HTMLElement>(".training");
-    const kendo = document.querySelector<HTMLElement>(".kendo");
+    const chapters = Array.from(document.querySelectorAll<HTMLElement>("[data-story-chapter]"));
+    let chapterBounds: { node: HTMLElement; top: number; height: number }[] = [];
+    let dimensionsDirty = true;
+    const storyLayout = window.matchMedia("(min-width: 901px) and (min-height: 641px)");
+    const resizeObserver = new ResizeObserver(() => {
+      dimensionsDirty = true;
+      onScroll();
+    });
 
     let frame = 0;
     const updateScrollMotion = () => {
@@ -110,20 +112,24 @@ export function SiteMotion() {
         descent.style.setProperty("--descent-motion-y", `${((0.5 - progress) * 22).toFixed(2)}px`);
       }
 
-      /* Training -> Kendo is treated as one cinematic handoff instead of two stacked blocks.
-         The incoming scene feathers in while the outgoing scene is gently dimmed. */
-      if (training && kendo) {
-        const rect = kendo.getBoundingClientRect();
-        const transition = clamp((viewport - rect.top) / (viewport * 0.72));
-        const eased = 1 - Math.pow(1 - transition, 3);
-
-        kendo.style.setProperty("--scene-in", eased.toFixed(4));
-        kendo.style.setProperty("--scene-in-opacity", (0.18 + eased * 0.82).toFixed(4));
-        kendo.style.setProperty("--scene-in-y", `${((1 - eased) * 42).toFixed(2)}px`);
-        training.style.setProperty("--scene-out", eased.toFixed(4));
-        training.style.setProperty("--scene-out-dim", (eased * 0.64).toFixed(4));
-        training.style.setProperty("--scene-out-copy", Math.max(0.18, 1 - eased * 0.86).toFixed(4));
+      // Cache untransformed chapter geometry only after a layout change.
+      // Native sticky owns the handoff; this controller only reframes the camera.
+      if (dimensionsDirty) {
+        chapterBounds = chapters.map((node) => ({
+          node, top: node.getBoundingClientRect().top + window.scrollY, height: node.offsetHeight,
+        }));
+        dimensionsDirty = false;
       }
+      chapterBounds.forEach(({ node, top, height }) => {
+        if (!storyLayout.matches) {
+          node.style.removeProperty("--story-scale");
+          node.style.removeProperty("--story-copy-y");
+          return;
+        }
+        const p = clamp((window.scrollY - top) / Math.max(1, height - viewport));
+        node.style.setProperty("--story-scale", (1 + p * 0.025).toFixed(4));
+        node.style.setProperty("--story-copy-y", `${(-p * 24).toFixed(2)}px`);
+      });
     };
 
     const onScroll = () => {
@@ -133,13 +139,16 @@ export function SiteMotion() {
 
     updateScrollMotion();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const onResize = () => { dimensionsDirty = true; onScroll(); };
+    resizeObserver.observe(document.body);
+    window.addEventListener("resize", onResize);
 
     return () => {
       observer.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
+      resizeObserver.disconnect();
       revealNodes.forEach((node) => {
         delete node.dataset.motionReveal;
         delete node.dataset.motionVisible;
@@ -149,12 +158,10 @@ export function SiteMotion() {
       descent?.style.removeProperty("--descent-motion-progress");
       descent?.style.removeProperty("--descent-entry");
       descent?.style.removeProperty("--descent-motion-y");
-      training?.style.removeProperty("--scene-out");
-      training?.style.removeProperty("--scene-out-dim");
-      training?.style.removeProperty("--scene-out-copy");
-      kendo?.style.removeProperty("--scene-in");
-      kendo?.style.removeProperty("--scene-in-opacity");
-      kendo?.style.removeProperty("--scene-in-y");
+      chapters.forEach((node) => {
+        node.style.removeProperty("--story-scale");
+        node.style.removeProperty("--story-copy-y");
+      });
       document.documentElement.classList.remove("kdk-motion-ready");
       body.classList.remove("kdk-route-enter");
     };

@@ -36,9 +36,7 @@
   isolation:isolate;
 }
 .home-page .manga::before,
-.home-page .knowledge::before,
-.home-page .lab::before,
-.home-page .portal::before{
+.home-page .knowledge::before{
   content:"";
   position:absolute;
   inset:-1px 0 auto;

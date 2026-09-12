@@ -1,0 +1,80 @@
+/* One opaque frame per chapter. Native sticky release keeps adjacent images
+   in separate rectangles, including reverse scroll and direct hash navigation. */
+.story { background: #0e1214; }
+.chapter { position: relative; height: 150svh; scroll-margin-top: 0; }
+.frame {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 640px;
+  overflow: clip;
+  isolation: isolate;
+  background: #0e1214;
+}
+.art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 65% center;
+  transform-origin: 68% 38%;
+  transform: scale(var(--story-scale, 1));
+}
+.copy {
+  position: relative;
+  width: min(43%, 620px);
+  margin-left: max(32px, calc((100vw - 1280px) / 2));
+  padding-block: clamp(140px, 25svh, 280px) 56px;
+  transform: translateY(var(--story-copy-y, 0px));
+}
+.copy h2 {
+  font-size: clamp(32px, 3.6vw, 60px);
+  line-height: 1.28;
+  text-wrap: balance;
+  margin-bottom: 28px;
+}
+.copy > p:last-child, .note > p { color: #c3c5c6; line-height: 1.7; }
+.note { max-width: 380px; margin-top: 32px; }
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 48px;
+  padding: 12px 20px;
+  margin-top: 12px;
+  color: #140b05;
+  background: var(--orange);
+  font-size: 14px;
+  font-weight: 700;
+}
+.cta:focus-visible { outline: 3px solid var(--cyan); outline-offset: 5px; }
+.cta:hover { background: #ff924d; }
+
+/* Portrait devices get a dedicated image area and readable editorial caption.
+   No viewport-height text clipping, no sticky trapping at larger font sizes. */
+@media (max-width: 900px), (max-height: 640px) {
+  .chapter { height: auto; scroll-margin-top: 88px; }
+  .frame { position: relative; height: auto; min-height: 0; }
+  .art {
+    position: relative;
+    height: clamp(330px, 62svh, 740px);
+    object-position: 72% top;
+    transform: none;
+  }
+  .copy {
+    width: auto;
+    margin: 0;
+    padding: 32px max(24px, calc((100vw - 720px) / 2)) 48px;
+    transform: none;
+  }
+  .copy h2 { font-size: clamp(30px, 6vw, 42px); max-width: 580px; }
+  .note { max-width: 540px; margin-top: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter { height: auto; }
+  .frame { position: relative; }
+  .art, .copy { transform: none; }
+}

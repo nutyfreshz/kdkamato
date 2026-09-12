@@ -69,65 +69,6 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
   mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 9%,rgba(0,0,0,.72) 23%,#000 36%,#000 100%);
 }
 
-/* LAB -> TRAINING: the image enters from underneath the UI instead of appearing as a new rectangle. */
-.training{
-  --scene-out-dim:0;
-  --scene-out-copy:1;
-  z-index:1;
-  isolation:isolate;
-}
-.training::before{
-  content:"";
-  position:absolute;
-  z-index:2;
-  inset:0 0 auto;
-  height:28svh;
-  pointer-events:none;
-  background:linear-gradient(180deg,#0e1214 0%,rgba(14,18,20,.82) 18%,rgba(14,18,20,.28) 62%,transparent 100%);
-}
-.training::after{
-  content:"";
-  position:absolute;
-  z-index:2;
-  inset:0;
-  pointer-events:none;
-  background:#08090a;
-  opacity:var(--scene-out-dim,0);
-}
-.training-copy{
-  opacity:var(--scene-out-copy,1);
-  transition:opacity .08s linear;
-}
-
-/* TRAINING -> REAL KENDO
-   These two full-screen photographs now behave as one stacked cinematic scene.
-   Kendo overlaps the final part of Training, is feather-masked at its leading edge,
-   then fades/lifts in while Training dims underneath. This removes the horizontal cut completely. */
-.kendo{
-  --scene-in-opacity:1;
-  --scene-in-y:0px;
-  z-index:3;
-  isolation:isolate;
-  margin-top:-24svh;
-  background:transparent;
-}
-.kendo-image{
-  opacity:var(--scene-in-opacity,1);
-  transform:translate3d(0,calc(var(--motion-y,0px) + var(--scene-in-y,0px)),0) scale(1.075);
-  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 6%,rgba(0,0,0,.34) 13%,rgba(0,0,0,.76) 23%,#000 34%,#000 100%);
-  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.08) 6%,rgba(0,0,0,.34) 13%,rgba(0,0,0,.76) 23%,#000 34%,#000 100%);
-  will-change:transform,opacity;
-}
-.kendo-shade{
-  z-index:1;
-  background:
-    linear-gradient(180deg,rgba(8,9,10,0) 0%,rgba(8,9,10,.05) 18%,rgba(8,9,10,.12) 32%,rgba(8,9,10,.08) 100%),
-    linear-gradient(90deg,rgba(8,9,10,.97) 0%,rgba(8,9,10,.72) 31%,rgba(8,9,10,.12) 66%,rgba(8,9,10,.22) 100%);
-}
-.kendo-copy{
-  padding-top:32svh;
-}
-
 /* Scroll-driven Descent sequence. */
 .descent-frame{
   transform:translate3d(0,10px,0) scale(1.075);
@@ -161,10 +102,6 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
 }
 
 /* Scroll-linked depth for large visual sections. */
-.training-image{
-  transform:translate3d(0,var(--motion-y,0px),0) scale(1.065);
-  will-change:transform;
-}
 .knowledge-visual,.manga-cover.real-cover{
   transform:translate3d(0,var(--motion-y,0px),0);
   will-change:transform;
@@ -199,13 +136,6 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
     -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
     mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.14) 8%,rgba(0,0,0,.7) 20%,#000 32%,#000 100%);
   }
-  .training::before{height:20svh}
-  .kendo{margin-top:-16svh}
-  .kendo-image{
-    -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 8%,rgba(0,0,0,.58) 18%,#000 30%,#000 100%);
-    mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.16) 8%,rgba(0,0,0,.58) 18%,#000 30%,#000 100%);
-  }
-  .kendo-copy{padding-top:27svh}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -218,13 +148,9 @@ html.kdk-motion-ready [data-motion-reveal="true"][data-motion-visible="true"]{
     transition:none;
   }
   .hero::after,.descent::before{display:none}
-  .descent-frame,.descent-copy,.descent-progress span,
-  .training-image,.knowledge-visual,.manga-cover.real-cover{
+  .descent-frame,.descent-copy,.descent-progress span,.knowledge-visual,.manga-cover.real-cover{
     transition:none;
     transform:none;
     filter:none;
   }
-  .training::after{opacity:0}
-  .training-copy{opacity:1}
-  .kendo-image{opacity:1;transform:none}
 }
