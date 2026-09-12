@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
       </aside>
-      <main id="app-main-content" className={`${styles.main} app-main`} tabIndex={-1}>
+      <main id="app-main-content" className={`${styles.main} app-main`} tabIndex={-1} style={{ marginInline: "auto" }}>
         <div className="app-mobile-guide"><Link href="/guide">คู่มือการใช้งาน</Link></div>
         {children}
       </main>
