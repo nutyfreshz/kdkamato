@@ -1,0 +1,58 @@
+/* Approved surgical seam fixes for cinematic-scroll-v2.
+   Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
+
+@media (min-width: 901px) and (min-height: 641px) {
+  /* 1) Hero -> Descent: deepen the overlap and extend both handoff veils so the
+     first scientific scene arrives through one continuous visual field instead
+     of exposing a page-to-page horizontal seam. */
+  .home-page .hero::after {
+    height: 42svh;
+  }
+
+  .home-page .descent {
+    margin-top: -16svh;
+  }
+
+  .home-page .descent::before {
+    height: 42svh;
+  }
+
+  .home-page .descent-sticky {
+    background: #08090a;
+  }
+
+  /* 2) LAB -> Training: the 88px artwork inset belonged to the isolated-chapter
+     rescue layout. The restored pinned story must be full-bleed behind the
+     floating navigation, otherwise it creates a visible black gap. */
+  .home-page [data-home-story] [data-story-chapter] > div > img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 3) Real Kendo -> Portal: keep the pinned Kendo scene inside its story bounds,
+     then let a full-width opaque portal surface take over through a short top
+     blend. This prevents Kendo from surviving as the portal's accidental BG. */
+  .home-page [data-home-story] {
+    overflow: clip;
+  }
+
+  .home-page .portal {
+    z-index: 4;
+    margin-top: -1px;
+  }
+
+  .home-page .portal::before {
+    top: -14svh;
+    bottom: 0;
+    height: calc(100% + 14svh);
+    min-height: 0;
+    opacity: 1;
+    background:
+      linear-gradient(180deg,
+        rgba(8, 9, 10, 0) 0%,
+        rgba(8, 9, 10, .84) 8svh,
+        #08090a 14svh,
+        #08090a 100%);
+  }
+}
