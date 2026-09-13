@@ -11,6 +11,7 @@ import './cinematic-handoffs-restored.css';
 import './cinematic-seam-fixes.css';
 import './motion-architecture-v3.css';
 import './motion-architecture-v3-1.css';
+import './motion-architecture-v3-2.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';
 
