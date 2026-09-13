@@ -2,61 +2,61 @@
    Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
 
 @media (min-width: 901px) and (min-height: 641px) {
-  /* 1) Hero -> Descent: continuous scene handoff without portrait overlap.
-     The two artworks remain sequential in document flow (zero overlap, zero gap).
-     A shared atmospheric veil crosses the real boundary, while ONLY the first
-     Descent artwork feathers in from transparent at its top edge. */
+  /* 1) Hero -> Descent: stable composite handoff.
+     Hero and Descent remain sequential (zero overlap, zero gap). The Hero ends
+     in the exact same dark field used behind Descent, while the ENTIRE Descent
+     visual composite (artwork + shade) feathers in from its top edge. */
   .home-page .hero::after {
-    height: 28svh;
+    height: 30svh;
     background:
-      radial-gradient(62% 92% at 70% 100%, rgba(72,220,232,.085), transparent 63%),
-      radial-gradient(44% 78% at 94% 100%, rgba(255,106,26,.045), transparent 69%),
+      radial-gradient(62% 92% at 70% 100%, rgba(72,220,232,.08), transparent 63%),
+      radial-gradient(44% 78% at 94% 100%, rgba(255,106,26,.04), transparent 69%),
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.10) 32%,
-        rgba(8,9,10,.27) 62%,
-        rgba(8,9,10,.46) 82%,
-        rgba(8,9,10,.62) 100%);
+        rgba(8,9,10,.10) 30%,
+        rgba(8,9,10,.28) 58%,
+        rgba(8,9,10,.56) 78%,
+        rgba(8,9,10,.86) 92%,
+        #08090a 100%);
   }
 
-  /* No negative overlap and no positive corridor. */
+  /* Critical geometry: no overlap and no corridor. */
   .home-page .descent {
     margin-top: 0;
     z-index: 3;
   }
 
+  /* Match the Hero's terminal field exactly so there is no physical color seam
+     when the Descent composite is transparent at its top edge. */
   .home-page .descent-sticky {
     background: #08090a;
   }
 
+  /* Fade the complete visual composite, not just the first image. This includes
+     .descent-shade, which was the remaining rectangular edge in prior attempts.
+     The fade is spatial/static, so forward and reverse scroll are identical and
+     later frame switching cannot reintroduce a hard boundary. */
   .home-page .descent-media {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-
-  /* Fade ONLY the first Descent scene at the real section boundary.
-     This removes the hard horizontal image edge without keeping a permanent
-     mask on later Descent stages. The first portrait becomes fully opaque
-     before its focal subject reaches the transition zone. */
-  .home-page .descent-frame:first-child {
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      rgba(0,0,0,.10) 3svh,
-      rgba(0,0,0,.28) 7svh,
-      rgba(0,0,0,.56) 12svh,
-      rgba(0,0,0,.82) 17svh,
-      #000 22svh,
+      rgba(0,0,0,.08) 2svh,
+      rgba(0,0,0,.22) 5svh,
+      rgba(0,0,0,.46) 9svh,
+      rgba(0,0,0,.70) 14svh,
+      rgba(0,0,0,.90) 19svh,
+      #000 25svh,
       #000 100%
     );
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      rgba(0,0,0,.10) 3svh,
-      rgba(0,0,0,.28) 7svh,
-      rgba(0,0,0,.56) 12svh,
-      rgba(0,0,0,.82) 17svh,
-      #000 22svh,
+      rgba(0,0,0,.08) 2svh,
+      rgba(0,0,0,.22) 5svh,
+      rgba(0,0,0,.46) 9svh,
+      rgba(0,0,0,.70) 14svh,
+      rgba(0,0,0,.90) 19svh,
+      #000 25svh,
       #000 100%
     );
     -webkit-mask-repeat: no-repeat;
@@ -65,29 +65,35 @@
     mask-size: 100% 100%;
   }
 
-  /* One shared boundary veil. It starts inside the Hero and dissolves inside
-     Descent. Its center is intentionally softer now because the first artwork
-     itself handles the edge feathering; the veil only supplies common atmosphere. */
+  /* Clear any frame-level mask from the previous experiment. */
+  .home-page .descent-frame:first-child {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* Atmospheric veil is now color-only. backdrop-filter was removed because a
+     filtered rectangle can expose its compositor boundary even when gradients
+     are feathered. This veil only carries shared cyan/orange atmosphere. */
   .home-page .descent::before {
-    top: -12svh;
-    height: 28svh;
+    top: -10svh;
+    height: 30svh;
     opacity: 1;
     pointer-events: none;
-    -webkit-backdrop-filter: blur(2px) saturate(.94);
-    backdrop-filter: blur(2px) saturate(.94);
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
     background:
-      radial-gradient(66% 105% at 30% 50%, rgba(72,220,232,.075), transparent 68%),
-      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.04), transparent 72%),
+      radial-gradient(66% 105% at 30% 48%, rgba(72,220,232,.07), transparent 68%),
+      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.035), transparent 72%),
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.14) 18%,
-        rgba(8,9,10,.38) 36%,
-        rgba(8,9,10,.64) 47%,
-        rgba(8,9,10,.64) 53%,
-        rgba(8,9,10,.36) 70%,
-        rgba(8,9,10,.10) 88%,
+        rgba(8,9,10,.10) 18%,
+        rgba(8,9,10,.24) 36%,
+        rgba(8,9,10,.42) 48%,
+        rgba(8,9,10,.42) 54%,
+        rgba(8,9,10,.24) 70%,
+        rgba(8,9,10,.08) 88%,
         rgba(8,9,10,0) 100%);
   }
 
