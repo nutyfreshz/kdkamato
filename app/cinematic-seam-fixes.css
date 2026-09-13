@@ -2,56 +2,65 @@
    Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
 
 @media (min-width: 901px) and (min-height: 641px) {
-  /* 1) Hero -> Descent: do NOT crossfade two portraits.
-     The artwork compositions are different, so image-on-image overlap creates a
-     double-subject artifact. Instead, Hero resolves into a short atmospheric
-     corridor and the first Descent scene emerges after it. Both corridor edges
-     use the same dark/cyan/orange field, so there is no hard section rectangle. */
+  /* 1) Hero -> Descent: continuous scene handoff without portrait overlap.
+     The two artworks remain sequential in document flow (zero overlap, zero gap).
+     A single atmospheric veil extends across BOTH sides of the real boundary,
+     suppressing the rectangular image cut while preserving visible texture. */
   .home-page .hero::after {
-    height: 38svh;
+    height: 28svh;
     background:
-      radial-gradient(66% 96% at 72% 100%, rgba(72,220,232,.095), transparent 61%),
-      radial-gradient(48% 82% at 94% 100%, rgba(255,106,26,.055), transparent 67%),
+      radial-gradient(62% 92% at 70% 100%, rgba(72,220,232,.085), transparent 63%),
+      radial-gradient(44% 78% at 94% 100%, rgba(255,106,26,.045), transparent 69%),
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.16) 28%,
-        rgba(8,9,10,.54) 67%,
-        #08090a 100%);
+        rgba(8,9,10,.10) 32%,
+        rgba(8,9,10,.30) 62%,
+        rgba(8,9,10,.54) 82%,
+        rgba(8,9,10,.70) 100%);
   }
 
-  /* Positive separation prevents the two Kendo portraits from ever occupying
-     the same pixels. The space is painted by descent::before below. */
+  /* Critical geometry rule: no negative overlap and no positive corridor.
+     The Hero ends exactly where Descent begins, so two Kendo portraits can
+     never occupy the same pixels and there is no empty band to scroll through. */
   .home-page .descent {
-    margin-top: 18svh;
+    margin-top: 0;
+    z-index: 3;
   }
 
   .home-page .descent-sticky {
     background: #08090a;
   }
 
-  /* Remove the previous portrait mask completely. It fixed the image edge but
-     still allowed two different portraits to coexist in the viewport. */
   .home-page .descent-media {
     -webkit-mask-image: none;
     mask-image: none;
   }
 
-  /* Atmospheric bridge starts exactly at the Hero boundary (18svh above the
-     Descent box), fills the intentional corridor, then continues over the top
-     of the first scene and dissolves gradually. No opaque edge is introduced. */
+  /* One shared boundary veil. It starts 12svh INSIDE the Hero and ends 16svh
+     INSIDE Descent. The center is deliberately not fully opaque: both scenes
+     retain texture, but a short blur + common color field hides the physical
+     rectangular image boundary. Because it is spatial rather than time-based,
+     reverse scrolling is inherently identical and stable. */
   .home-page .descent::before {
-    top: -18svh;
-    height: 50svh;
+    top: -12svh;
+    height: 28svh;
     opacity: 1;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(3px) saturate(.92);
+    backdrop-filter: blur(3px) saturate(.92);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
     background:
-      radial-gradient(62% 82% at 30% 32%, rgba(72,220,232,.085), transparent 68%),
-      radial-gradient(48% 74% at 86% 46%, rgba(255,106,26,.04), transparent 70%),
+      radial-gradient(66% 105% at 30% 50%, rgba(72,220,232,.085), transparent 68%),
+      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.045), transparent 72%),
       linear-gradient(180deg,
-        #08090a 0%,
-        rgba(8,9,10,.97) 18%,
-        rgba(8,9,10,.78) 42%,
-        rgba(8,9,10,.34) 68%,
-        rgba(8,9,10,.08) 88%,
+        rgba(8,9,10,0) 0%,
+        rgba(8,9,10,.18) 18%,
+        rgba(8,9,10,.58) 36%,
+        rgba(8,9,10,.88) 46%,
+        rgba(8,9,10,.88) 54%,
+        rgba(8,9,10,.52) 70%,
+        rgba(8,9,10,.14) 88%,
         rgba(8,9,10,0) 100%);
   }
 
