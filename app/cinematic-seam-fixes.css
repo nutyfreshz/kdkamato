@@ -2,95 +2,65 @@
    Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
 
 @media (min-width: 901px) and (min-height: 641px) {
-  /* 1) Hero -> Descent: fade the Hero composite itself before its physical clip.
-     This removes the remaining straight 100svh cut instead of asking Descent to
-     hide it after the fact. Hero and Descent still remain zero-overlap/zero-gap. */
-  .home-page .hero {
+  /* HERO -> DESCENT
+     Use one pinned composite handoff. The incoming Descent is fixed in place
+     while it appears, so there is no physical upward slide over the Hero. */
+  .home-page[data-hero-handoff="active"] .hero {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    opacity: var(--hd-hero-scene-opacity, 1);
     background: #08090a;
+    will-change: opacity;
+  }
+
+  .home-page[data-hero-handoff="active"] .descent-sticky {
+    position: fixed;
+    inset: 0;
+    z-index: 31;
+    opacity: var(--hd-descent-scene-opacity, 0);
+    pointer-events: none;
+    background: #08090a;
+    will-change: opacity;
+  }
+
+  .home-page[data-hero-handoff="settled"] .descent-sticky {
+    opacity: 1;
+  }
+
+  .home-page .hero::after,
+  .home-page .descent::before,
+  .home-page .descent::after {
+    content: none;
   }
 
   .home-page .hero-image,
-  .home-page .hero-vignette {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 78%,
-      rgba(0,0,0,.94) 82%,
-      rgba(0,0,0,.72) 87%,
-      rgba(0,0,0,.42) 92%,
-      rgba(0,0,0,.16) 96%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 78%,
-      rgba(0,0,0,.94) 82%,
-      rgba(0,0,0,.72) 87%,
-      rgba(0,0,0,.42) 92%,
-      rgba(0,0,0,.16) 96%,
-      transparent 100%
-    );
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+  .home-page .hero-vignette,
+  .home-page .descent-media {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
-  /* Keep only atmosphere at the Hero tail. Because the artwork/vignette already
-     fade to the exact background color, this layer no longer has to conceal a
-     hard image edge and can stay visually lighter. */
-  .home-page .hero::after {
-    height: 24svh;
-    background:
-      radial-gradient(62% 92% at 70% 100%, rgba(72,220,232,.065), transparent 64%),
-      radial-gradient(44% 78% at 94% 100%, rgba(255,106,26,.032), transparent 70%),
-      linear-gradient(180deg,
-        rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.08) 36%,
-        rgba(8,9,10,.24) 64%,
-        rgba(8,9,10,.50) 84%,
-        #08090a 100%);
+  .home-page .hero-image {
+    transform-origin: 68% 42%;
+    transform: translate3d(0, var(--hd-hero-image-y, 0px), 0) scale(var(--hd-hero-image-scale, 1.04));
+    will-change: transform;
   }
 
-  /* Critical geometry: no overlap and no corridor. */
+  .home-page .hero-copy {
+    opacity: 1;
+    transform: translate3d(0, var(--hd-hero-copy-y, 0px), 0);
+    will-change: transform;
+  }
+
   .home-page .descent {
     margin-top: 0;
-    z-index: 3;
+    z-index: 2;
+    isolation: isolate;
   }
 
   .home-page .descent-sticky {
     background: #08090a;
-  }
-
-  /* Descent now only needs a shorter complementary fade-in because Hero itself
-     resolves before the boundary. This avoids turning the handoff into a long
-     black band while still removing the incoming rectangular edge. */
-  .home-page .descent-media {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      rgba(0,0,0,.18) 3svh,
-      rgba(0,0,0,.44) 7svh,
-      rgba(0,0,0,.72) 11svh,
-      rgba(0,0,0,.92) 15svh,
-      #000 18svh,
-      #000 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      rgba(0,0,0,.18) 3svh,
-      rgba(0,0,0,.44) 7svh,
-      rgba(0,0,0,.72) 11svh,
-      rgba(0,0,0,.92) 15svh,
-      #000 18svh,
-      #000 100%
-    );
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
   }
 
   .home-page .descent-frame:first-child {
@@ -98,39 +68,14 @@
     mask-image: none;
   }
 
-  /* Color-only bridge. No backdrop-filter, so the browser has no filtered
-     compositor rectangle to expose at the section boundary. */
-  .home-page .descent::before {
-    top: -8svh;
-    height: 24svh;
-    opacity: 1;
-    pointer-events: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
-    background:
-      radial-gradient(66% 105% at 30% 48%, rgba(72,220,232,.06), transparent 68%),
-      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.03), transparent 72%),
-      linear-gradient(180deg,
-        rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.08) 20%,
-        rgba(8,9,10,.18) 40%,
-        rgba(8,9,10,.30) 50%,
-        rgba(8,9,10,.30) 56%,
-        rgba(8,9,10,.16) 72%,
-        rgba(8,9,10,.05) 90%,
-        rgba(8,9,10,0) 100%);
-  }
-
-  /* 2) LAB -> Training: keep the restored pinned story full-bleed. */
+  /* LAB -> Training: keep the restored pinned story full-bleed. */
   .home-page [data-home-story] [data-story-chapter] > div > img {
     inset: 0;
     width: 100%;
     height: 100%;
   }
 
-  /* 3) Real Kendo -> Portal: keep Kendo clipped to story bounds and let Portal
+  /* Real Kendo -> Portal: keep Kendo clipped to story bounds and let Portal
      take over on an opaque full-width surface. */
   .home-page [data-home-story] {
     overflow: clip;
