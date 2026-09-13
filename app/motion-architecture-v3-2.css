@@ -68,16 +68,6 @@
     align-content: start;
   }
 
-  .home-page .manga-row-label {
-    margin: 0 0 5px;
-    padding-left: 2px;
-    color: #c8ccce;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-
   .home-page .manga-card {
     min-height: 116px;
     padding: 10px;
@@ -102,33 +92,29 @@
     object-fit: cover;
   }
 
-  .home-page .manga-card-copy {
-    min-width: 0;
-  }
-
-  .home-page .manga-card-meta {
-    display: block;
-    overflow: hidden;
-    color: #ff965d;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .11em;
-    line-height: 1.3;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
+  .home-page .manga-card > p,
   .home-page .manga-card-copy p {
-    margin: 7px 0 0;
+    min-width: 0;
+    margin: 0;
     color: #f2f2ef;
     font-size: clamp(16px, 1.25vw, 20px);
     font-weight: 700;
     line-height: 1.24;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     overflow: hidden;
+  }
+
+  .home-page .manga-card > p::before {
+    content: "MANGA / PREVIOUS";
+    display: block;
+    margin-bottom: 7px;
+    color: #ff965d;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .11em;
+    line-height: 1.3;
   }
 
   .home-page .manga > .section-link {
