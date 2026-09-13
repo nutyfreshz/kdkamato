@@ -35,6 +35,7 @@ export function useHomeMotion() {
 
     let bounds: MotionBound[] = [];
     let sceneBounds: MotionBound[] = [];
+    let heroTop = 0;
     let descentTop = 0;
     let descentHeight = 1;
     let storyTop = 0;
@@ -57,6 +58,9 @@ export function useHomeMotion() {
         top: node.getBoundingClientRect().top + y,
         height: node.offsetHeight,
       }));
+      if (hero) {
+        heroTop = hero.getBoundingClientRect().top + y;
+      }
       if (descent) {
         descentTop = descent.getBoundingClientRect().top + y;
         descentHeight = descent.offsetHeight;
@@ -85,11 +89,46 @@ export function useHomeMotion() {
         node.style.setProperty("--home-open", p.toFixed(4));
       });
 
-      const heroP = reduce ? 0 : ease(clamp(y / (viewport * 0.9)));
-      hero?.style.setProperty("--hero-pan", `${(heroP * viewport * 0.12).toFixed(2)}px`);
-      hero?.style.setProperty("--hero-copy-y", `${(-heroP * 34).toFixed(2)}px`);
-      hero?.style.setProperty("--hero-copy-opacity", (1 - heroP * 0.72).toFixed(4));
-      hero?.style.setProperty("--hero-handoff", (0.26 + heroP * 0.74).toFixed(4));
+      /* Hero -> Descent uses one controlled composite handoff on desktop.
+         During the first viewport the incoming Descent stage is fixed in place,
+         so it never physically slides over the pinned Hero. At the exact point
+         Descent reaches the top of normal flow it resumes its existing sticky
+         four-stage behavior with no geometry jump. */
+      const heroHandoffEnabled = !!hero && !!descent && !reduce && !isCompact;
+      if (heroHandoffEnabled && hero && descent) {
+        const handoffSpan = Math.max(1, descentTop - heroTop);
+        const raw = clamp((y - heroTop) / handoffSpan);
+        const handoff = ease(clamp((raw - 0.14) / 0.72));
+        const heroOpacity = 1 - handoff;
+
+        home.dataset.heroHandoff = y < descentTop - 1 ? "active" : "settled";
+
+        hero.style.setProperty("--hd-hero-scene-opacity", heroOpacity.toFixed(4));
+        hero.style.setProperty("--hd-hero-image-scale", (1.04 + handoff * 0.022).toFixed(4));
+        hero.style.setProperty("--hd-hero-image-y", `${(-handoff * 12).toFixed(2)}px`);
+        hero.style.setProperty("--hd-hero-copy-y", `${(-handoff * 22).toFixed(2)}px`);
+        descent.style.setProperty("--hd-descent-scene-opacity", handoff.toFixed(4));
+
+        /* Neutralize the older Hero-only motion variables while this handoff is
+           active so two animation systems never write the same visual state. */
+        hero.style.setProperty("--hero-pan", "0px");
+        hero.style.setProperty("--hero-copy-y", "0px");
+        hero.style.setProperty("--hero-copy-opacity", "1");
+        hero.style.setProperty("--hero-handoff", "0");
+      } else {
+        delete home.dataset.heroHandoff;
+        hero?.style.removeProperty("--hd-hero-scene-opacity");
+        hero?.style.removeProperty("--hd-hero-image-scale");
+        hero?.style.removeProperty("--hd-hero-image-y");
+        hero?.style.removeProperty("--hd-hero-copy-y");
+        descent?.style.removeProperty("--hd-descent-scene-opacity");
+
+        const heroP = reduce ? 0 : ease(clamp(y / (viewport * 0.9)));
+        hero?.style.setProperty("--hero-pan", `${(heroP * viewport * 0.12).toFixed(2)}px`);
+        hero?.style.setProperty("--hero-copy-y", `${(-heroP * 34).toFixed(2)}px`);
+        hero?.style.setProperty("--hero-copy-opacity", (1 - heroP * 0.72).toFixed(4));
+        hero?.style.setProperty("--hero-handoff", (0.26 + heroP * 0.74).toFixed(4));
+      }
 
       sceneBounds.forEach(({ node, top, height }) => {
         const enter = reduce ? 1 : ease(clamp((y + viewport - top) / (viewport * 0.55)));
@@ -187,11 +226,17 @@ export function useHomeMotion() {
       compact.removeEventListener("change", invalidate);
       home.removeEventListener("load", invalidate, true);
       delete home.dataset.homeMotion;
+      delete home.dataset.heroHandoff;
 
       hero?.style.removeProperty("--hero-pan");
       hero?.style.removeProperty("--hero-copy-y");
       hero?.style.removeProperty("--hero-copy-opacity");
       hero?.style.removeProperty("--hero-handoff");
+      hero?.style.removeProperty("--hd-hero-scene-opacity");
+      hero?.style.removeProperty("--hd-hero-image-scale");
+      hero?.style.removeProperty("--hd-hero-image-y");
+      hero?.style.removeProperty("--hd-hero-copy-y");
+      descent?.style.removeProperty("--hd-descent-scene-opacity");
       descent?.style.removeProperty("--descent-progress");
       descent?.style.removeProperty("--descent-entry");
       descent?.style.removeProperty("--descent-motion-y");
