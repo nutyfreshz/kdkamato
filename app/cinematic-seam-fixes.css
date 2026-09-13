@@ -2,23 +2,61 @@
    Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
 
 @media (min-width: 901px) and (min-height: 641px) {
-  /* 1) Hero -> Descent: deepen the overlap and extend both handoff veils so the
-     first scientific scene arrives through one continuous visual field instead
-     of exposing a page-to-page horizontal seam. */
+  /* 1) Hero -> Descent: real pixel-level handoff.
+     The first Descent image is feather-masked while it physically overlaps the
+     Hero. As --descent-entry advances the mask becomes fully opaque, so the
+     transition works in both scroll directions without leaving a permanent fade. */
   .home-page .hero::after {
     height: 42svh;
+    background:
+      radial-gradient(72% 105% at 72% 100%, rgba(72,220,232,.075), transparent 58%),
+      radial-gradient(55% 90% at 92% 100%, rgba(255,106,26,.05), transparent 64%),
+      linear-gradient(180deg,
+        rgba(8,9,10,0) 0%,
+        rgba(8,9,10,.14) 32%,
+        rgba(8,9,10,.46) 70%,
+        rgba(8,9,10,.72) 100%);
   }
 
   .home-page .descent {
     margin-top: -16svh;
   }
 
-  .home-page .descent::before {
-    height: 42svh;
+  .home-page .descent-sticky {
+    background: transparent;
   }
 
-  .home-page .descent-sticky {
-    background: #08090a;
+  .home-page .descent-media {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / var(--descent-entry, 0)) 0,
+      rgb(0 0 0 / calc(.18 + (var(--descent-entry, 0) * .82))) 8svh,
+      rgb(0 0 0 / calc(.58 + (var(--descent-entry, 0) * .42))) 18svh,
+      #000 30svh
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / var(--descent-entry, 0)) 0,
+      rgb(0 0 0 / calc(.18 + (var(--descent-entry, 0) * .82))) 8svh,
+      rgb(0 0 0 / calc(.58 + (var(--descent-entry, 0) * .42))) 18svh,
+      #000 30svh
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .home-page .descent::before {
+    height: 42svh;
+    background:
+      radial-gradient(88% 120% at 70% 0%, rgba(72,220,232,.055), transparent 58%),
+      linear-gradient(180deg,
+        rgba(8,9,10,0) 0%,
+        rgba(8,9,10,.18) 16%,
+        rgba(8,9,10,.34) 42%,
+        rgba(8,9,10,.12) 72%,
+        rgba(8,9,10,0) 100%);
   }
 
   /* 2) LAB -> Training: the 88px artwork inset belonged to the isolated-chapter
