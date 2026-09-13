@@ -12,7 +12,7 @@ const copy = {
   th: {
     heroTitle: <>สิ่งที่คุณเห็นเป็นเพียง<span>ปลายทาง</span></>,
     heroLede: 'เบื้องหลังร่างกายที่เปลี่ยนไป คือการฝึก สัญญาณในร่างกาย การตอบสนองระดับเซลล์ โภชนาการ และการฟื้นตัว',
-    enter: 'ดูว่าเกิดอะไรขึ้นภายในร่างกาย',
+    enter: 'เลื่อนสำรวจเบื้องหลังร่างกาย',
     latestEyebrow: 'MANGA / ตอนล่าสุด', latestTitle: <>ตอนล่าสุดจาก KDKAMATO</>, readEpisode: 'อ่านตอนนี้', viewManga: 'ดู MANGA ทั้งหมด',
     noMangaTitle: 'พื้นที่แสดง Manga ที่เผยแพร่แล้ว', noMangaText: 'ตอนที่เผยแพร่แล้วจะแสดงที่นี่โดยอัตโนมัติ', waiting: 'รอตอนใหม่',
     knowledgeTitle: <>เข้าใจให้ลึกกว่าเดิม</>, knowledgeIntro: 'บทความที่อธิบายหลักฐาน กลไก และการนำไปใช้ โดยไม่ลดทอนความซับซ้อนของวิทยาศาสตร์', read: 'อ่าน', explore: 'ดูบทความ',
@@ -26,7 +26,7 @@ const copy = {
   en: {
     heroTitle: <>WHAT YOU SEE<br/>IS ONLY THE<br/><span>OUTCOME.</span></>,
     heroLede: 'The visible body is the end of a process shaped by training, signaling, cellular response, nutrition, and recovery.',
-    enter: 'ENTER THE UNIVERSE',
+    enter: 'SCROLL TO EXPLORE',
     latestEyebrow: 'MANGA / LATEST', latestTitle: <>LATEST<br/>FROM THE UNIVERSE</>, readEpisode: 'READ EPISODE', viewManga: 'VIEW ALL MANGA',
     noMangaTitle: 'YOUR PUBLISHED MANGA LIBRARY', noMangaText: 'Published episodes will appear here automatically.', waiting: 'Waiting for published content',
     knowledgeTitle: <>GO<br/>DEEPER.</>, knowledgeIntro: 'Evidence, mechanisms, and practical meaning behind the stories, explained without flattening the science.', read: 'READ', explore: 'EXPLORE',
@@ -54,7 +54,7 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
   const latest = manga[0];
   const previous = manga.slice(1, 4);
   return (
-    <main className="home-page" ref={motionRoot}>
+    <main id="main-content" tabIndex={-1} className="home-page" ref={motionRoot}>
       <section className="hero">
         <div className="hero-image" />
         <div className="hero-vignette" />
