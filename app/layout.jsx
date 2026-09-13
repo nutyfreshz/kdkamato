@@ -7,6 +7,7 @@ import './ui-final-polish-overrides.css';
 import './cinematic-motion.css';
 import './home-scroll.css';
 import './worldclass-polish.css';
+import './cinematic-handoffs-restored.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';
 
