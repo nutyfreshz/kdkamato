@@ -68,9 +68,6 @@
   transform: translate3d(0, var(--story-copy-y, 0px), 0);
   will-change: opacity, transform;
 }
-.chapter:last-child .copy {
-  --story-copy-opacity: 0;
-}
 .copy h2 {
   font-size: clamp(32px, 3.6vw, 60px);
   line-height: 1.28;
