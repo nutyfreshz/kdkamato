@@ -4,8 +4,8 @@
 @media (min-width: 901px) and (min-height: 641px) {
   /* 1) Hero -> Descent: continuous scene handoff without portrait overlap.
      The two artworks remain sequential in document flow (zero overlap, zero gap).
-     A single atmospheric veil extends across BOTH sides of the real boundary,
-     suppressing the rectangular image cut while preserving visible texture. */
+     A shared atmospheric veil crosses the real boundary, while ONLY the first
+     Descent artwork feathers in from transparent at its top edge. */
   .home-page .hero::after {
     height: 28svh;
     background:
@@ -14,14 +14,12 @@
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
         rgba(8,9,10,.10) 32%,
-        rgba(8,9,10,.30) 62%,
-        rgba(8,9,10,.54) 82%,
-        rgba(8,9,10,.70) 100%);
+        rgba(8,9,10,.27) 62%,
+        rgba(8,9,10,.46) 82%,
+        rgba(8,9,10,.62) 100%);
   }
 
-  /* Critical geometry rule: no negative overlap and no positive corridor.
-     The Hero ends exactly where Descent begins, so two Kendo portraits can
-     never occupy the same pixels and there is no empty band to scroll through. */
+  /* No negative overlap and no positive corridor. */
   .home-page .descent {
     margin-top: 0;
     z-index: 3;
@@ -36,31 +34,60 @@
     mask-image: none;
   }
 
-  /* One shared boundary veil. It starts 12svh INSIDE the Hero and ends 16svh
-     INSIDE Descent. The center is deliberately not fully opaque: both scenes
-     retain texture, but a short blur + common color field hides the physical
-     rectangular image boundary. Because it is spatial rather than time-based,
-     reverse scrolling is inherently identical and stable. */
+  /* Fade ONLY the first Descent scene at the real section boundary.
+     This removes the hard horizontal image edge without keeping a permanent
+     mask on later Descent stages. The first portrait becomes fully opaque
+     before its focal subject reaches the transition zone. */
+  .home-page .descent-frame:first-child {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(0,0,0,.10) 3svh,
+      rgba(0,0,0,.28) 7svh,
+      rgba(0,0,0,.56) 12svh,
+      rgba(0,0,0,.82) 17svh,
+      #000 22svh,
+      #000 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      rgba(0,0,0,.10) 3svh,
+      rgba(0,0,0,.28) 7svh,
+      rgba(0,0,0,.56) 12svh,
+      rgba(0,0,0,.82) 17svh,
+      #000 22svh,
+      #000 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  /* One shared boundary veil. It starts inside the Hero and dissolves inside
+     Descent. Its center is intentionally softer now because the first artwork
+     itself handles the edge feathering; the veil only supplies common atmosphere. */
   .home-page .descent::before {
     top: -12svh;
     height: 28svh;
     opacity: 1;
     pointer-events: none;
-    -webkit-backdrop-filter: blur(3px) saturate(.92);
-    backdrop-filter: blur(3px) saturate(.92);
-    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    -webkit-backdrop-filter: blur(2px) saturate(.94);
+    backdrop-filter: blur(2px) saturate(.94);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
     background:
-      radial-gradient(66% 105% at 30% 50%, rgba(72,220,232,.085), transparent 68%),
-      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.045), transparent 72%),
+      radial-gradient(66% 105% at 30% 50%, rgba(72,220,232,.075), transparent 68%),
+      radial-gradient(54% 94% at 86% 48%, rgba(255,106,26,.04), transparent 72%),
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.18) 18%,
-        rgba(8,9,10,.58) 36%,
-        rgba(8,9,10,.88) 46%,
-        rgba(8,9,10,.88) 54%,
-        rgba(8,9,10,.52) 70%,
-        rgba(8,9,10,.14) 88%,
+        rgba(8,9,10,.14) 18%,
+        rgba(8,9,10,.38) 36%,
+        rgba(8,9,10,.64) 47%,
+        rgba(8,9,10,.64) 53%,
+        rgba(8,9,10,.36) 70%,
+        rgba(8,9,10,.10) 88%,
         rgba(8,9,10,0) 100%);
   }
 
