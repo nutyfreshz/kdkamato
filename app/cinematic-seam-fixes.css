@@ -2,60 +2,56 @@
    Scope: desktop motion geometry only. No content, data, routing, or mobile flow changes. */
 
 @media (min-width: 901px) and (min-height: 641px) {
-  /* 1) Hero -> Descent: real pixel-level handoff.
-     The first Descent image is feather-masked while it physically overlaps the
-     Hero. As --descent-entry advances the mask becomes fully opaque, so the
-     transition works in both scroll directions without leaving a permanent fade. */
+  /* 1) Hero -> Descent: do NOT crossfade two portraits.
+     The artwork compositions are different, so image-on-image overlap creates a
+     double-subject artifact. Instead, Hero resolves into a short atmospheric
+     corridor and the first Descent scene emerges after it. Both corridor edges
+     use the same dark/cyan/orange field, so there is no hard section rectangle. */
   .home-page .hero::after {
-    height: 42svh;
+    height: 38svh;
     background:
-      radial-gradient(72% 105% at 72% 100%, rgba(72,220,232,.075), transparent 58%),
-      radial-gradient(55% 90% at 92% 100%, rgba(255,106,26,.05), transparent 64%),
+      radial-gradient(66% 96% at 72% 100%, rgba(72,220,232,.095), transparent 61%),
+      radial-gradient(48% 82% at 94% 100%, rgba(255,106,26,.055), transparent 67%),
       linear-gradient(180deg,
         rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.14) 32%,
-        rgba(8,9,10,.46) 70%,
-        rgba(8,9,10,.72) 100%);
+        rgba(8,9,10,.16) 28%,
+        rgba(8,9,10,.54) 67%,
+        #08090a 100%);
   }
 
+  /* Positive separation prevents the two Kendo portraits from ever occupying
+     the same pixels. The space is painted by descent::before below. */
   .home-page .descent {
-    margin-top: -16svh;
+    margin-top: 18svh;
   }
 
   .home-page .descent-sticky {
-    background: transparent;
+    background: #08090a;
   }
 
+  /* Remove the previous portrait mask completely. It fixed the image edge but
+     still allowed two different portraits to coexist in the viewport. */
   .home-page .descent-media {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / var(--descent-entry, 0)) 0,
-      rgb(0 0 0 / calc(.18 + (var(--descent-entry, 0) * .82))) 8svh,
-      rgb(0 0 0 / calc(.58 + (var(--descent-entry, 0) * .42))) 18svh,
-      #000 30svh
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      rgb(0 0 0 / var(--descent-entry, 0)) 0,
-      rgb(0 0 0 / calc(.18 + (var(--descent-entry, 0) * .82))) 8svh,
-      rgb(0 0 0 / calc(.58 + (var(--descent-entry, 0) * .42))) 18svh,
-      #000 30svh
-    );
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
+  /* Atmospheric bridge starts exactly at the Hero boundary (18svh above the
+     Descent box), fills the intentional corridor, then continues over the top
+     of the first scene and dissolves gradually. No opaque edge is introduced. */
   .home-page .descent::before {
-    height: 42svh;
+    top: -18svh;
+    height: 50svh;
+    opacity: 1;
     background:
-      radial-gradient(88% 120% at 70% 0%, rgba(72,220,232,.055), transparent 58%),
+      radial-gradient(62% 82% at 30% 32%, rgba(72,220,232,.085), transparent 68%),
+      radial-gradient(48% 74% at 86% 46%, rgba(255,106,26,.04), transparent 70%),
       linear-gradient(180deg,
-        rgba(8,9,10,0) 0%,
-        rgba(8,9,10,.18) 16%,
-        rgba(8,9,10,.34) 42%,
-        rgba(8,9,10,.12) 72%,
+        #08090a 0%,
+        rgba(8,9,10,.97) 18%,
+        rgba(8,9,10,.78) 42%,
+        rgba(8,9,10,.34) 68%,
+        rgba(8,9,10,.08) 88%,
         rgba(8,9,10,0) 100%);
   }
 
