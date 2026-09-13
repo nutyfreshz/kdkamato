@@ -7,9 +7,6 @@ const ease = (n: number) => n * n * (3 - 2 * n);
 
 type MotionBound = { node: HTMLElement; top: number; height: number };
 
-/** Homepage cinematic motion controller.
- * One passive scroll listener + rAF batching. Historical cinematic handoffs are
- * restored without changing content, routing, data, or section markup. */
 export function useHomeMotion() {
   const root = useRef<HTMLElement>(null);
 
@@ -85,21 +82,99 @@ export function useHomeMotion() {
         node.style.setProperty("--home-open", p.toFixed(4));
       });
 
-      const heroP = reduce ? 0 : ease(clamp(y / (viewport * 0.9)));
-      hero?.style.setProperty("--hero-pan", `${(heroP * viewport * 0.12).toFixed(2)}px`);
+      const heroP = reduce ? 0 : ease(clamp(y / (viewport * 0.92)));
+      hero?.style.setProperty("--hero-pan", `${(heroP * viewport * 0.10).toFixed(2)}px`);
       hero?.style.setProperty("--hero-copy-y", `${(-heroP * 34).toFixed(2)}px`);
       hero?.style.setProperty("--hero-copy-opacity", (1 - heroP * 0.72).toFixed(4));
       hero?.style.setProperty("--hero-handoff", (0.26 + heroP * 0.74).toFixed(4));
+
+      hero?.style.setProperty("--v3-hero-x", `${(heroP * -34).toFixed(2)}px`);
+      hero?.style.setProperty("--v3-hero-scale", (1.08 + heroP * 0.16).toFixed(4));
+      hero?.style.setProperty("--v3-hero-sat", (1 - heroP * 0.18).toFixed(4));
+      hero?.style.setProperty("--v3-hero-bright", (1 - heroP * 0.20).toFixed(4));
+      hero?.style.setProperty("--v3-hero-copy-y", `${(-heroP * 80).toFixed(2)}px`);
+      hero?.style.setProperty("--v3-hero-copy-scale", (1 - heroP * 0.08).toFixed(4));
+      hero?.style.setProperty("--v3-hero-copy-opacity", (1 - heroP * 0.78).toFixed(4));
+      hero?.style.setProperty("--v3-hero-glow", `${(heroP * 42).toFixed(2)}px`);
+      hero?.style.setProperty("--v3-hero-orbit-x", `${(-heroP * 110).toFixed(2)}px`);
+      hero?.style.setProperty("--v3-hero-orbit-y", `${(heroP * 40).toFixed(2)}px`);
+      hero?.style.setProperty("--v3-hero-orbit-scale", (1 + heroP * 0.18).toFixed(4));
 
       sceneBounds.forEach(({ node, top, height }) => {
         const enter = reduce ? 1 : ease(clamp((y + viewport - top) / (viewport * 0.55)));
         const exit = reduce ? 0 : ease(clamp((y + viewport - (top + height)) / (viewport * 0.55)));
         const center = clamp((y + viewport - top) / Math.max(1, viewport + height));
         const sheen = reduce ? 0.25 : Math.sin(Math.PI * center);
+        const stageP = reduce || isCompact ? 1 : clamp((y - top) / Math.max(1, height - viewport));
+        const a = reduce || isCompact ? 1 : ease(clamp(stageP / 0.34));
+        const b = reduce || isCompact ? 1 : ease(clamp((stageP - 0.22) / 0.36));
+        const c = reduce || isCompact ? 1 : ease(clamp((stageP - 0.56) / 0.34));
+
         node.style.setProperty("--scene-top-opacity", (1 - enter).toFixed(4));
         node.style.setProperty("--scene-bottom-opacity", exit.toFixed(4));
         node.style.setProperty("--scene-ambient-y", `${((0.5 - center) * (isCompact ? 10 : 26)).toFixed(2)}px`);
         node.style.setProperty("--scene-sheen-opacity", (sheen * 0.58).toFixed(4));
+        node.style.setProperty("--v3-p", stageP.toFixed(4));
+        node.style.setProperty("--v3-a", a.toFixed(4));
+        node.style.setProperty("--v3-b", b.toFixed(4));
+        node.style.setProperty("--v3-c", c.toFixed(4));
+
+        if (node.classList.contains("manga")) {
+          node.style.setProperty("--v3-manga-bg-y", `${(-stageP * 170).toFixed(2)}px`);
+          node.style.setProperty("--v3-manga-heading-opacity", Math.max(0.08, 1 - b * 0.94).toFixed(4));
+          node.style.setProperty("--v3-manga-heading-y", `${(-b * 120).toFixed(2)}px`);
+          node.style.setProperty("--v3-manga-cover-x", `${(-b * 18).toFixed(2)}vw`);
+          node.style.setProperty("--v3-manga-cover-y", `${(-b * 8).toFixed(2)}vh`);
+          node.style.setProperty("--v3-manga-cover-scale", (1.08 - b * 0.28).toFixed(4));
+          node.style.setProperty("--v3-manga-cover-ry", `${(-b * 7).toFixed(2)}deg`);
+          node.style.setProperty("--v3-manga-cover-bright", (1 - c * 0.42).toFixed(4));
+          node.style.setProperty("--v3-manga-copy-opacity", Math.max(0.06, 1 - b * 0.94).toFixed(4));
+          node.style.setProperty("--v3-manga-copy-y", `${(-b * 110).toFixed(2)}px`);
+          node.style.setProperty("--v3-manga-row-opacity", c.toFixed(4));
+          node.style.setProperty("--v3-manga-row-y", `${((1 - c) * 190).toFixed(2)}px`);
+          node.style.setProperty("--v3-card-1-y", `${((1 - c) * 120).toFixed(2)}px`);
+          node.style.setProperty("--v3-card-2-y", `${((1 - c) * 190).toFixed(2)}px`);
+          node.style.setProperty("--v3-card-3-y", `${((1 - c) * 260).toFixed(2)}px`);
+          node.style.setProperty("--v3-card-1-r", `${(-2 + c * 2).toFixed(2)}deg`);
+          node.style.setProperty("--v3-card-2-r", `${(1 - c).toFixed(2)}deg`);
+          node.style.setProperty("--v3-card-3-r", `${(2 - c * 2).toFixed(2)}deg`);
+        }
+
+        if (node.classList.contains("knowledge")) {
+          node.style.setProperty("--v3-knowledge-heading-opacity", Math.max(0.04, 1 - b * 0.96).toFixed(4));
+          node.style.setProperty("--v3-knowledge-heading-y", `${(-b * 120).toFixed(2)}px`);
+          node.style.setProperty("--v3-knowledge-stage-x", `${((1 - a) * 120 - c * 120).toFixed(2)}px`);
+          node.style.setProperty("--v3-knowledge-stage-y", `${(-c * 70).toFixed(2)}px`);
+          node.style.setProperty("--v3-knowledge-stage-scale", (0.82 + a * 0.22 - c * 0.16).toFixed(4));
+          node.style.setProperty("--v3-knowledge-stage-opacity", Math.max(0.15, 1 - c * 0.82).toFixed(4));
+          node.style.setProperty("--v3-knowledge-stage-blur", `${(c * 8).toFixed(2)}px`);
+          node.style.setProperty("--v3-knowledge-articles-opacity", c.toFixed(4));
+          node.style.setProperty("--v3-knowledge-articles-y", `${((1 - c) * 190).toFixed(2)}px`);
+          node.style.setProperty("--v3-knowledge-horizon-opacity", c.toFixed(4));
+          node.style.setProperty("--v3-knowledge-horizon-y", `${((1 - c) * 100).toFixed(2)}px`);
+        }
+
+        if (node.classList.contains("lab")) {
+          node.style.setProperty("--v3-lab-heading-opacity", Math.max(0.04, 1 - b * 0.96).toFixed(4));
+          node.style.setProperty("--v3-lab-heading-y", `${(-b * 110).toFixed(2)}px`);
+          node.style.setProperty("--v3-lab-grid-opacity", (0.48 + a * 0.34 - c * 0.16).toFixed(4));
+          node.style.setProperty("--v3-lab-grid-tilt", `${(64 - a * 42 + c * 10).toFixed(2)}deg`);
+          node.style.setProperty("--v3-lab-grid-y", `${(-7 + stageP * 20).toFixed(2)}vh`);
+          node.style.setProperty("--v3-lab-grid-scale", (1.35 - a * 0.22 + c * 0.12).toFixed(4));
+          node.style.setProperty("--v3-lab-demo-y", `${((1 - a) * 110 - c * 85).toFixed(2)}px`);
+          node.style.setProperty("--v3-lab-demo-scale", (0.80 + a * 0.20 - c * 0.12).toFixed(4));
+          node.style.setProperty("--v3-lab-demo-tilt", `${((1 - a) * 12 + c * 3).toFixed(2)}deg`);
+          node.style.setProperty("--v3-lab-demo-opacity", Math.max(0.26, 1 - c * 0.65).toFixed(4));
+          node.style.setProperty("--v3-lab-tools-opacity", c.toFixed(4));
+          node.style.setProperty("--v3-lab-tools-y", `${((1 - c) * 180).toFixed(2)}px`);
+        }
+
+        if (node.classList.contains("portal")) {
+          node.style.setProperty("--v3-portal-heading-opacity", (0.18 + enter * 0.82).toFixed(4));
+          node.style.setProperty("--v3-portal-heading-y", `${((1 - enter) * 90).toFixed(2)}px`);
+          node.style.setProperty("--v3-portal-row-opacity", enter.toFixed(4));
+          node.style.setProperty("--v3-portal-row-y", `${((1 - enter) * 100).toFixed(2)}px`);
+        }
       });
 
       if (descent) {
@@ -108,6 +183,10 @@ export function useHomeMotion() {
         descent.style.setProperty("--descent-progress", p.toFixed(4));
         descent.style.setProperty("--descent-entry", entry.toFixed(4));
         descent.style.setProperty("--descent-motion-y", `${((0.5 - p) * (isCompact ? 8 : 18)).toFixed(2)}px`);
+        descent.style.setProperty("--v3-descent-scale", (1.09 - p * 0.07).toFixed(4));
+        descent.style.setProperty("--v3-descent-sat", (0.88 + p * 0.18).toFixed(4));
+        descent.style.setProperty("--v3-descent-contrast", (1.08 + Math.sin(Math.PI * p) * 0.08).toFixed(4));
+        descent.style.setProperty("--v3-descent-copy-x", `${((0.5 - p) * 60).toFixed(2)}px`);
 
         const activeIndex = Math.min(frames.length - 1, Math.floor(p * frames.length));
         frames.forEach((node, index) => {
@@ -127,6 +206,9 @@ export function useHomeMotion() {
         const entry = reduce ? 1 : ease(clamp((y + viewport - storyTop) / (viewport * 0.58)));
         story.style.setProperty("--story-entry", entry.toFixed(4));
         story.style.setProperty("--story-entry-y", `${((1 - entry) * 22).toFixed(2)}px`);
+        story.style.setProperty("--v3-story-atmosphere", (0.28 + Math.sin(Math.PI * p) * 0.58).toFixed(4));
+        story.style.setProperty("--v3-story-sat", (1.02 + Math.sin(Math.PI * p) * 0.12).toFixed(4));
+        story.style.setProperty("--v3-story-contrast", (1.02 + Math.sin(Math.PI * p) * 0.08).toFixed(4));
 
         const handoff = reduce || isCompact ? 1 : ease(clamp((p - 0.12) / 0.56));
         const trainingExit = reduce || isCompact ? 0 : ease(clamp((p - 0.16) / 0.42));
@@ -188,19 +270,21 @@ export function useHomeMotion() {
       home.removeEventListener("load", invalidate, true);
       delete home.dataset.homeMotion;
 
-      hero?.style.removeProperty("--hero-pan");
-      hero?.style.removeProperty("--hero-copy-y");
-      hero?.style.removeProperty("--hero-copy-opacity");
-      hero?.style.removeProperty("--hero-handoff");
-      descent?.style.removeProperty("--descent-progress");
-      descent?.style.removeProperty("--descent-entry");
-      descent?.style.removeProperty("--descent-motion-y");
-      sceneNodes.forEach((node) => {
-        node.style.removeProperty("--scene-top-opacity");
-        node.style.removeProperty("--scene-bottom-opacity");
-        node.style.removeProperty("--scene-ambient-y");
-        node.style.removeProperty("--scene-sheen-opacity");
+      [hero, descent, story].forEach((node) => {
+        if (!node) return;
+        Array.from(node.style).forEach((name) => {
+          if (name.startsWith("--v3-") || name.startsWith("--hero-") || name.startsWith("--descent-") || name.startsWith("--story-")) {
+            node.style.removeProperty(name);
+          }
+        });
       });
+
+      sceneNodes.forEach((node) => {
+        Array.from(node.style).forEach((name) => {
+          if (name.startsWith("--v3-") || name.startsWith("--scene-")) node.style.removeProperty(name);
+        });
+      });
+
       frames.forEach((node, index) => {
         node.classList.toggle("is-active", index === 0);
         node.style.removeProperty("--descent-depth");
@@ -217,8 +301,6 @@ export function useHomeMotion() {
         node.style.removeProperty("--story-copy-y");
         node.style.removeProperty("--story-scene-opacity");
       });
-      story?.style.removeProperty("--story-entry");
-      story?.style.removeProperty("--story-entry-y");
     };
   }, []);
 

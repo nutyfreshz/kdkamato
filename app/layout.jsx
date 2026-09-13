@@ -9,6 +9,7 @@ import './home-scroll.css';
 import './worldclass-polish.css';
 import './cinematic-handoffs-restored.css';
 import './cinematic-seam-fixes.css';
+import './motion-architecture-v3.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';
 

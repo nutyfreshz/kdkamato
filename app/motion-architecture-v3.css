@@ -1,0 +1,537 @@
+/* KDKAMATO Motion Architecture V3 — experimental cinematic re-authoring.
+   Same material + story order, radically different presentation mechanics.
+   Desktop first; compact/mobile intentionally falls back to the proven production flow. */
+
+@media (min-width: 901px) and (min-height: 641px) {
+  .home-page {
+    --v3-shell-left: max(48px, calc((100vw - min(1280px, calc(100vw - 96px))) / 2));
+    background: #060708;
+  }
+
+  /* ---------- ACT 01 / HERO ---------- */
+  .home-page .hero {
+    background: #050607;
+    isolation: isolate;
+  }
+
+  .home-page .hero-image {
+    transform: translate3d(var(--v3-hero-x, 0px), var(--hero-pan, 0px), 0) scale(var(--v3-hero-scale, 1.08));
+    filter: saturate(var(--v3-hero-sat, 1)) brightness(var(--v3-hero-bright, 1));
+    transform-origin: 64% 44%;
+    will-change: transform, filter;
+  }
+
+  .home-page .hero-vignette {
+    background:
+      radial-gradient(70% 80% at 72% 44%, rgba(72,220,232,.06), transparent 66%),
+      linear-gradient(90deg, rgba(5,6,7,.98) 0%, rgba(5,6,7,.76) 30%, rgba(5,6,7,.08) 64%, rgba(5,6,7,.35) 100%);
+  }
+
+  .home-page .hero-copy {
+    transform: translate3d(0, var(--v3-hero-copy-y, 0px), 0) scale(var(--v3-hero-copy-scale, 1));
+    transform-origin: left center;
+    opacity: var(--v3-hero-copy-opacity, 1);
+    will-change: transform, opacity;
+  }
+
+  .home-page .hero-copy h1 {
+    max-width: 820px;
+    font-size: clamp(76px, 8vw, 132px);
+  }
+
+  .home-page .hero-copy h1 span {
+    display: inline-block;
+    text-shadow: 0 0 var(--v3-hero-glow, 0px) rgba(255,106,26,.35);
+  }
+
+  .home-page .hero::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    width: 52vw;
+    height: 52vw;
+    right: -18vw;
+    top: 18vh;
+    border: 1px solid rgba(72,220,232,.12);
+    border-radius: 50%;
+    transform: translate3d(var(--v3-hero-orbit-x, 0px), var(--v3-hero-orbit-y, 0px), 0) scale(var(--v3-hero-orbit-scale, 1));
+    box-shadow: inset 0 0 90px rgba(72,220,232,.025), 0 0 120px rgba(72,220,232,.03);
+    pointer-events: none;
+  }
+
+  /* ---------- ACT 02 / DESCENT ---------- */
+  .home-page .descent {
+    background: #050708;
+  }
+
+  .home-page .descent-sticky {
+    perspective: 1600px;
+  }
+
+  .home-page .descent-media {
+    transform: scale(var(--v3-descent-scale, 1));
+    transform-origin: 68% 46%;
+    filter: saturate(var(--v3-descent-sat, 1)) contrast(var(--v3-descent-contrast, 1));
+    will-change: transform, filter;
+  }
+
+  .home-page .descent-copy-wrap {
+    transform: translate3d(var(--v3-descent-copy-x, 0px), 0, 0);
+    will-change: transform;
+  }
+
+  .home-page .descent-copy h2 {
+    font-size: clamp(68px, 7vw, 120px);
+    max-width: 840px;
+  }
+
+  .home-page .descent-progress {
+    left: var(--v3-shell-left);
+    right: auto;
+    bottom: 7vh;
+    width: min(420px, 32vw);
+    height: 3px;
+    background: rgba(255,255,255,.12);
+  }
+
+  .home-page .descent-progress span {
+    box-shadow: 0 0 22px rgba(72,220,232,.75);
+  }
+
+  /* ---------- ACT 03 / MANGA CINEMA ---------- */
+  .home-page .manga.section.shell {
+    position: relative;
+    width: 100vw;
+    max-width: none;
+    height: 270svh;
+    margin: 0;
+    padding: 0;
+    overflow: clip;
+    background:
+      radial-gradient(70% 70% at 78% 36%, rgba(255,106,26,.08), transparent 65%),
+      radial-gradient(58% 56% at 20% 70%, rgba(72,220,232,.055), transparent 68%),
+      #070809;
+    isolation: isolate;
+  }
+
+  .home-page .manga.section.shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size: 72px 72px;
+    transform: translate3d(0, var(--v3-manga-bg-y, 0px), 0) scale(1.08);
+    -webkit-mask-image: radial-gradient(circle at 70% 45%, #000 0%, rgba(0,0,0,.6) 48%, transparent 82%);
+    mask-image: radial-gradient(circle at 70% 45%, #000 0%, rgba(0,0,0,.6) 48%, transparent 82%);
+    pointer-events: none;
+  }
+
+  .home-page .manga > .section-heading {
+    position: absolute;
+    z-index: 8;
+    top: 12svh;
+    left: var(--v3-shell-left);
+    width: min(720px, 48vw);
+    margin: 0;
+    opacity: var(--v3-manga-heading-opacity, 1);
+    transform: translate3d(0, var(--v3-manga-heading-y, 0px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .manga > .section-heading h2 {
+    font-size: clamp(72px, 8vw, 136px);
+    max-width: 760px;
+  }
+
+  .home-page .manga-feature {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    width: 100vw;
+    height: 100svh;
+    display: block;
+    overflow: hidden;
+  }
+
+  .home-page .manga-feature::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(7,8,9,.96) 0%, rgba(7,8,9,.76) 34%, rgba(7,8,9,.16) 58%, rgba(7,8,9,.5) 100%),
+      linear-gradient(180deg, rgba(7,8,9,.18), transparent 46%, rgba(7,8,9,.55));
+  }
+
+  .home-page .manga-feature .manga-cover {
+    position: absolute;
+    z-index: 0;
+    top: 6svh;
+    right: 7vw;
+    width: min(42vw, 650px);
+    height: 88svh;
+    aspect-ratio: auto;
+    border: 0;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 42px 120px rgba(0,0,0,.55);
+    transform: translate3d(var(--v3-manga-cover-x, 0px), var(--v3-manga-cover-y, 0px), 0) scale(var(--v3-manga-cover-scale, 1.08)) rotateY(var(--v3-manga-cover-ry, 0deg));
+    transform-origin: 55% 48%;
+    will-change: transform, filter;
+    filter: brightness(var(--v3-manga-cover-bright, 1));
+  }
+
+  .home-page .manga-feature-copy {
+    position: absolute;
+    z-index: 4;
+    left: var(--v3-shell-left);
+    top: 48svh;
+    width: min(650px, 43vw);
+    opacity: var(--v3-manga-copy-opacity, 1);
+    transform: translate3d(0, var(--v3-manga-copy-y, 0px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .manga-feature-copy h3 {
+    font-size: clamp(42px, 4.7vw, 78px);
+  }
+
+  .home-page .manga-row {
+    position: sticky;
+    z-index: 10;
+    top: 57svh;
+    width: var(--shell);
+    margin: 112svh auto 0;
+    opacity: var(--v3-manga-row-opacity, 0);
+    transform: translate3d(0, var(--v3-manga-row-y, 180px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .manga-card {
+    padding: 12px;
+    background: rgba(10,12,13,.78);
+    border: 1px solid rgba(255,255,255,.1);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 28px 70px rgba(0,0,0,.34);
+  }
+
+  .home-page .manga-card:nth-child(1) { transform: translate3d(0, var(--v3-card-1-y, 0px), 0) rotate(var(--v3-card-1-r, -2deg)); }
+  .home-page .manga-card:nth-child(2) { transform: translate3d(0, var(--v3-card-2-y, 0px), 0) rotate(var(--v3-card-2-r, 1deg)); }
+  .home-page .manga-card:nth-child(3) { transform: translate3d(0, var(--v3-card-3-y, 0px), 0) rotate(var(--v3-card-3-r, 2deg)); }
+
+  .home-page .manga-card .mini-cover {
+    height: 31svh;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  .home-page .manga > .section-link {
+    position: absolute;
+    z-index: 12;
+    left: var(--v3-shell-left);
+    bottom: 6svh;
+    opacity: var(--v3-manga-row-opacity, 0);
+  }
+
+  /* ---------- ACT 04 / KNOWLEDGE EDITORIAL STAGE ---------- */
+  .home-page .knowledge {
+    position: relative;
+    height: 270svh;
+    padding: 0;
+    overflow: clip;
+    background:
+      radial-gradient(64% 58% at 72% 40%, rgba(72,220,232,.08), transparent 68%),
+      #080b0c;
+  }
+
+  .home-page .knowledge > .shell {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100svh;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .home-page .knowledge .section-heading {
+    position: absolute;
+    z-index: 8;
+    left: var(--v3-shell-left);
+    top: 13svh;
+    width: min(520px, 34vw);
+    margin: 0;
+    opacity: var(--v3-knowledge-heading-opacity, 1);
+    transform: translate3d(0, var(--v3-knowledge-heading-y, 0px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .knowledge .section-heading h2 {
+    font-size: clamp(70px, 7vw, 118px);
+  }
+
+  .home-page .knowledge-stage {
+    position: absolute;
+    z-index: 5;
+    right: 5vw;
+    top: 11svh;
+    width: min(930px, 61vw);
+    height: 76svh;
+    grid-template-columns: 4fr 7fr;
+    gap: 28px;
+    transform: translate3d(var(--v3-knowledge-stage-x, 80px), var(--v3-knowledge-stage-y, 0px), 0) scale(var(--v3-knowledge-stage-scale, .88));
+    transform-origin: 76% 46%;
+    opacity: var(--v3-knowledge-stage-opacity, 1);
+    filter: blur(var(--v3-knowledge-stage-blur, 0px));
+    will-change: transform, opacity, filter;
+  }
+
+  .home-page .knowledge-list {
+    justify-content: center;
+    border: 0;
+  }
+
+  .home-page .knowledge-item {
+    padding: 22px 18px;
+    border: 1px solid transparent;
+    border-bottom-color: rgba(255,255,255,.09);
+    background: rgba(8,11,12,.34);
+  }
+
+  .home-page .knowledge-item.is-active {
+    border-color: rgba(72,220,232,.22);
+    background: rgba(72,220,232,.055);
+  }
+
+  .home-page .knowledge-visual {
+    min-height: 0;
+    height: 100%;
+    border-radius: 28px;
+    box-shadow: 0 44px 120px rgba(0,0,0,.45);
+  }
+
+  .home-page .article-grid {
+    position: absolute;
+    z-index: 10;
+    left: var(--v3-shell-left);
+    right: var(--v3-shell-left);
+    bottom: 7svh;
+    margin: 0;
+    opacity: var(--v3-knowledge-articles-opacity, 0);
+    transform: translate3d(0, var(--v3-knowledge-articles-y, 180px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .article-grid article {
+    min-height: 300px;
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,.11);
+    background: rgba(8,11,12,.78);
+    backdrop-filter: blur(22px);
+    box-shadow: 0 24px 70px rgba(0,0,0,.32);
+  }
+
+  /* A cyan horizon survives Knowledge and becomes the LAB world. */
+  .home-page .knowledge::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: -10vw;
+    right: -10vw;
+    bottom: -10svh;
+    height: 38svh;
+    opacity: var(--v3-knowledge-horizon-opacity, 0);
+    background: radial-gradient(60% 90% at 50% 100%, rgba(72,220,232,.16), transparent 68%);
+    transform: translate3d(0, var(--v3-knowledge-horizon-y, 80px), 0);
+    pointer-events: none;
+  }
+
+  /* ---------- ACT 05 / LAB IMMERSIVE INTERFACE ---------- */
+  .home-page .lab {
+    position: relative;
+    height: 250svh;
+    padding: 0;
+    overflow: clip;
+    background: #071013;
+  }
+
+  .home-page .lab-grid-bg {
+    opacity: var(--v3-lab-grid-opacity, .72);
+    background-size: 56px 56px;
+    transform: perspective(900px) rotateX(var(--v3-lab-grid-tilt, 64deg)) translate3d(0, var(--v3-lab-grid-y, -7vh), 0) scale(var(--v3-lab-grid-scale, 1.35));
+    transform-origin: 50% 15%;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.5) 48%, transparent 92%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.5) 48%, transparent 92%);
+    will-change: transform, opacity;
+  }
+
+  .home-page .lab-shell {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100svh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .home-page .lab .section-heading {
+    position: absolute;
+    z-index: 9;
+    left: var(--v3-shell-left);
+    top: 11svh;
+    width: min(580px, 38vw);
+    margin: 0;
+    opacity: var(--v3-lab-heading-opacity, 1);
+    transform: translate3d(0, var(--v3-lab-heading-y, 0px), 0);
+  }
+
+  .home-page .lab .section-heading h2 {
+    font-size: clamp(72px, 7vw, 120px);
+  }
+
+  .home-page .lab-demo {
+    position: absolute;
+    z-index: 6;
+    left: var(--v3-shell-left);
+    right: var(--v3-shell-left);
+    top: 24svh;
+    min-height: 62svh;
+    transform: perspective(1500px) translate3d(0, var(--v3-lab-demo-y, 90px), 0) scale(var(--v3-lab-demo-scale, .82)) rotateX(var(--v3-lab-demo-tilt, 10deg));
+    transform-origin: 50% 70%;
+    border-color: rgba(72,220,232,.34);
+    background: rgba(5,11,13,.82);
+    box-shadow: 0 48px 150px rgba(0,0,0,.58), 0 0 90px rgba(72,220,232,.045);
+    will-change: transform, opacity;
+    opacity: var(--v3-lab-demo-opacity, 1);
+  }
+
+  .home-page .lab-result {
+    background:
+      radial-gradient(60% 70% at 50% 50%, rgba(72,220,232,.085), transparent 70%),
+      rgba(4,10,12,.48);
+  }
+
+  .home-page .tool-teasers {
+    position: absolute;
+    z-index: 11;
+    left: var(--v3-shell-left);
+    right: var(--v3-shell-left);
+    bottom: 6svh;
+    margin: 0;
+    opacity: var(--v3-lab-tools-opacity, 0);
+    transform: translate3d(0, var(--v3-lab-tools-y, 160px), 0);
+    will-change: transform, opacity;
+  }
+
+  .home-page .tool-teasers a {
+    min-height: 132px;
+    align-items: flex-start;
+    padding: 24px;
+    background: rgba(5,11,13,.78);
+    backdrop-filter: blur(18px);
+    border-color: rgba(72,220,232,.18);
+  }
+
+  /* ---------- ACT 06 / TRAINING -> REAL KENDO FINALE ---------- */
+  .home-page [data-home-story] {
+    isolation: isolate;
+    background: #050607;
+  }
+
+  .home-page [data-home-story]::after {
+    content: "";
+    position: absolute;
+    z-index: 20;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--v3-story-atmosphere, .35);
+    background:
+      radial-gradient(56% 44% at 18% 35%, rgba(72,220,232,.08), transparent 74%),
+      radial-gradient(62% 50% at 82% 55%, rgba(255,106,26,.12), transparent 76%);
+    mix-blend-mode: screen;
+  }
+
+  .home-page [data-home-story] [data-story-chapter] > div > img {
+    filter: saturate(var(--v3-story-sat, 1.06)) contrast(var(--v3-story-contrast, 1.04));
+  }
+
+  /* ---------- ACT 07 / PORTAL LANDING ---------- */
+  .home-page .portal.section.shell {
+    width: 100vw;
+    max-width: none;
+    min-height: 112svh;
+    margin: 0;
+    padding: 16svh var(--v3-shell-left) 12svh;
+    background:
+      radial-gradient(52% 52% at 80% 20%, rgba(255,106,26,.08), transparent 70%),
+      radial-gradient(50% 50% at 15% 80%, rgba(72,220,232,.06), transparent 70%),
+      #060708;
+  }
+
+  .home-page .portal h2 {
+    font-size: clamp(82px, 9vw, 150px);
+    max-width: 1100px;
+    transform: translate3d(0, var(--v3-portal-heading-y, 60px), 0);
+    opacity: var(--v3-portal-heading-opacity, .2);
+  }
+
+  .home-page .portal-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 0;
+    gap: 1px;
+    background: rgba(255,255,255,.1);
+  }
+
+  .home-page .portal-links a {
+    height: 150px;
+    padding: 0 28px;
+    border: 0;
+    background: #080a0b;
+    transform: translate3d(0, var(--v3-portal-row-y, 80px), 0);
+    opacity: var(--v3-portal-row-opacity, 0);
+    transition: background .35s ease, color .35s ease, padding .35s ease;
+  }
+
+  .home-page .portal-links a:hover {
+    padding-left: 44px;
+    background: #0c1113;
+  }
+}
+
+/* Compact/mobile keeps the proven production mechanics. */
+@media (max-width: 900px), (max-height: 640px) {
+  .home-page .manga.section.shell,
+  .home-page .knowledge,
+  .home-page .lab,
+  .home-page .portal.section.shell {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .hero-image,
+  .home-page .hero-copy,
+  .home-page .descent-media,
+  .home-page .descent-copy-wrap,
+  .home-page .manga-feature .manga-cover,
+  .home-page .manga-feature-copy,
+  .home-page .manga-row,
+  .home-page .knowledge-stage,
+  .home-page .article-grid,
+  .home-page .lab-grid-bg,
+  .home-page .lab-demo,
+  .home-page .tool-teasers,
+  .home-page .portal h2,
+  .home-page .portal-links a {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
