@@ -82,12 +82,12 @@ export function useHomeMotion() {
         node.style.setProperty("--home-open", p.toFixed(4));
       });
 
+      /* HERO — keep the high-impact V3 camera treatment. */
       const heroP = reduce ? 0 : ease(clamp(y / (viewport * 0.92)));
       hero?.style.setProperty("--hero-pan", `${(heroP * viewport * 0.10).toFixed(2)}px`);
       hero?.style.setProperty("--hero-copy-y", `${(-heroP * 34).toFixed(2)}px`);
       hero?.style.setProperty("--hero-copy-opacity", (1 - heroP * 0.72).toFixed(4));
       hero?.style.setProperty("--hero-handoff", (0.26 + heroP * 0.74).toFixed(4));
-
       hero?.style.setProperty("--v3-hero-x", `${(heroP * -34).toFixed(2)}px`);
       hero?.style.setProperty("--v3-hero-scale", (1.08 + heroP * 0.16).toFixed(4));
       hero?.style.setProperty("--v3-hero-sat", (1 - heroP * 0.18).toFixed(4));
@@ -100,73 +100,54 @@ export function useHomeMotion() {
       hero?.style.setProperty("--v3-hero-orbit-y", `${(heroP * 40).toFixed(2)}px`);
       hero?.style.setProperty("--v3-hero-orbit-scale", (1 + heroP * 0.18).toFixed(4));
 
+      /* EDITORIAL ACTS — one primary transformation per section. */
       sceneBounds.forEach(({ node, top, height }) => {
         const enter = reduce ? 1 : ease(clamp((y + viewport - top) / (viewport * 0.55)));
         const exit = reduce ? 0 : ease(clamp((y + viewport - (top + height)) / (viewport * 0.55)));
         const center = clamp((y + viewport - top) / Math.max(1, viewport + height));
         const sheen = reduce ? 0.25 : Math.sin(Math.PI * center);
         const stageP = reduce || isCompact ? 1 : clamp((y - top) / Math.max(1, height - viewport));
-        const a = reduce || isCompact ? 1 : ease(clamp(stageP / 0.34));
-        const b = reduce || isCompact ? 1 : ease(clamp((stageP - 0.22) / 0.36));
-        const c = reduce || isCompact ? 1 : ease(clamp((stageP - 0.56) / 0.34));
 
         node.style.setProperty("--scene-top-opacity", (1 - enter).toFixed(4));
         node.style.setProperty("--scene-bottom-opacity", exit.toFixed(4));
         node.style.setProperty("--scene-ambient-y", `${((0.5 - center) * (isCompact ? 10 : 26)).toFixed(2)}px`);
         node.style.setProperty("--scene-sheen-opacity", (sheen * 0.58).toFixed(4));
-        node.style.setProperty("--v3-p", stageP.toFixed(4));
-        node.style.setProperty("--v3-a", a.toFixed(4));
-        node.style.setProperty("--v3-b", b.toFixed(4));
-        node.style.setProperty("--v3-c", c.toFixed(4));
 
         if (node.classList.contains("manga")) {
-          node.style.setProperty("--v3-manga-bg-y", `${(-stageP * 170).toFixed(2)}px`);
-          node.style.setProperty("--v3-manga-heading-opacity", Math.max(0.08, 1 - b * 0.94).toFixed(4));
-          node.style.setProperty("--v3-manga-heading-y", `${(-b * 120).toFixed(2)}px`);
-          node.style.setProperty("--v3-manga-cover-x", `${(-b * 18).toFixed(2)}vw`);
-          node.style.setProperty("--v3-manga-cover-y", `${(-b * 8).toFixed(2)}vh`);
-          node.style.setProperty("--v3-manga-cover-scale", (1.08 - b * 0.28).toFixed(4));
-          node.style.setProperty("--v3-manga-cover-ry", `${(-b * 7).toFixed(2)}deg`);
-          node.style.setProperty("--v3-manga-cover-bright", (1 - c * 0.42).toFixed(4));
-          node.style.setProperty("--v3-manga-copy-opacity", Math.max(0.06, 1 - b * 0.94).toFixed(4));
-          node.style.setProperty("--v3-manga-copy-y", `${(-b * 110).toFixed(2)}px`);
-          node.style.setProperty("--v3-manga-row-opacity", c.toFixed(4));
-          node.style.setProperty("--v3-manga-row-y", `${((1 - c) * 190).toFixed(2)}px`);
-          node.style.setProperty("--v3-card-1-y", `${((1 - c) * 120).toFixed(2)}px`);
-          node.style.setProperty("--v3-card-2-y", `${((1 - c) * 190).toFixed(2)}px`);
-          node.style.setProperty("--v3-card-3-y", `${((1 - c) * 260).toFixed(2)}px`);
-          node.style.setProperty("--v3-card-1-r", `${(-2 + c * 2).toFixed(2)}deg`);
-          node.style.setProperty("--v3-card-2-r", `${(1 - c).toFixed(2)}deg`);
-          node.style.setProperty("--v3-card-3-r", `${(2 - c * 2).toFixed(2)}deg`);
+          const handoff = reduce || isCompact ? 1 : ease(clamp((stageP - 0.34) / 0.42));
+          node.style.setProperty("--v3-manga-bg-y", `${(-stageP * 72).toFixed(2)}px`);
+          node.style.setProperty("--v31-manga-context-opacity", (1 - handoff * 0.56).toFixed(4));
+          node.style.setProperty("--v31-manga-cover-y", `${(-handoff * 26).toFixed(2)}px`);
+          node.style.setProperty("--v31-manga-cover-scale", (1.03 - handoff * 0.17).toFixed(4));
+          node.style.setProperty("--v31-manga-cover-bright", (1 - handoff * 0.22).toFixed(4));
+          node.style.setProperty("--v31-manga-copy-opacity", (1 - handoff * 0.92).toFixed(4));
+          node.style.setProperty("--v31-manga-copy-y", `${(-handoff * 38).toFixed(2)}px`);
+          node.style.setProperty("--v31-manga-library-opacity", handoff.toFixed(4));
+          node.style.setProperty("--v31-manga-library-y", `${((1 - handoff) * 72).toFixed(2)}px`);
         }
 
         if (node.classList.contains("knowledge")) {
-          node.style.setProperty("--v3-knowledge-heading-opacity", Math.max(0.04, 1 - b * 0.96).toFixed(4));
-          node.style.setProperty("--v3-knowledge-heading-y", `${(-b * 120).toFixed(2)}px`);
-          node.style.setProperty("--v3-knowledge-stage-x", `${((1 - a) * 120 - c * 120).toFixed(2)}px`);
-          node.style.setProperty("--v3-knowledge-stage-y", `${(-c * 70).toFixed(2)}px`);
-          node.style.setProperty("--v3-knowledge-stage-scale", (0.82 + a * 0.22 - c * 0.16).toFixed(4));
-          node.style.setProperty("--v3-knowledge-stage-opacity", Math.max(0.15, 1 - c * 0.82).toFixed(4));
-          node.style.setProperty("--v3-knowledge-stage-blur", `${(c * 8).toFixed(2)}px`);
-          node.style.setProperty("--v3-knowledge-articles-opacity", c.toFixed(4));
-          node.style.setProperty("--v3-knowledge-articles-y", `${((1 - c) * 190).toFixed(2)}px`);
-          node.style.setProperty("--v3-knowledge-horizon-opacity", c.toFixed(4));
-          node.style.setProperty("--v3-knowledge-horizon-y", `${((1 - c) * 100).toFixed(2)}px`);
+          const handoff = reduce || isCompact ? 1 : ease(clamp((stageP - 0.44) / 0.38));
+          node.style.setProperty("--v31-knowledge-x", `${(handoff * 18).toFixed(2)}vw`);
+          node.style.setProperty("--v31-knowledge-y", `${(-handoff * 34).toFixed(2)}px`);
+          node.style.setProperty("--v31-knowledge-scale", (1 - handoff * 0.27).toFixed(4));
+          node.style.setProperty("--v31-knowledge-opacity", (1 - handoff * 0.54).toFixed(4));
+          node.style.setProperty("--v31-articles-opacity", handoff.toFixed(4));
+          node.style.setProperty("--v31-articles-y", `${((1 - handoff) * 76).toFixed(2)}px`);
+          node.style.setProperty("--v31-horizon-opacity", (handoff * 0.72).toFixed(4));
         }
 
         if (node.classList.contains("lab")) {
-          node.style.setProperty("--v3-lab-heading-opacity", Math.max(0.04, 1 - b * 0.96).toFixed(4));
-          node.style.setProperty("--v3-lab-heading-y", `${(-b * 110).toFixed(2)}px`);
-          node.style.setProperty("--v3-lab-grid-opacity", (0.48 + a * 0.34 - c * 0.16).toFixed(4));
-          node.style.setProperty("--v3-lab-grid-tilt", `${(64 - a * 42 + c * 10).toFixed(2)}deg`);
-          node.style.setProperty("--v3-lab-grid-y", `${(-7 + stageP * 20).toFixed(2)}vh`);
-          node.style.setProperty("--v3-lab-grid-scale", (1.35 - a * 0.22 + c * 0.12).toFixed(4));
-          node.style.setProperty("--v3-lab-demo-y", `${((1 - a) * 110 - c * 85).toFixed(2)}px`);
-          node.style.setProperty("--v3-lab-demo-scale", (0.80 + a * 0.20 - c * 0.12).toFixed(4));
-          node.style.setProperty("--v3-lab-demo-tilt", `${((1 - a) * 12 + c * 3).toFixed(2)}deg`);
-          node.style.setProperty("--v3-lab-demo-opacity", Math.max(0.26, 1 - c * 0.65).toFixed(4));
-          node.style.setProperty("--v3-lab-tools-opacity", c.toFixed(4));
-          node.style.setProperty("--v3-lab-tools-y", `${((1 - c) * 180).toFixed(2)}px`);
+          const intro = reduce || isCompact ? 1 : ease(clamp(stageP / 0.24));
+          const handoff = reduce || isCompact ? 1 : ease(clamp((stageP - 0.52) / 0.34));
+          node.style.setProperty("--v31-lab-grid-opacity", (0.50 + intro * 0.14 - handoff * 0.05).toFixed(4));
+          node.style.setProperty("--v31-lab-grid-tilt", `${(40 - intro * 6 + handoff * 2).toFixed(2)}deg`);
+          node.style.setProperty("--v31-lab-grid-y", `${(-2 + stageP * 7).toFixed(2)}vh`);
+          node.style.setProperty("--v31-lab-demo-y", `${((1 - intro) * 36 - handoff * 20).toFixed(2)}px`);
+          node.style.setProperty("--v31-lab-demo-scale", (0.97 + intro * 0.03 - handoff * 0.08).toFixed(4));
+          node.style.setProperty("--v31-lab-demo-opacity", (0.92 + intro * 0.08 - handoff * 0.52).toFixed(4));
+          node.style.setProperty("--v31-lab-tools-opacity", handoff.toFixed(4));
+          node.style.setProperty("--v31-lab-tools-y", `${((1 - handoff) * 76).toFixed(2)}px`);
         }
 
         if (node.classList.contains("portal")) {
@@ -177,30 +158,42 @@ export function useHomeMotion() {
         }
       });
 
+      /* DESCENT — continuous scroll-scrubbed image blend.
+         Four visual states are placed on one 0..3 timeline. */
       if (descent) {
         const p = clamp((y - descentTop) / Math.max(1, descentHeight - viewport));
         const entry = reduce ? 1 : ease(clamp((y + viewport - descentTop) / (viewport * 0.72)));
         descent.style.setProperty("--descent-progress", p.toFixed(4));
         descent.style.setProperty("--descent-entry", entry.toFixed(4));
-        descent.style.setProperty("--descent-motion-y", `${((0.5 - p) * (isCompact ? 8 : 18)).toFixed(2)}px`);
-        descent.style.setProperty("--v3-descent-scale", (1.09 - p * 0.07).toFixed(4));
-        descent.style.setProperty("--v3-descent-sat", (0.88 + p * 0.18).toFixed(4));
-        descent.style.setProperty("--v3-descent-contrast", (1.08 + Math.sin(Math.PI * p) * 0.08).toFixed(4));
-        descent.style.setProperty("--v3-descent-copy-x", `${((0.5 - p) * 60).toFixed(2)}px`);
+        descent.style.setProperty("--descent-motion-y", `${((0.5 - p) * (isCompact ? 8 : 14)).toFixed(2)}px`);
+        descent.style.setProperty("--v3-descent-scale", (1.06 - p * 0.035).toFixed(4));
+        descent.style.setProperty("--v3-descent-sat", (0.94 + p * 0.10).toFixed(4));
+        descent.style.setProperty("--v3-descent-contrast", (1.04 + Math.sin(Math.PI * p) * 0.04).toFixed(4));
+        descent.style.setProperty("--v3-descent-copy-x", `${((0.5 - p) * 30).toFixed(2)}px`);
 
-        const activeIndex = Math.min(frames.length - 1, Math.floor(p * frames.length));
+        const timeline = p * Math.max(1, frames.length - 1);
+        const nearest = Math.min(frames.length - 1, Math.max(0, Math.round(timeline)));
+
         frames.forEach((node, index) => {
-          const active = index === activeIndex;
-          node.classList.toggle("is-active", active);
-          node.style.setProperty("--descent-depth", `${Math.abs(index - activeIndex)}`);
+          const d = Math.abs(timeline - index);
+          const opacity = reduce || isCompact ? (index === nearest ? 1 : 0) : clamp(1 - d);
+          node.style.setProperty("--v31-frame-opacity", opacity.toFixed(4));
+          node.style.setProperty("--v31-frame-z", `${index}`);
+          node.style.setProperty("--v31-frame-y", `${((index - timeline) * 10).toFixed(2)}px`);
+          node.style.setProperty("--v31-frame-scale", (1.022 + (1 - opacity) * 0.025).toFixed(4));
+          node.style.setProperty("--v31-frame-sat", (0.96 + opacity * 0.04).toFixed(4));
+          node.style.setProperty("--v31-frame-bright", (0.90 + opacity * 0.10).toFixed(4));
+          node.classList.toggle("is-active", index === nearest);
         });
+
         captions.forEach((node, index) => {
-          const active = index === activeIndex;
+          const active = index === nearest;
           node.setAttribute("aria-hidden", active ? "false" : "true");
           node.classList.toggle("is-active", active);
         });
       }
 
+      /* TRAINING -> REAL KENDO — preserve the strongest V3 shared-stage transition. */
       if (story && chapters.length >= 2) {
         const p = clamp((y - storyTop) / Math.max(1, storyHeight - viewport));
         const entry = reduce ? 1 : ease(clamp((y + viewport - storyTop) / (viewport * 0.58)));
@@ -273,7 +266,7 @@ export function useHomeMotion() {
       [hero, descent, story].forEach((node) => {
         if (!node) return;
         Array.from(node.style).forEach((name) => {
-          if (name.startsWith("--v3-") || name.startsWith("--hero-") || name.startsWith("--descent-") || name.startsWith("--story-")) {
+          if (name.startsWith("--v3-") || name.startsWith("--v31-") || name.startsWith("--hero-") || name.startsWith("--descent-") || name.startsWith("--story-")) {
             node.style.removeProperty(name);
           }
         });
@@ -281,13 +274,15 @@ export function useHomeMotion() {
 
       sceneNodes.forEach((node) => {
         Array.from(node.style).forEach((name) => {
-          if (name.startsWith("--v3-") || name.startsWith("--scene-")) node.style.removeProperty(name);
+          if (name.startsWith("--v3-") || name.startsWith("--v31-") || name.startsWith("--scene-")) node.style.removeProperty(name);
         });
       });
 
       frames.forEach((node, index) => {
         node.classList.toggle("is-active", index === 0);
-        node.style.removeProperty("--descent-depth");
+        Array.from(node.style).forEach((name) => {
+          if (name.startsWith("--v31-") || name === "--descent-depth") node.style.removeProperty(name);
+        });
       });
       captions.forEach((node, index) => {
         node.classList.toggle("is-active", index === 0);

@@ -1,0 +1,167 @@
+/* KDKAMATO Motion Architecture V3.1 — comprehension pass.
+   Keeps the V3 visual re-authoring, but limits each act to one primary transition.
+   Desktop only. Mobile/compact continues to use the proven production flow. */
+
+@media (min-width: 901px) and (min-height: 641px) {
+  /* ACT 02 / DESCENT
+     Images are now scroll-scrubbed continuously instead of switching by activeIndex.
+     One scroll position maps to one visual blend state. */
+  .home-page .descent {
+    height: 310svh;
+  }
+
+  .home-page .descent-frame,
+  .home-page .descent-frame.is-active {
+    opacity: var(--v31-frame-opacity, 0) !important;
+    z-index: var(--v31-frame-z, 0);
+    transform: translate3d(0, var(--v31-frame-y, 0px), 0) scale(var(--v31-frame-scale, 1.03)) !important;
+    filter: saturate(var(--v31-frame-sat, 1)) brightness(var(--v31-frame-bright, 1)) !important;
+    transition: none !important;
+    will-change: opacity, transform, filter;
+  }
+
+  .home-page .descent-copy,
+  .home-page .descent-copy.is-active {
+    visibility: visible;
+    clip-path: none;
+    filter: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+
+  .home-page .descent-copy {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+
+  .home-page .descent-copy.is-active {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* ACT 03 / MANGA
+     One idea only: latest episode retreats, library comes forward. */
+  .home-page .manga.section.shell {
+    height: 185svh;
+  }
+
+  .home-page .manga > .section-heading {
+    position: sticky;
+    top: 10svh;
+    height: 0;
+    width: min(640px, 44vw);
+    opacity: var(--v31-manga-context-opacity, 1);
+    transform: none;
+    pointer-events: none;
+  }
+
+  .home-page .manga > .section-heading h2 {
+    font-size: clamp(58px, 6.4vw, 104px);
+  }
+
+  .home-page .manga-feature {
+    transform: none;
+  }
+
+  .home-page .manga-feature .manga-cover {
+    transform: translate3d(0, var(--v31-manga-cover-y, 0px), 0) scale(var(--v31-manga-cover-scale, 1.03)) !important;
+    filter: brightness(var(--v31-manga-cover-bright, 1));
+  }
+
+  .home-page .manga-feature-copy {
+    opacity: var(--v31-manga-copy-opacity, 1);
+    transform: translate3d(0, var(--v31-manga-copy-y, 0px), 0);
+  }
+
+  .home-page .manga-row {
+    top: 55svh;
+    margin-top: 78svh;
+    opacity: var(--v31-manga-library-opacity, 0);
+    transform: translate3d(0, var(--v31-manga-library-y, 72px), 0);
+  }
+
+  .home-page .manga-card:nth-child(1),
+  .home-page .manga-card:nth-child(2),
+  .home-page .manga-card:nth-child(3) {
+    transform: none !important;
+  }
+
+  .home-page .manga > .section-link {
+    opacity: var(--v31-manga-library-opacity, 0);
+  }
+
+  /* ACT 04 / KNOWLEDGE
+     Knowledge remains the anchor. The interface simply makes room for articles. */
+  .home-page .knowledge {
+    height: 190svh;
+  }
+
+  .home-page .knowledge .section-heading {
+    opacity: 1;
+    transform: none;
+  }
+
+  .home-page .knowledge-stage {
+    transform: translate3d(var(--v31-knowledge-x, 0px), var(--v31-knowledge-y, 0px), 0) scale(var(--v31-knowledge-scale, 1));
+    opacity: var(--v31-knowledge-opacity, 1);
+    filter: none;
+  }
+
+  .home-page .article-grid {
+    opacity: var(--v31-articles-opacity, 0);
+    transform: translate3d(0, var(--v31-articles-y, 76px), 0);
+  }
+
+  .home-page .knowledge::after {
+    opacity: var(--v31-horizon-opacity, 0);
+    transform: none;
+  }
+
+  /* ACT 05 / LAB
+     Perspective belongs to the environment; the usable interface stays readable and flat. */
+  .home-page .lab {
+    height: 185svh;
+  }
+
+  .home-page .lab .section-heading {
+    opacity: 1;
+    transform: none;
+  }
+
+  .home-page .lab-grid-bg {
+    opacity: var(--v31-lab-grid-opacity, .58);
+    transform: perspective(1000px) rotateX(var(--v31-lab-grid-tilt, 38deg)) translate3d(0, var(--v31-lab-grid-y, -2vh), 0) scale(1.13);
+    transform-origin: 50% 18%;
+  }
+
+  .home-page .lab-demo {
+    transform: translate3d(0, var(--v31-lab-demo-y, 36px), 0) scale(var(--v31-lab-demo-scale, .97));
+    opacity: var(--v31-lab-demo-opacity, .92);
+  }
+
+  .home-page .tool-teasers {
+    opacity: var(--v31-lab-tools-opacity, 0);
+    transform: translate3d(0, var(--v31-lab-tools-y, 76px), 0);
+  }
+
+  /* Preserve the successful finale and landing mechanics from V3. */
+  .home-page [data-home-story],
+  .home-page .portal.section.shell {
+    --v31-preserve-v3: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .descent-frame,
+  .home-page .manga-feature .manga-cover,
+  .home-page .manga-feature-copy,
+  .home-page .manga-row,
+  .home-page .knowledge-stage,
+  .home-page .article-grid,
+  .home-page .lab-grid-bg,
+  .home-page .lab-demo,
+  .home-page .tool-teasers {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
