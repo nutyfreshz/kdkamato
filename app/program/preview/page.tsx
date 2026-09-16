@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ActivateProgramButton } from "@/components/activate-program-button";
 import { ProgramWeek } from "@/components/program-week";
+import { TrainingPrinciplesCard } from "@/components/training-principles-card";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
@@ -80,12 +81,6 @@ const valueLabel: Record<string, string> = {
   BEGINNER: "เริ่มต้น", INTERMEDIATE: "ระดับกลาง", EXPERIENCED: "มีประสบการณ์",
   FULL_GYM: "ฟิตเนสครบวงจร", LIMITED_GYM: "ฟิตเนสจำกัดอุปกรณ์", HOME_BASIC: "อุปกรณ์พื้นฐานที่บ้าน",
 };
-
-function progressionText(item: PreviewItem) {
-  const p = item.metadata?.progression;
-  if (!p?.trigger || !p.action) return null;
-  return `${p.trigger} → ${p.action}`;
-}
 
 async function edgeErrorPayload(error: unknown) {
   if (!error || typeof error !== "object" || !("context" in error)) return null;
@@ -219,6 +214,7 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       <p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p>
     </section> : null}
 
+    <TrainingPrinciplesCard />
     <ProgramWeek days={preview.days} focus={preview.focus} dayLabels={dayLabels} />
 
     {Array.from(byDay.entries()).map(([day, items]) => {
@@ -227,18 +223,19 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       return <section className="card day" key={day}>
         <div className="kicker">วันที่ฝึก {day}</div>
         <h2>{dayLabel}</h2>
-        {sorted.map((x) => {
-          const next = progressionText(x);
-          return <div className="exercise" key={`${x.training_day}-${x.display_order}`}>
+        {sorted.map((x) => (
+          <div className="exercise" key={`${x.training_day}-${x.display_order}`}>
             <div style={{ minWidth: 0 }}>
               <strong>{x.metadata?.display_name ?? x.exercise_key}</strong><br/>
               <small>{x.metadata?.target_label ?? "ท่าฝึก"}{x.metadata?.focus_boost ? " · จุดเน้น" : ""}</small>
-              {next ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {next}</p> : null}
               {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>ตัวเลือก: {x.metadata.alternative_name}</p> : null}
             </div>
-            <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
-          </div>;
-        })}
+            <div style={{ textAlign: "right" }}>
+              <strong>{x.sets} × {x.rep_min}–{x.rep_max}</strong><br/>
+              <small>เหลือแรงประมาณ {x.target_rir} ครั้ง (RIR {x.target_rir})</small>
+            </div>
+          </div>
+        ))}
       </section>;
     })}
 

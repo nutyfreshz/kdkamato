@@ -2,13 +2,21 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ExerciseFeedbackForm } from "@/components/exercise-feedback-form";
 import { ExerciseVisualPair, RepDbAttribution } from "@/components/exercise-visual-pair";
+import { FreeAdaptiveSummary, type FreeAdaptiveGuidance } from "@/components/free-adaptive-summary";
 import { ProExerciseSuggestions, type ProExerciseSuggestionPayload } from "@/components/pro-exercise-suggestions";
 import { ProgramWeek } from "@/components/program-week";
+import { TrainingPrinciplesCard } from "@/components/training-principles-card";
+import { WorkoutLogForm } from "@/components/workout-log-form";
 import { getExerciseVisual } from "@/lib/exercise-visuals";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
-type ProgressionRule = { trigger?: string; action?: string };
+type ProgressionRule = {
+  trigger?: string;
+  action?: string;
+  increment_pct_low?: number | null;
+  increment_pct_high?: number | null;
+};
 type ItemAutoUpdate = { kind?: string; source_result_id?: string; result_code?: string; applied_at?: string };
 type TrainingProgramItem = {
   item_id: string;
@@ -155,6 +163,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     { data: trainingRaw },
     { data: accessRaw },
     { data: feedbackRaw },
+    { data: guidanceRaw },
   ] = await Promise.all([
     supabase.from("training_program_items").select("*").eq("program_id", program.program_id).order("training_day").order("display_order"),
     supabase.from("nutrition_targets").select("*").eq("program_id", program.program_id).maybeSingle(),
@@ -166,12 +175,15 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
       .eq("user_id", userId)
       .eq("program_id", program.program_id)
       .eq("entry_date", today),
+    supabase.rpc("get_my_free_training_guidance"),
   ]);
 
   const typedItems = (items ?? []) as TrainingProgramItem[];
   const snapshot = (program.goal_snapshot ?? {}) as GoalSnapshot;
   const baseline = (baselineRaw ?? null) as Baseline | null;
   const training = (trainingRaw ?? null) as TrainingProfile | null;
+  const guidance = (guidanceRaw ?? null) as FreeAdaptiveGuidance | null;
+  const guidanceMap = new Map((guidance?.items ?? []).map((item) => [item.item_id, item]));
   const isPro = accessRaw?.tier === "PRO";
   const proSuggestionResult = isPro ? await supabase.rpc("get_my_pro_exercise_suggestions") : null;
   const proSuggestions = (proSuggestionResult?.data ?? null) as ProExerciseSuggestionPayload | null;
@@ -234,6 +246,9 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">เซตหนักโดยตรงต่อสัปดาห์</div><h2>ปริมาณการฝึกรายสัปดาห์</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
 
+    <TrainingPrinciplesCard />
+    <FreeAdaptiveSummary guidance={guidance} />
+
     {isPro && <ProExerciseSuggestions data={proSuggestions} />}
 
     <ProgramWeek days={Number(snapshot.training_days_per_week ?? byDay.size)} focus={snapshot.primary_focus ?? "BALANCED"} dayLabels={dayLabels} />
@@ -244,25 +259,43 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
         <div className="kicker">วันที่ฝึก {day}</div><h2>{dayLabel}</h2>
         {dayItems.map((x) => {
           const label = x.metadata?.display_name ?? x.exercise_key;
-          const hasVisual = Boolean(getExerciseVisual(x.exercise_key));
           const updatedFromLab = Boolean(autoUpdate && x.metadata?.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" && x.metadata?.auto_update?.source_result_id === autoUpdate.source_result_id);
+          const itemGuidance = guidanceMap.get(x.item_id) ?? null;
           return <div key={x.item_id} style={{ borderBottom: "1px solid rgba(255,255,255,.07)", paddingBottom: 10 }}>
             <div className="exercise" style={{ borderBottom: 0 }}>
               <div style={{ minWidth: 0 }}>
                 {updatedFromLab && <small style={{ display: "block", marginBottom: 4 }}><strong>อัปเดตจาก LAB</strong></small>}
                 <strong>{label}</strong><br/>
                 <small>{x.metadata?.target_label ?? "ท่าฝึก"}{x.metadata?.focus_boost ? " · จุดเน้น" : ""}</small>
-                {x.metadata?.progression?.trigger && x.metadata?.progression?.action ? <p style={{ margin: "6px 0 0", fontSize: ".82rem" }}><strong>ถัดไป:</strong> {x.metadata.progression.trigger} → {x.metadata.progression.action}</p> : null}
                 {x.metadata?.alternative_name ? <p style={{ margin: "4px 0 0", fontSize: ".78rem", opacity: .72 }}>ตัวเลือก: {x.metadata.alternative_name}</p> : null}
               </div>
-              <div>{x.sets} × {x.rep_min}–{x.rep_max} · RIR {x.target_rir}</div>
+              <div style={{ textAlign: "right" }}>
+                <strong>{x.sets} × {x.rep_min}–{x.rep_max}</strong><br/>
+                <small>เหลือแรงประมาณ {x.target_rir} ครั้ง (RIR {x.target_rir})</small>
+              </div>
             </div>
-            {(hasVisual || isPro) && <details style={{ margin: "2px 0 8px" }}>
-              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>
-                {hasVisual && isPro ? "ดูท่า · บันทึกผล PRO" : hasVisual ? "ดูท่า" : "บันทึกผล PRO"}
-              </summary>
-              {hasVisual && <ExerciseVisualPair exerciseKey={x.exercise_key} label={label} />}
-              {isPro && <ExerciseFeedbackForm exerciseKey={x.exercise_key} label={label} initial={feedbackMap.get(x.exercise_key) ?? null} />}
+
+            <details style={{ margin: "2px 0 8px" }}>
+              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>ดูท่า</summary>
+              <ExerciseVisualPair exerciseKey={x.exercise_key} label={label} />
+            </details>
+
+            <details style={{ margin: "2px 0 8px" }}>
+              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>บันทึกการฝึก · ดูคำแนะนำครั้งถัดไป</summary>
+              <WorkoutLogForm
+                itemId={x.item_id}
+                label={label}
+                plannedSets={x.sets}
+                repMin={x.rep_min}
+                repMax={x.rep_max}
+                targetRir={x.target_rir}
+                guidance={itemGuidance}
+              />
+            </details>
+
+            {isPro && <details style={{ margin: "2px 0 8px" }}>
+              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>บันทึกผล PRO</summary>
+              <ExerciseFeedbackForm exerciseKey={x.exercise_key} label={label} initial={feedbackMap.get(x.exercise_key) ?? null} />
             </details>}
           </div>;
         })}
