@@ -21,6 +21,8 @@ type ProgressRow = {
   training_status: string | null;
   recovery_status: string | null;
   adherence_status: string | null;
+  training_adherence_status: string | null;
+  nutrition_adherence_status: string | null;
   new_issue: boolean | null;
   body_weight_kg: number | null;
   optional_note: string | null;
@@ -45,6 +47,12 @@ const adherenceStatusLabel: Record<string, string> = {
   LOW: "ทำได้น้อย",
 };
 
+const nutritionAdherenceLabel: Record<string, string> = {
+  HIGH: "ส่วนใหญ่ทำได้",
+  MEDIUM: "ประมาณครึ่งหนึ่ง",
+  LOW: "ทำได้ไม่ค่อยถึง",
+};
+
 function bangkokDate() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 }
@@ -58,7 +66,7 @@ export default async function ProgressPage(){
 
   const [{ data: summaryRaw }, { data: latestRaw }, { data: activeProgram }] = await Promise.all([
     supabase.rpc("get_my_progress_summary", { p_days: 30 }),
-    supabase.from("progress_entries").select("entry_date,training_completed,training_status,recovery_status,adherence_status,new_issue,body_weight_kg,optional_note,program_id").eq("user_id", userId).order("entry_date", { ascending:false }).limit(5),
+    supabase.from("progress_entries").select("entry_date,training_completed,training_status,recovery_status,adherence_status,training_adherence_status,nutrition_adherence_status,new_issue,body_weight_kg,optional_note,program_id").eq("user_id", userId).order("entry_date", { ascending:false }).limit(5),
     supabase.from("programs").select("program_id,program_version").eq("user_id", userId).eq("status", "ACTIVE").maybeSingle(),
   ]);
 
@@ -78,6 +86,9 @@ export default async function ProgressPage(){
       <div className="card"><div className="kicker">ปัญหาใหม่</div><div className="metric">{summary.new_issue_count ?? 0}</div><p>{(summary.entries_count ?? 0) < 3 ? "ข้อมูลยังน้อยเกินไปสำหรับดูแนวโน้ม" : "ดูแนวโน้มจากหลายครั้ง ไม่ตัดสินจากการเช็กอินเพียงครั้งเดียว"}</p></div>
     </div>
     <div style={{marginTop:18}}><ProgressForm hasActiveProgram={Boolean(activeProgram)} initial={todayRow}/></div>
-    {latest.length > 0 && <section className="card day"><h2>การเช็กอินล่าสุด</h2>{latest.map((x, i)=><div className="exercise" key={`${x.entry_date}-${i}`}><div><strong>{x.entry_date}</strong><br/><small>{x.training_status ? trainingStatusLabel[x.training_status] ?? x.training_status : "ยังไม่มีผลการฝึก"}</small></div><div>{x.body_weight_kg ? `${x.body_weight_kg} kg` : "–"} · {x.recovery_status ? recoveryStatusLabel[x.recovery_status] ?? x.recovery_status : "–"} · {x.adherence_status ? adherenceStatusLabel[x.adherence_status] ?? x.adherence_status : "–"}</div></div>)}</section>}
+    {latest.length > 0 && <section className="card day"><h2>การเช็กอินล่าสุด</h2>{latest.map((x, i)=>{
+      const trainingAdherence = x.training_adherence_status ?? x.adherence_status;
+      return <div className="exercise" key={`${x.entry_date}-${i}`}><div><strong>{x.entry_date}</strong><br/><small>{x.training_status ? trainingStatusLabel[x.training_status] ?? x.training_status : "ยังไม่มีผลการฝึก"}</small></div><div>{x.body_weight_kg ? `${x.body_weight_kg} kg` : "–"} · Recovery {x.recovery_status ? recoveryStatusLabel[x.recovery_status] ?? x.recovery_status : "–"}<br/><small>ฝึก: {trainingAdherence ? adherenceStatusLabel[trainingAdherence] ?? trainingAdherence : "–"} · อาหาร: {x.nutrition_adherence_status ? nutritionAdherenceLabel[x.nutrition_adherence_status] ?? x.nutrition_adherence_status : "–"}</small></div></div>;
+    })}</section>}
   </AppShell>;
 }
