@@ -134,11 +134,11 @@ export function WorkoutLogForm({
 
       <div style={{ display: "grid", gap: 8 }}>
         {rows.map((row, index) => (
-          <div key={index} style={{ display: "grid", gridTemplateColumns: "42px minmax(72px,1fr) minmax(72px,1fr) minmax(72px,1fr)", gap: 8, alignItems: "end" }}>
+          <div key={index} style={{ display: "grid", gridTemplateColumns: "30px repeat(3, minmax(0, 1fr))", gap: 6, alignItems: "end", minWidth: 0 }}>
             <strong style={{ paddingBottom: 10 }}>#{index + 1}</strong>
-            <label style={{ margin: 0 }}>กก.<input inputMode="decimal" value={row.load} onChange={(e) => updateRow(index, "load", e.target.value)} placeholder="–" /></label>
-            <label style={{ margin: 0 }}>ครั้ง<input inputMode="numeric" value={row.reps} onChange={(e) => updateRow(index, "reps", e.target.value)} placeholder={`${repMin}`} /></label>
-            <label style={{ margin: 0 }}>เหลือแรง<input inputMode="decimal" value={row.rir} onChange={(e) => updateRow(index, "rir", e.target.value)} placeholder={`${targetRir}`} /></label>
+            <label style={{ margin: 0, minWidth: 0 }}>กก.<input inputMode="decimal" value={row.load} onChange={(e) => updateRow(index, "load", e.target.value)} placeholder="–" /></label>
+            <label style={{ margin: 0, minWidth: 0 }}>ครั้ง<input inputMode="numeric" value={row.reps} onChange={(e) => updateRow(index, "reps", e.target.value)} placeholder={`${repMin}`} /></label>
+            <label style={{ margin: 0, minWidth: 0 }}>เหลือแรง<input inputMode="decimal" value={row.rir} onChange={(e) => updateRow(index, "rir", e.target.value)} placeholder={`${targetRir}`} /></label>
           </div>
         ))}
       </div>
