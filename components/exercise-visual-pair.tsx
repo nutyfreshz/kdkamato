@@ -2,7 +2,7 @@ import { getExerciseVisual } from "@/lib/exercise-visuals";
 
 function searchUrl(label: string) {
   const query = encodeURIComponent(`${label} exercise proper form`);
-  return `https://www.youtube.com/results?search_query=${query}`;
+  return `https://www.google.com/search?tbm=isch&q=${query}`;
 }
 
 export function ExerciseVisualPair({ exerciseKey, label }: { exerciseKey: string; label: string }) {
@@ -12,10 +12,10 @@ export function ExerciseVisualPair({ exerciseKey, label }: { exerciseKey: string
     return (
       <div style={{ marginTop: 10, maxWidth: 360 }}>
         <p style={{ margin: "0 0 8px" }}>
-          ท่านี้ยังไม่มีภาพ Start / End ใน KDKAMATO คุณสามารถเปิดตัวอย่างการเคลื่อนไหวที่ค้นหาไว้ให้แล้วได้ทันที
+          ท่านี้ยังไม่มีภาพ Start / End ใน KDKAMATO เปิดรูปตัวอย่างที่ค้นหาชื่อท่าไว้ให้แล้วได้ทันที
         </p>
         <a className="btn" href={searchUrl(label)} target="_blank" rel="noreferrer">
-          ดูตัวอย่างท่าบน YouTube
+          ดูรูปตัวอย่างท่าบน Google
         </a>
       </div>
     );

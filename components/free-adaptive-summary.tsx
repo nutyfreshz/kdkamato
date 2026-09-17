@@ -4,6 +4,7 @@ type NutritionGuidance = {
   weight_entries?: number | null;
   span_days?: number | null;
   weekly_weight_change_pct?: number | null;
+  nutrition_adherence_status?: string | null;
   calorie_low?: number | null;
   calorie_high?: number | null;
   protein_low_g?: number | null;
@@ -65,9 +66,11 @@ function nutritionText(nutrition?: NutritionGuidance | null) {
   const delta = Math.abs(Number(nutrition?.suggested_delta_kcal ?? 0));
   switch (nutrition?.code) {
     case "CHECK_INTAKE_UP":
-      return `ถ้าคุณกินใกล้ช่วงเป้าหมายได้สม่ำเสมอแล้ว ลองเพิ่มพลังงานประมาณ ${delta || 100} kcal/วัน แล้วติดตามแนวโน้มต่อ`;
+      return `ลองเพิ่มพลังงานประมาณ ${delta || 100} kcal/วัน แล้วติดตามแนวโน้มต่อ`;
     case "CHECK_INTAKE_DOWN":
-      return `ถ้าคุณกินใกล้ช่วงเป้าหมายได้สม่ำเสมอแล้ว ลองลดพลังงานประมาณ ${delta || 100} kcal/วัน แล้วติดตามแนวโน้มต่อ`;
+      return `ลองลดพลังงานประมาณ ${delta || 100} kcal/วัน แล้วติดตามแนวโน้มต่อ`;
+    case "CHECK_ADHERENCE_FIRST":
+      return "ยังไม่ต้องปรับแคลอรีจากตัวเลขน้ำหนักตอนนี้ ทำช่วงพลังงานเป้าหมายให้สม่ำเสมอก่อน แล้วค่อยดูแนวโน้มอีกครั้ง";
     case "KEEP":
       return "แนวโน้มน้ำหนักไปในทิศทางที่เหมาะกับเป้าหมาย ใช้ช่วงพลังงานเดิมต่อ";
     case "KEEP_MONITORING":

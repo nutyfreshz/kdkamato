@@ -16,6 +16,8 @@ function actionText(item?: FreeGuidanceItem | null) {
       return "เพิ่มความยากของท่าหรือเพิ่มน้ำหนักเล็กน้อยได้";
     case "READY_TO_PROGRESS":
       return "ถึงช่วงบนของจำนวนครั้งแล้ว ถ้าคุมท่าได้ดี ให้เพิ่มน้ำหนักเล็กน้อย";
+    case "CONFIRM_EFFORT":
+      return "ถึงช่วงบนของจำนวนครั้งแล้ว แต่ข้อมูล RIR หรือการคุมท่ายังไม่พอ ครั้งถัดไปคงน้ำหนักเดิมและบันทึกให้ครบก่อนเพิ่ม";
     case "HOLD_CONTROL":
       return "คงน้ำหนักเดิมก่อน แล้วทำให้ท่านิ่งและคุมช่วงลงได้ดีขึ้น";
     case "BUILD_REPS":
@@ -30,6 +32,8 @@ function actionText(item?: FreeGuidanceItem | null) {
       return "ยังไม่ต้องเร่ง progression มีสัญญาณจากหลายครั้งว่าควรทบทวนโปรแกรม";
     case "HOLD_RECOVERY":
       return "คงเดิมก่อน รอให้การฟื้นตัวกลับมาดีแล้วค่อยเพิ่มความหนัก";
+    case "HOLD_SESSION":
+      return "ผลการฝึกล่าสุดแย่ลง คงความหนักเดิมก่อน แล้วดูผลครั้งถัดไป";
     case "HOLD_EFFORT":
       return "ถึงจำนวนครั้งเป้าแล้ว แต่เซ็ตหนักเกินไป คงน้ำหนักเดิมก่อน";
     default:
