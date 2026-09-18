@@ -12,17 +12,38 @@ import './cinematic-seam-fixes.css';
 import { getLanguage } from '../lib/language';
 import { SiteMotion } from '../components/site-motion';
 
+const SITE_URL = 'https://kdkamato.vercel.app';
+
 export const metadata = {
   title: {
     default: 'KDKAMATO — Scientific Manga Universe',
     template: '%s | KDKAMATO'
   },
   description: 'Evidence-led fitness knowledge through Manga, deep-dive articles, interactive LAB tools, and training.',
-  metadataBase: new URL('https://kdkamato.com'),
+  applicationName: 'KDKAMATO',
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: 'KDKAMATO — Scientific Manga Universe',
     description: 'Manga. Knowledge. LAB. Training.',
-    type: 'website'
+    type: 'website',
+    url: SITE_URL,
+    siteName: 'KDKAMATO'
+  },
+  twitter: {
+    card: 'summary',
+    title: 'KDKAMATO — Scientific Manga Universe',
+    description: 'Evidence-led fitness knowledge through Manga, deep-dive articles, interactive LAB tools, and training.'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1
+    }
   }
 };
 
