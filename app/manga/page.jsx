@@ -4,7 +4,12 @@ import { getManga } from '../../lib/content';
 import { getLanguage } from '../../lib/language';
 import { localizedField } from '../../lib/localize';
 
-export const metadata = { title: 'Manga' };
+export const metadata = {
+  title: 'Manga',
+  description: 'รวม KDKAMATO Manga ฟิตเนสสายวิทยาศาสตร์ทุกตอนที่เผยแพร่แล้ว',
+  alternates: { canonical: '/manga' },
+  openGraph: { title: 'Manga | KDKAMATO', description: 'Evidence-led fitness Manga from KDKAMATO.', url: '/manga', siteName: 'KDKAMATO' }
+};
 export const revalidate = 300;
 
 export default async function MangaLibrary() {
