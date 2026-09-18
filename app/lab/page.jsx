@@ -4,7 +4,9 @@ import { getLanguage } from '../../lib/language';
 
 export const metadata = {
   title: 'KDKAMATO LAB',
-  description: 'Simple fitness and body-structure tools: measure once, reuse the result, and apply it to a clear question.'
+  description: 'Simple fitness and body-structure tools: measure once, reuse the result, and apply it to a clear question.',
+  alternates: { canonical: '/lab' },
+  openGraph: { title: 'KDKAMATO LAB', description: 'Interactive fitness and body-structure tools from KDKAMATO.', url: '/lab', siteName: 'KDKAMATO' }
 };
 
 const content = {
