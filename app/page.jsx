@@ -3,6 +3,7 @@ import HomePage from '../components/HomePage';
 import { getArticles, getManga } from '../lib/content';
 import { getLanguage } from '../lib/language';
 
+export const metadata = { alternates: { canonical: '/' } };
 export const revalidate = 300;
 
 export default async function Page() {
