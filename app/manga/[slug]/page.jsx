@@ -47,7 +47,7 @@ export default async function MangaEpisode({ params }) {
     url: `https://kdkamato.vercel.app/manga/${slug}`,
     datePublished: episode.Publish_Date || undefined,
     image: episode.cover?.url ? `https://kdkamato.vercel.app${episode.cover.url}` : undefined,
-    publisher: { '@type': 'Organization', name: 'KDKAMATO' },
+    publisher: { '@type': 'Organization', name: 'KDKAMATO', logo: { '@type': 'ImageObject', url: 'https://kdkamato.vercel.app/icon.svg' } },
     inLanguage: language === 'en' ? 'en' : 'th'
   };
 
