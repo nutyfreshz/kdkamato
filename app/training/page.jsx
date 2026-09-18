@@ -2,7 +2,12 @@ import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import { getLanguage } from '../../lib/language';
 
-export const metadata = { title: 'Training' };
+export const metadata = {
+  title: 'Training',
+  description: 'เปลี่ยนความรู้ฟิตเนสให้เป็นโปรแกรมฝึกที่นำไปใช้และติดตามผลได้กับ KDKAMATO.',
+  alternates: { canonical: '/training' },
+  openGraph: { title: 'Training | KDKAMATO', description: 'Turn evidence-led fitness knowledge into application.', url: '/training', siteName: 'KDKAMATO' }
+};
 
 export default async function TrainingPage() {
   const language = await getLanguage();
