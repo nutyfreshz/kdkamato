@@ -48,13 +48,16 @@ export default async function ArticlePage({ params }) {
   const description = localizedField(article, 'Summary', language);
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: title,
+    '@type': 'WebPage',
+    name: title,
     description,
-    datePublished: article.Publish_Date || undefined,
-    mainEntityOfPage: `https://kdkamato.vercel.app/knowledge/${slug}`,
+    url: `https://kdkamato.vercel.app/knowledge/${slug}`,
     author: { '@type': 'Person', name: 'Kendo' },
-    publisher: { '@type': 'Organization', name: 'KDKAMATO' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'KDKAMATO',
+      logo: { '@type': 'ImageObject', url: 'https://kdkamato.vercel.app/icon.svg' }
+    },
     inLanguage: language === 'en' ? 'en' : 'th'
   };
 
