@@ -6,13 +6,19 @@ import { localizedField } from '../../../lib/localize';
 
 export const revalidate = 300;
 
+function toMetaDescription(value = '') {
+  const text = String(value).replace(/\s+/g, ' ').trim();
+  if (text.length <= 155) return text;
+  return text.slice(0, 152).replace(/\s+\S*$/, '').trimEnd() + '...';
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const episode = await getMangaBySlug(slug).catch(() => null);
   if (!episode) return { title: 'Manga' };
 
   const title = localizedField(episode, 'Title', 'th') || episode.Episode_ID || 'KDKAMATO Manga';
-  const description = localizedField(episode, 'Short_Description', 'th') || 'Evidence-led fitness Manga from KDKAMATO.';
+  const description = toMetaDescription(localizedField(episode, 'Short_Description', 'th') || 'Evidence-led fitness Manga from KDKAMATO.');
   const canonical = `/manga/${slug}`;
   const images = episode.cover?.url ? [episode.cover.url] : undefined;
 
