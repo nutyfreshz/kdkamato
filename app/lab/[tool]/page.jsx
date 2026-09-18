@@ -21,7 +21,20 @@ export async function generateMetadata({ params }) {
   const language = await getLanguage();
   const { tool: toolSlug } = await params;
   const tool = tools[toolSlug];
-  return tool ? tool[language] : { title: 'KDKAMATO LAB' };
+  if (!tool) return { title: 'KDKAMATO LAB' };
+  const localized = tool[language];
+  const canonical = `/lab/${toolSlug}`;
+  return {
+    ...localized,
+    alternates: { canonical },
+    openGraph: {
+      title: localized.title,
+      description: localized.description,
+      url: canonical,
+      siteName: 'KDKAMATO',
+      type: 'website'
+    }
+  };
 }
 
 export default async function Page({ params }) {
