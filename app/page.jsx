@@ -6,6 +6,18 @@ import { getLanguage } from '../lib/language';
 export const metadata = { alternates: { canonical: '/' } };
 export const revalidate = 300;
 
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'KDKAMATO',
+  url: 'https://kdkamato.vercel.app/',
+  publisher: {
+    '@type': 'Organization',
+    name: 'KDKAMATO',
+    logo: { '@type': 'ImageObject', url: 'https://kdkamato.vercel.app/icon.svg' }
+  }
+};
+
 export default async function Page() {
   const language = await getLanguage();
   const [manga, articles] = await Promise.all([
@@ -18,6 +30,7 @@ export default async function Page() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(websiteJsonLd).replace(/</g, '\\u003c')}} />
       <SiteHeader language={language} />
       <HomePage manga={manga} articles={articles} language={language} />
       <footer className="footer shell">
