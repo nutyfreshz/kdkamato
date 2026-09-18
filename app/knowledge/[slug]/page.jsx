@@ -7,13 +7,19 @@ import { localizedField } from '../../../lib/localize';
 
 export const revalidate = 300;
 
+function toMetaDescription(value = '') {
+  const text = String(value).replace(/\s+/g, ' ').trim();
+  if (text.length <= 155) return text;
+  return text.slice(0, 152).replace(/\s+\S*$/, '').trimEnd() + '...';
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug).catch(() => null);
   if (!article) return { title: 'Knowledge' };
 
   const title = localizedField(article, 'Title', 'th') || 'KDKAMATO Knowledge';
-  const description = localizedField(article, 'Summary', 'th') || 'Evidence-led fitness knowledge from KDKAMATO.';
+  const description = toMetaDescription(localizedField(article, 'Summary', 'th') || 'Evidence-led fitness knowledge from KDKAMATO.');
   const canonical = `/knowledge/${slug}`;
 
   return {
@@ -52,5 +58,5 @@ export default async function ArticlePage({ params }) {
     inLanguage: language === 'en' ? 'en' : 'th'
   };
 
-  return <><SiteHeader language={language}/><main className="article-page shell"><script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd).replace(/</g, '\\u003c')}}/><header><p className="eyebrow">{localizedField(article, 'Topic', language)}</p><h1>{title}</h1><p className="article-summary">{description}</p><p className="meta">{article.Publish_Date}</p></header><article className="prose"><ReactMarkdown>{localizedField(article, 'Body_MD', language) || ''}</ReactMarkdown></article>{article.References ? <section className="references"><h2>{language === 'en' ? 'References' : 'เอกสารอ้างอิง'}</h2><ReactMarkdown>{article.References}</ReactMarkdown></section> : null}</main></>;
+  return <><SiteHeader language={language}/><main className="article-page shell"><script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd).replace(/</g, '\\u003c')}}/><header><p className="eyebrow">{localizedField(article, 'Topic', language)}</p><h1>{title}</h1><p className="article-summary">{description}</p><p className="meta">{article.Publish_Date}</p></header><article className="prose"><ReactMarkdown components={{h1: ({node, ...props}) => <h2 {...props}/>}}>{localizedField(article, 'Body_MD', language) || ''}</ReactMarkdown></article>{article.References ? <section className="references"><h2>{language === 'en' ? 'References' : 'เอกสารอ้างอิง'}</h2><ReactMarkdown>{article.References}</ReactMarkdown></section> : null}</main></>;
 }
