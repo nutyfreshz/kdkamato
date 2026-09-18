@@ -4,7 +4,12 @@ import { getArticles } from '../../lib/content';
 import { getLanguage } from '../../lib/language';
 import { localizedField } from '../../lib/localize';
 
-export const metadata = { title: 'Knowledge' };
+export const metadata = {
+  title: 'Knowledge',
+  description: 'บทความฟิตเนสเชิงลึกจาก KDKAMATO อธิบายหลักฐาน กลไก ข้อจำกัด และการนำไปใช้จริง',
+  alternates: { canonical: '/knowledge' },
+  openGraph: { title: 'Knowledge | KDKAMATO', description: 'Evidence-led fitness deep dives from KDKAMATO.', url: '/knowledge', siteName: 'KDKAMATO' }
+};
 export const revalidate = 300;
 
 export default async function KnowledgePage() {
