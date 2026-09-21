@@ -99,7 +99,21 @@ PASS:
 
 ### Database E2E
 
-Not run in this patch session because isolated project `dgazltepkniwqqbxvksp` remained in `COMING_UP/RESTORING` after restore was requested.
+PASS on isolated project `dgazltepkniwqqbxvksp`.
+
+Validated:
+
+- Existing FAT_LOSS snapshot with mild stall: `AUTO_CANDIDATE_SHADOW → NUTRITION → ADJUST_CALORIES → -200 → DEFAULT_200`.
+- Strong synthetic FAT_LOSS trend `+0.42%/week`: `-300 → STRONG_300`.
+- Validator accepts `-200` and `-300`.
+- Validator blocks legacy `-100` with `BLOCKED_DELTA_OUTSIDE_BOUND`.
+- Stale snapshot remains blocked with `BLOCKED_SNAPSHOT_PROGRAM_STALE`.
+- Fresh snapshot on active Program v3: execution gate returned `EXECUTION_READY` with both authorization flags true.
+- Auto-write returned `AUTO_WRITE_APPLIED`.
+- Program v4 was created from v3.
+- Nutrition target changed `2050–2150 → 1850–1950 kcal/day` exactly `-200 kcal/day`.
+- Decision audit persisted `DEFAULT_200` and the V2 validator payload.
+- Published consult report returned `ADAPT` and rendered `200 kcal/day` dynamically.
 
 Production project `lmyofrjwmwhuppvejgfx` was not modified.
 
