@@ -10,32 +10,32 @@ import { localizedField } from '../lib/localize';
 
 const copy = {
   th: {
-    heroTitle: <>สิ่งที่คุณเห็นเป็นเพียง<span>ปลายทาง</span></>,
-    heroLede: 'เบื้องหลังร่างกายที่เปลี่ยนไป คือการฝึก สัญญาณในร่างกาย การตอบสนองระดับเซลล์ โภชนาการ และการฟื้นตัว',
-    enter: 'เลื่อนสำรวจเบื้องหลังร่างกาย',
+    heroTitle: <>รู้ว่าควรฝึกอะไร<br/>และรู้ว่า<span>ควรทำอะไรต่อ</span></>,
+    heroLede: 'KDKAMATO ช่วยวางแผนการฝึกจากเป้าหมาย เวลาที่มี และอุปกรณ์ของคุณ แล้วใช้ผลการฝึกจริงช่วยบอกว่าครั้งต่อไปควรคง เพิ่ม หรือลดอะไร',
+    enter: 'เลื่อนดูว่าระบบช่วยตัดสินใจอย่างไร',
     latestEyebrow: 'MANGA / ตอนล่าสุด', latestTitle: <>ตอนล่าสุดจาก KDKAMATO</>, readEpisode: 'อ่านตอนนี้', viewManga: 'ดู MANGA ทั้งหมด',
     noMangaTitle: 'พื้นที่แสดง Manga ที่เผยแพร่แล้ว', noMangaText: 'ตอนที่เผยแพร่แล้วจะแสดงที่นี่โดยอัตโนมัติ', waiting: 'รอตอนใหม่',
-    knowledgeTitle: <>เข้าใจให้ลึกกว่าเดิม</>, knowledgeIntro: 'บทความที่อธิบายหลักฐาน กลไก และการนำไปใช้ โดยไม่ลดทอนความซับซ้อนของวิทยาศาสตร์', read: 'อ่าน', explore: 'ดูบทความ',
+    knowledgeTitle: <>เข้าใจเหตุผลเบื้องหลัง</>, knowledgeIntro: 'เมื่ออยากรู้ว่าทำไมคำแนะนำบางอย่างถึงใช้ได้ บทความจะพาไปดูหลักฐาน กลไก และการนำไปใช้ด้วยภาษาที่เข้าใจง่าย โดยไม่ลดทอนความหมายทางวิทยาศาสตร์', read: 'อ่าน', explore: 'ดูบทความ',
     noArticleTitle: 'พื้นที่สำหรับบทความที่พร้อมใช้งาน', noArticleText: 'บทความเชิงลึกเผยแพร่แยกจาก Manga จึงไม่จำเป็นต้องมีบทความคู่กับทุกตอน',
-    labTitle: <>ลองใช้ข้อมูลของคุณ</>, labIntro: 'เริ่มจากคำถามที่อยากรู้ กรอกค่าที่วัดได้ แล้วดูว่าค่าเหล่านั้นส่งผลต่อการจัดท่า สัดส่วน หรือการตีความอย่างไร โดยไม่ต้องรู้ศัพท์เฉพาะทางมาก่อน',
+    labTitle: <>เมื่อท่าฝึกรู้สึกไม่เข้ากับตัวเอง</>, labIntro: 'เริ่มจากคำถามที่เจอจริง วัดเฉพาะข้อมูลที่จำเป็น แล้วดูว่า Setup หรือทางเลือกแบบไหนควรลองต่อในการฝึกจริง โดยไม่ต้องรู้ศัพท์เฉพาะทางมาก่อน',
     c1: 'ทำไมบางท่าถึงรู้สึกไม่เข้ากับโครงสร้างร่างกายของคุณ?', c2: 'ท่า Squat แบบไหนควรลองก่อน?', c3: 'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V (V-shape) จะเปลี่ยนอย่างไร?',
-    trainingTitle: <>เปลี่ยนความรู้ให้เป็นการลงมือทำ</>, trainingText: 'ตั้งค่าโปรแกรมฝึกจากเป้าหมาย เวลาฝึก และอุปกรณ์ของคุณ แล้วติดตามผลการฝึกต่อได้', trainingCta: 'ดู TRAINING',
+    trainingTitle: <>จาก Program<br/>สู่การตัดสินใจ<br/>ครั้งต่อไป</>, trainingText: 'ตั้งค่า Program จากเป้าหมาย เวลาที่มี และอุปกรณ์ของคุณ แล้วบันทึกผลที่ทำได้จริงหลังฝึก ระบบจะช่วยบอกว่าครั้งต่อไปควรเพิ่มน้ำหนัก เพิ่มจำนวนครั้ง คงไว้ หรือทบทวนบางอย่างก่อน', trainingCta: 'เริ่ม TRAINING ฟรี',
     kendoTitle: <>คนจริงเบื้องหลัง KDKAMATO</>, kendoText: 'หลักฐาน ประสบการณ์ และการนำไปใช้',
-    portal: <>อยากดูอะไรต่อ?</>
+    portal: <>ตอนนี้อยากแก้โจทย์ไหนต่อ?</>
   },
   en: {
-    heroTitle: <>WHAT YOU SEE<br/>IS ONLY THE<br/><span>OUTCOME.</span></>,
-    heroLede: 'The visible body is the end of a process shaped by training, signaling, cellular response, nutrition, and recovery.',
-    enter: 'SCROLL TO EXPLORE',
+    heroTitle: <>KNOW WHAT TO TRAIN.<br/>KNOW WHAT TO DO<span>NEXT.</span></>,
+    heroLede: 'KDKAMATO builds your training around your goal, available time, and equipment, then uses your real training results to help guide what to keep, increase, or reduce next.',
+    enter: 'SCROLL TO SEE HOW DECISIONS GET MADE',
     latestEyebrow: 'MANGA / LATEST', latestTitle: <>LATEST<br/>FROM THE UNIVERSE</>, readEpisode: 'READ EPISODE', viewManga: 'VIEW ALL MANGA',
     noMangaTitle: 'YOUR PUBLISHED MANGA LIBRARY', noMangaText: 'Published episodes will appear here automatically.', waiting: 'Waiting for published content',
-    knowledgeTitle: <>GO<br/>DEEPER.</>, knowledgeIntro: 'Evidence, mechanisms, and practical meaning behind the stories, explained without flattening the science.', read: 'READ', explore: 'EXPLORE',
+    knowledgeTitle: <>UNDERSTAND<br/>THE WHY.</>, knowledgeIntro: 'When you want to understand why a recommendation makes sense, go deeper into the evidence, mechanisms, and practical meaning without flattening the science.', read: 'READ', explore: 'EXPLORE',
     noArticleTitle: 'ARTICLE LIBRARY READY', noArticleText: 'Deep dives publish independently. Daily Manga does not require a matching article.',
-    labTitle: <>TEST<br/>YOURSELF.</>, labIntro: 'Start with a question, enter measurements you can actually take, and see how they change movement, proportions, or interpretation without needing technical vocabulary first.',
+    labTitle: <>WHEN AN EXERCISE<br/>DOESN’T FIT.</>, labIntro: 'Start with the problem you actually feel, measure only what matters, and see which setup or alternative is worth testing next in real training.',
     c1: 'Why do some exercises feel awkward for your structure?', c2: 'Which Squat setup is worth testing first?', c3: 'Want a stronger V-shape? What should change?',
-    trainingTitle: <>KNOWLEDGE<br/>INTO<br/>APPLICATION.</>, trainingText: 'Set your training goal, time, and equipment to build your program, then keep tracking how it goes.', trainingCta: 'EXPLORE TRAINING',
+    trainingTitle: <>FROM PROGRAM<br/>TO THE<br/>NEXT DECISION.</>, trainingText: 'Build your program around your goal, time, and equipment. Log what actually happened, then use the guidance to decide whether to add load, build reps, hold steady, or review something first.', trainingCta: 'START TRAINING FREE',
     kendoTitle: <>THE HUMAN<br/>BEHIND<br/>KDKAMATO.</>, kendoText: 'Evidence. Experience. Application.',
-    portal: <>WHERE DO YOU<br/>WANT TO GO NEXT?</>
+    portal: <>WHAT DO YOU WANT<br/>TO SOLVE NEXT?</>
   }
 };
 
