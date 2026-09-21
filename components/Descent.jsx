@@ -3,23 +3,23 @@
 
 const content = {
   th: [
-    { image: '/assets/a02_body.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 01', title: <>การฝึกเป็นสิ่งที่<br/>มองเห็นได้</> },
-    { image: '/assets/a03_signal.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 02', title: <>แต่สัญญาณที่ร่างกายได้รับ<br/>อาจมองไม่เห็น</> },
-    { image: '/assets/a04_cell.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 03', title: <>การปรับตัวเริ่มจากภายใน</> },
-    { image: '/assets/a05_tissue.webp', eyebrow: 'ใต้สิ่งที่มองเห็น / 04', title: <>สำรวจว่ามันเกิดขึ้นอย่างไร</> }
+    { image: '/assets/a02_body.webp', eyebrow: 'จากการฝึกสู่การตัดสินใจ / 01', title: <>สิ่งที่ทำในการฝึก<br/>มองเห็นได้</> },
+    { image: '/assets/a03_signal.webp', eyebrow: 'จากการฝึกสู่การตัดสินใจ / 02', title: <>แต่ร่างกายตอบสนอง<br/>มากกว่าที่มองเห็น</> },
+    { image: '/assets/a04_cell.webp', eyebrow: 'จากการฝึกสู่การตัดสินใจ / 03', title: <>ผลลัพธ์เกิดจากการปรับตัว<br/>ที่สะสมจากภายใน</> },
+    { image: '/assets/a05_tissue.webp', eyebrow: 'จากการฝึกสู่การตัดสินใจ / 04', title: <>จึงควรตัดสินใจจากข้อมูล<br/>ไม่ใช่การเดา</> }
   ],
   en: [
-    { image: '/assets/a02_body.webp', eyebrow: 'BENEATH THE SURFACE / 01', title: <>TRAINING<br/>IS VISIBLE.</> },
-    { image: '/assets/a03_signal.webp', eyebrow: 'BENEATH THE SURFACE / 02', title: <>THE SIGNAL<br/>ISN&apos;T.</> },
-    { image: '/assets/a04_cell.webp', eyebrow: 'BENEATH THE SURFACE / 03', title: <>ADAPTATION<br/>HAPPENS HERE.</> },
-    { image: '/assets/a05_tissue.webp', eyebrow: 'BENEATH THE SURFACE / 04', title: <>WE GO<br/>INSIDE.</> }
+    { image: '/assets/a02_body.webp', eyebrow: 'FROM TRAINING TO DECISIONS / 01', title: <>WHAT YOU DO<br/>IS VISIBLE.</> },
+    { image: '/assets/a03_signal.webp', eyebrow: 'FROM TRAINING TO DECISIONS / 02', title: <>YOUR BODY RESPONDS<br/>BEYOND WHAT YOU SEE.</> },
+    { image: '/assets/a04_cell.webp', eyebrow: 'FROM TRAINING TO DECISIONS / 03', title: <>RESULTS COME FROM<br/>ADAPTATION OVER TIME.</> },
+    { image: '/assets/a05_tissue.webp', eyebrow: 'FROM TRAINING TO DECISIONS / 04', title: <>MAKE THE NEXT DECISION<br/>FROM DATA, NOT GUESSWORK.</> }
   ]
 };
 
 export default function Descent({ language = 'th' }) {
   const stages = content[language] || content.th;
   return (
-    <section className="descent" id="descent" aria-label={language === 'en' ? 'Beneath the surface' : 'สิ่งที่เกิดขึ้นใต้สิ่งที่มองเห็น'}>
+    <section className="descent" id="descent" aria-label={language === 'en' ? 'From training to decisions' : 'จากการฝึกสู่การตัดสินใจ'}>
       <div className="descent-sticky">
         <div className="descent-media" aria-hidden="true">
           {stages.map((item, index) => (
