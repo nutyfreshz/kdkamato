@@ -8,7 +8,7 @@ import { hasSupabaseEnv } from "@/lib/supabase/config";
 
 export const metadata = { title: "ตัวอย่างโปรแกรม" };
 
-const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.3";
+const SUPPORTED_ENGINE_VERSIONS = new Set(["FREE_ENGINE_V1.2", "FREE_ENGINE_V1.3"]);
 const EXPECTED_CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
 
 type ProgressionRule = {
@@ -137,7 +137,7 @@ function validPreview(data: unknown): data is PreviewData {
   if (!data || typeof data !== "object") return false;
   const x = data as Partial<PreviewData>;
   if (x.contract_version !== EXPECTED_CONTRACT_VERSION) return false;
-  if (x.engine_version !== EXPECTED_ENGINE_VERSION) return false;
+  if (!x.engine_version || !SUPPORTED_ENGINE_VERSIONS.has(x.engine_version)) return false;
   if (typeof x.program_fingerprint !== "string" || !/^[a-f0-9]{64}$/.test(x.program_fingerprint)) return false;
   if (typeof x.family !== "string" || typeof x.focus !== "string" || typeof x.focus_label !== "string") return false;
   if (!Number.isInteger(Number(x.days)) || Number(x.days) < 2 || Number(x.days) > 6) return false;
