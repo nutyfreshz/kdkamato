@@ -599,8 +599,8 @@ function buildActivityTarget(b, n) {
     };
   }
 
-  const cardioTargetLow = currentCardio >= 150 ? currentCardio : Math.min(150, currentCardio + 60);
-  const cardioTargetHigh = currentCardio >= 300 ? currentCardio : Math.min(300, cardioTargetLow + 60);
+  const cardioTargetLow = currentCardio >= 150 ? currentCardio : Math.min(150, currentCardio + 30);
+  const cardioTargetHigh = currentCardio >= 150 ? currentCardio : Math.min(150, currentCardio + 60);
 
   return {
     mode: "FAT_LOSS_ACTIVITY_TARGET",
