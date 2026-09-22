@@ -1,6 +1,6 @@
 import { EXERCISE_POOLS } from "./exercise-catalog.mjs";
 
-export const ENGINE_VERSION = "FREE_ENGINE_V1.2";
+export const ENGINE_VERSION = "FREE_ENGINE_V1.3";
 
 const FOCUS_LABELS = {
   BALANCED: "Balanced",
@@ -582,6 +582,84 @@ function calculateEnergy(b, n, t, days) {
   };
 }
 
+function buildActivityTarget(b, n) {
+  const goal = String(b?.goal ?? "");
+  const currentSteps = numeric(n?.average_steps);
+  const currentCardio = Math.max(0, numeric(n?.cardio_minutes_per_week) ?? 0);
+
+  if (goal !== "FAT_LOSS") {
+    return {
+      mode: "MAINTAIN_BASELINE_ACTIVITY",
+      step_floor: currentSteps,
+      cardio_current_min_week: currentCardio,
+      cardio_target_min_week: currentCardio,
+      cardio_target_max_week: currentCardio,
+      review_after_days: 14,
+      one_variable_rule: true,
+    };
+  }
+
+  const cardioTargetLow = currentCardio >= 150 ? currentCardio : Math.min(150, currentCardio + 60);
+  const cardioTargetHigh = currentCardio >= 300 ? currentCardio : Math.min(300, cardioTargetLow + 60);
+
+  return {
+    mode: "FAT_LOSS_ACTIVITY_TARGET",
+    step_floor: currentSteps,
+    cardio_current_min_week: currentCardio,
+    cardio_target_min_week: cardioTargetLow,
+    cardio_target_max_week: cardioTargetHigh,
+    intensity_basis: "MODERATE_EQUIVALENT",
+    review_after_days: 14,
+    escalation_cardio_min_week: 30,
+    escalation_cardio_max_week: 60,
+    escalation_weight_change_pct_per_week_threshold: -0.20,
+    nutrition_adherence_required: "HIGH",
+    one_variable_rule: true,
+  };
+}
+
+function buildProgressStrategy(goal) {
+  if (goal === "FAT_LOSS") {
+    return {
+      mode: "FAT_LOSS",
+      review_after_days: 14,
+      weight_change_pct_per_week: { min: -1.00, max: -0.20 },
+      training_status_keep: ["BETTER", "SAME"],
+      nutrition_adherence_required: "HIGH",
+      primary_decision: "WEIGHT_TREND_WITH_TRAINING_PRESERVATION",
+    };
+  }
+  if (goal === "MUSCLE_GAIN") {
+    return {
+      mode: "MUSCLE_GAIN",
+      review_after_days: 14,
+      weight_change_pct_per_week: { min: 0.00, max: 0.50 },
+      training_status_keep: ["BETTER", "SAME"],
+      nutrition_adherence_required: "HIGH",
+      primary_decision: "PERFORMANCE_WITH_CONTROLLED_WEIGHT_GAIN",
+    };
+  }
+  if (goal === "RECOMPOSITION") {
+    return {
+      mode: "RECOMPOSITION",
+      review_after_days: 14,
+      weight_change_pct_per_week: { min: -0.25, max: 0.25 },
+      training_status_keep: ["BETTER", "SAME"],
+      recovery_status_block: "POOR",
+      nutrition_adherence_required: "HIGH",
+      primary_decision: "WEIGHT_STABILITY_WITH_TRAINING_PROGRESS",
+      automatic_calorie_adjustment: false,
+    };
+  }
+  return {
+    mode: "GENERAL_FITNESS",
+    review_after_days: 14,
+    weight_change_pct_per_week: null,
+    training_status_keep: ["BETTER", "SAME"],
+    primary_decision: "TRAINING_RESPONSE_AND_RECOVERY",
+  };
+}
+
 function nextRule(exercise, repMax, targetRir) {
   const rule = exercise.load_rule;
   if (rule.mode === "VARIATION_OR_LOAD") {
@@ -673,6 +751,8 @@ export function buildFreeProgram(b, n = null, t = null) {
   const proteinLowG = Number.isFinite(weightKg) ? Math.round(weightKg * 1.6) : null;
   const proteinHighG = Number.isFinite(weightKg) ? Math.round(weightKg * 2.0) : null;
   const energy = calculateEnergy(b, n, t, days);
+  const activityTarget = buildActivityTarget(b, n);
+  const progressStrategy = buildProgressStrategy(b.goal);
   const family = familyName(days);
   const focusLabel = FOCUS_LABELS[focus];
 
@@ -712,6 +792,8 @@ export function buildFreeProgram(b, n = null, t = null) {
     program_family: family,
     weekly_volume: weeklyVolume,
     decision_trace: decisionTrace,
+    activity_target: activityTarget,
+    progress_strategy: progressStrategy,
     energy_estimate: { confidence: energy.estimate_confidence, basis: energy.basis, missing_inputs: energy.missing_inputs },
   };
 
@@ -731,6 +813,8 @@ export function buildFreeProgram(b, n = null, t = null) {
       "Starting bodybuilding prescription; observed response has authority over the starting dose.",
       "Focus changes direct weekly sets and exercise allocation; it is not random variation.",
       "Lab data is reserved for PRO candidate ranking and never overrides actual exercise response.",
+      ...(b.goal === "FAT_LOSS" ? ["Fat-loss activity target preserves measured steps and progresses aerobic work gradually instead of relying on calorie cuts alone."] : []),
+      ...(b.goal === "RECOMPOSITION" ? ["Recomposition uses weight stability plus training response as the progress signal; it is not treated as a smaller fat-loss plan."] : []),
       ...(focus === "REPOSTURE" ? ["Reposture is an upper-back / scapular / rotator-cuff training emphasis, not a diagnosis or rehabilitation plan."] : []),
     ],
   };
