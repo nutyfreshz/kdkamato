@@ -8,7 +8,7 @@ import { hasSupabaseEnv } from "@/lib/supabase/config";
 
 export const metadata = { title: "ตัวอย่างโปรแกรม" };
 
-const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.2";
+const EXPECTED_ENGINE_VERSION = "FREE_ENGINE_V1.3";
 const EXPECTED_CONTRACT_VERSION = "FREE_PROGRAM_CONTRACT_V1";
 
 type ProgressionRule = {
@@ -16,6 +16,24 @@ type ProgressionRule = {
   action?: string;
   increment_pct_low?: number | null;
   increment_pct_high?: number | null;
+};
+
+type ActivityTarget = {
+  mode?: string;
+  step_floor?: number | null;
+  cardio_current_min_week?: number | null;
+  cardio_target_min_week?: number | null;
+  cardio_target_max_week?: number | null;
+  review_after_days?: number;
+};
+
+type ProgressStrategy = {
+  mode?: string;
+  review_after_days?: number;
+  weight_change_pct_per_week?: { min?: number; max?: number } | null;
+  training_status_keep?: string[];
+  primary_decision?: string;
+  automatic_calorie_adjustment?: boolean;
 };
 
 type PreviewItem = {
@@ -45,6 +63,8 @@ type GoalSnapshot = {
   primary_focus: string;
   focus_label: string;
   session_duration_min: number;
+  activity_target?: ActivityTarget;
+  progress_strategy?: ProgressStrategy;
 };
 
 type PreviewData = {
@@ -81,6 +101,26 @@ const valueLabel: Record<string, string> = {
   BEGINNER: "เริ่มต้น", INTERMEDIATE: "ระดับกลาง", EXPERIENCED: "มีประสบการณ์",
   FULL_GYM: "ฟิตเนสครบวงจร", LIMITED_GYM: "ฟิตเนสจำกัดอุปกรณ์", HOME_BASIC: "อุปกรณ์พื้นฐานที่บ้าน",
 };
+
+function signedPct(value: number | undefined) {
+  if (value == null || !Number.isFinite(value)) return "–";
+  return `${value > 0 ? "+" : ""}${value.toFixed(2)}%`;
+}
+
+function progressStrategyCopy(strategy?: ProgressStrategy) {
+  if (!strategy) return null;
+  const band = strategy.weight_change_pct_per_week;
+  if (strategy.mode === "RECOMPOSITION" && band) {
+    return `คุมน้ำหนักเฉลี่ยให้อยู่ราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมรักษาหรือเพิ่ม performance การฝึก หากน้ำหนักนิ่งแต่แรงดีขึ้นถือว่า Program เดินถูกทาง`;
+  }
+  if (strategy.mode === "FAT_LOSS" && band) {
+    return `ติดตามน้ำหนักเฉลี่ยราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ โดยไม่แลกกับ performance ที่แย่ลงชัดเจน`;
+  }
+  if (strategy.mode === "MUSCLE_GAIN" && band) {
+    return `ให้น้ำหนักเพิ่มอย่างควบคุมราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมดู progression ของการฝึกเป็นหลัก`;
+  }
+  return "ติดตามผลการฝึก การฟื้นตัว และความสม่ำเสมอเป็นหลัก โดยไม่บังคับเปลี่ยนน้ำหนัก";
+}
 
 async function edgeErrorPayload(error: unknown) {
   if (!error || typeof error !== "object" || !("context" in error)) return null;
@@ -207,6 +247,20 @@ export default async function ProgramPreviewPage({ searchParams }: { searchParam
       <div className="card"><div className="kicker">โปรตีน (กรัม/วัน)</div><div className="metric">{preview.nutrition_target.protein_low_g}–{preview.nutrition_target.protein_high_g} g</div></div>
       <div className="card"><div className="kicker">พลังงาน (กิโลแคลอรี/วัน)</div><div className="metric" style={{ fontSize: "1.15rem" }}>{energyReady ? `${preview.nutrition_target.calorie_low}–${preview.nutrition_target.calorie_high} kcal` : "กำลังปรับเทียบ"}</div><p>{energyReady ? `พลังงานคงน้ำหนัก ${preview.nutrition_target.maintenance_low}–${preview.nutrition_target.maintenance_high}` : "จะแสดงเมื่อข้อมูลที่วัดได้เพียงพอแล้วเท่านั้น"}</p></div>
     </div>
+
+    {snapshot.activity_target?.mode === "FAT_LOSS_ACTIVITY_TARGET" ? <section className="card" style={{ marginTop: 18 }}>
+      <div className="kicker">Activity Target</div>
+      <h2>ลดไขมันไม่ได้พึ่งลดแคลอรีอย่างเดียว</h2>
+      <p>{snapshot.activity_target.step_floor != null ? `รักษาจำนวนก้าวเฉลี่ยอย่างน้อยประมาณ ${Math.round(snapshot.activity_target.step_floor).toLocaleString("en-US")} ก้าว/วัน · ` : ""}Cardio เป้าหมาย {snapshot.activity_target.cardio_target_min_week ?? "–"}–{snapshot.activity_target.cardio_target_max_week ?? "–"} นาที/สัปดาห์ ในระดับปานกลางเทียบเท่า</p>
+      <p>ทบทวนหลังประมาณ {snapshot.activity_target.review_after_days ?? 14} วัน ถ้าน้ำหนักไม่ลงตามแนวโน้มทั้งที่ทำโภชนาการได้ดี ให้เพิ่มกิจกรรมทีละขั้น ไม่ลดแคลอรีและเพิ่ม Cardio พร้อมกันโดยอัตโนมัติ</p>
+    </section> : null}
+
+    {snapshot.progress_strategy ? <section className="card" style={{ marginTop: 18 }}>
+      <div className="kicker">Goal Progress Logic</div>
+      <h2>{snapshot.progress_strategy.mode === "RECOMPOSITION" ? "Recomp วัดจากองค์ประกอบของผลลัพธ์ ไม่ใช่น้ำหนักอย่างเดียว" : "เกณฑ์ติดตามผลของเป้าหมายนี้"}</h2>
+      <p>{progressStrategyCopy(snapshot.progress_strategy)}</p>
+      <p>รอบประเมินเริ่มต้นประมาณ {snapshot.progress_strategy.review_after_days ?? 14} วัน เพื่อไม่ปรับ Program จาก noise รายวัน</p>
+    </section> : null}
 
     {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">เซตหนักโดยตรงต่อสัปดาห์</div>
