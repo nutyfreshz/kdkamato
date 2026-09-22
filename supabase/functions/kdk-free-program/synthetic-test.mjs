@@ -118,6 +118,26 @@ for (const equipmentProfile of equipment) {
   }
 }
 
+// Goal strategy differentiation.
+{
+  const fatLossProfile = profile({ goal: "FAT_LOSS", focus: "BALANCED", experience: "INTERMEDIATE", equipmentProfile: "FULL_GYM", duration: 60, days: 4 });
+  const fatLoss = buildFreeProgram(fatLossProfile.baseline, fatLossProfile.nutrition, fatLossProfile.training);
+  const activity = fatLoss.goal_snapshot.activity_target;
+  if (activity?.mode !== "FAT_LOSS_ACTIVITY_TARGET") failures.push("FAT_LOSS_ACTIVITY_TARGET_MISSING");
+  if (activity?.step_floor !== 8000) failures.push(`FAT_LOSS_STEP_FLOOR_INVALID:${activity?.step_floor}`);
+  if (!(activity?.cardio_target_min_week > fatLossProfile.nutrition.cardio_minutes_per_week)) failures.push("FAT_LOSS_CARDIO_NOT_PROGRESSED");
+  if (fatLoss.goal_snapshot.progress_strategy?.mode !== "FAT_LOSS") failures.push("FAT_LOSS_PROGRESS_STRATEGY_MISSING");
+}
+
+{
+  const recompProfile = profile({ goal: "RECOMPOSITION", focus: "BALANCED", experience: "INTERMEDIATE", equipmentProfile: "FULL_GYM", duration: 60, days: 4 });
+  const recomp = buildFreeProgram(recompProfile.baseline, recompProfile.nutrition, recompProfile.training);
+  const strategy = recomp.goal_snapshot.progress_strategy;
+  if (strategy?.mode !== "RECOMPOSITION") failures.push("RECOMP_PROGRESS_STRATEGY_MISSING");
+  if (strategy?.weight_change_pct_per_week?.min !== -0.25 || strategy?.weight_change_pct_per_week?.max !== 0.25) failures.push("RECOMP_WEIGHT_BAND_INVALID");
+  if (strategy?.automatic_calorie_adjustment !== false) failures.push("RECOMP_AUTO_CALORIE_GUARD_MISSING");
+}
+
 // Energy gate should stay closed with incomplete measurable inputs.
 {
   const p = profile({ goal: "MUSCLE_GAIN", focus: "BALANCED", experience: "INTERMEDIATE", equipmentProfile: "FULL_GYM", duration: 60, days: 4, completeEnergy: false });
