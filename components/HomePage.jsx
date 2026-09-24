@@ -100,13 +100,12 @@ export default function HomePage({ manga = [], articles = [], language = 'th' })
                 <Link className="home-article-cover-link" href={`/knowledge/${article.Slug}`} aria-label={localizedField(article, 'Title', language)}>
                   {article.cover ? <img className="home-article-cover" src={article.cover.url} alt={localizedField(article, 'Title', language)} loading="lazy" decoding="async" /> : <div className="home-article-cover home-article-cover-placeholder" aria-hidden="true" />}
                 </Link>
-                <p className="meta">{localizedField(article, 'Topic', language)}</p>
                 <h3>{localizedField(article, 'Title', language)}</h3>
                 <p>{localizedField(article, 'Summary', language)}</p>
                 <Link href={`/knowledge/${article.Slug}`}>{c.read} →</Link>
               </article>
             ) : (
-              <article className="home-article-card" key={i}><div className="home-article-cover home-article-cover-placeholder" aria-hidden="true" /><p className="meta">KDKAMATO KNOWLEDGE</p><h3>{c.noArticleTitle}</h3><p>{c.noArticleText}</p><Link href="/knowledge">{c.explore} →</Link></article>
+              <article className="home-article-card" key={i}><div className="home-article-cover home-article-cover-placeholder" aria-hidden="true" /><h3>{c.noArticleTitle}</h3><p>{c.noArticleText}</p><Link href="/knowledge">{c.explore} →</Link></article>
             ))}
           </div>
         </div>
