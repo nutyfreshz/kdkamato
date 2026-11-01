@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { ProgressForm } from "@/components/progress-form";
 import { createClient } from "@/lib/supabase/server";
@@ -79,6 +80,12 @@ export default async function ProgressPage(){
     <div className="topline">ความคืบหน้า · 30 วัน</div>
     <h1>ความคืบหน้าการฝึก</h1>
     <p>บันทึกผลหลังฝึกเพื่อดูแนวโน้มของคุณ</p>
+    <div className="card" style={{marginTop:18,borderColor:"rgba(73,215,232,.45)",background:"linear-gradient(120deg,rgba(16,36,41,.95),rgba(33,27,23,.94))"}}>
+      <div className="kicker">NEW · SUCCESS JOURNEY</div>
+      <h2>เห็นการเปลี่ยนแปลงใน 28 วัน</h2>
+      <p>กราฟน้ำหนัก · การฝึก · Recovery · พัฒนาการรายท่า พร้อมหลักฐานที่ตรวจย้อนหลังได้จากบัญชีของคุณ</p>
+      <Link className="btn primary" href="/progress/journey">เปิด Success Journey</Link>
+    </div>
     <div className="grid progress-grid">
       <div className="card"><div className="kicker">น้ำหนักล่าสุด</div><div className="metric">{summary.latest_weight_kg ?? "–"} {summary.latest_weight_kg ? "kg" : ""}</div><p>เปลี่ยนแปลง: {summary.weight_change_kg ?? "–"} kg</p></div>
       <div className="card"><div className="kicker">จำนวนครั้งที่ฝึก</div><div className="metric cyan">{summary.training_completed_count ?? 0}</div><p>ดีขึ้น {summary.training_better_count ?? 0} · เท่าเดิม {summary.training_same_count ?? 0} · แย่ลง {summary.training_worse_count ?? 0}</p></div>
