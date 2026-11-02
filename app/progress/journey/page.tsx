@@ -30,7 +30,8 @@ export default async function JourneyPage(){
  const input:JourneyData={
   today,goal:String(baseline.data?.goal||goalSnapshot?.goal||''),
   daysPerWeek:baseline.data?.training_days_per_week??null,
-  plannedMinutes:training.data?.session_duration_min??null,
+  plannedMinutes:training.error?null:training.data?.session_duration_min??null,
+  trainingProfileAvailable:!training.error,exerciseNamesAvailable:!items.error,
   programVersion:active?.program_version??null,
   checkins:(checkins.data||[]) as CheckIn[],
   logs:historyAvailable?(history.data as Log[]):[],
