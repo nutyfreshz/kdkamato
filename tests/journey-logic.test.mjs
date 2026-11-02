@@ -1,7 +1,7 @@
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
-import {buildJourney} from '../lib/journey-logic.ts';
+import {buildJourney,recordedFirstSet} from '../lib/journey-logic.ts';
 const check=(entry_date,extra={})=>({entry_date,body_weight_kg:null,training_completed:null,training_status:null,recovery_status:null,training_adherence_status:null,nutrition_adherence_status:null,new_issue:false,...extra});
 const log=(entry_date,load=20,reps=10,extra={})=>({log_id:entry_date,entry_date,exercise_key:'SQUAT',program_id:'p1',item_id:'i1',set_entries:[{set:1,load_kg:load,reps,rir:2}],control_status:'GOOD',issue_status:'NONE',...extra});
 const input=(extra={})=>({today:'2026-11-02',goal:'MUSCLE_GAIN',daysPerWeek:3,plannedMinutes:45,programVersion:1,historyAvailable:true,exercises:[{exercise_key:'SQUAT',metadata:{display_name:'Squat'}}],checkins:[],logs:[],...extra});
@@ -31,3 +31,12 @@ if(process.env.JOURNEY_SNAPSHOT){
  const expected=[{count:63,days:10,main:'-1.9'},{count:88,days:14,main:'+6'},{count:70,days:11,main:'+6'},{count:36,days:6,main:'6'},{count:91,days:14,main:'ดีขึ้น'},{count:54,days:9,main:'9'}];
  for(let i=0;i<cases.length;i++)test('live snapshot DEMO-0'+(i+1)+' agrees with source counts and supported story',()=>{const r=buildJourney(cases[i].input);assert.equal(r.logs.length,expected[i].count);assert.equal(r.loggedDays,expected[i].days);assert.equal(r.main,expected[i].main);assert.equal(r.checkinCount,7);assert.equal(r.state,'IMPROVING');if(i===2)assert.ok(r.limits.some(s=>s.includes('ไม่ยืนยันว่าไขมันลด')));if(i===5)assert.ok(r.limits.includes('45 นาทีเป็นเวลาตามแผน ไม่ใช่เวลาฝึกจริง'));});
 }
+test('seven-day review window excludes the eighth day',()=>{const r=buildJourney(input({checkins:[check('2026-10-26',{new_issue:true}),check('2026-11-01',{recovery_status:'GOOD'})],logs:[log('2026-10-10'),log('2026-11-01',25)]}));assert.notEqual(r.state,'REVIEW');});
+test('the seventh day is included in the review window',()=>assert.equal(buildJourney(input({checkins:[check('2026-10-27',{new_issue:true})]})).state,'REVIEW'));
+test('recent workout pain cannot be hidden by another improving lift',()=>{const r=buildJourney(input({logs:[log('2026-10-10'),log('2026-11-01',25),log('2026-11-02',10,10,{log_id:'pain',exercise_key:'ROW',item_id:'i2',issue_status:'PAIN'})]}));assert.equal(r.state,'REVIEW');assert.ok(r.proof.some(x=>x.includes('2026-11-02')));});
+test('recent poor control is shown even without a check-in',()=>assert.notEqual(buildJourney(input({logs:[log('2026-10-10'),log('2026-11-01',25),log('2026-11-02',25,10,{log_id:'poor-control',item_id:'i2',control_status:'POOR'})]})).state,'IMPROVING'));
+test('a fresh positive lift is selected before a stale positive lift',()=>{const r=buildJourney(input({logs:[log('2026-10-06'),log('2026-10-07',25),log('2026-10-08',26),log('2026-10-10',20,10,{item_id:'i2'}),log('2026-11-01',25,10,{item_id:'i2'})]}));assert.equal(r.state,'IMPROVING');assert.match(r.featuredLiftKey,/i2/);});
+
+test('bodyweight reps stay inspectable without inventing a load',()=>assert.deepEqual(recordedFirstSet([{set:1,load_kg:null,reps:12,rir:3}]),{load:null,reps:12,rir:3}));
+test('duplicate set one is ambiguous, not arbitrary evidence',()=>assert.equal(recordedFirstSet([{set:1,load_kg:20,reps:8},{set:1,load_kg:25,reps:8}]),null));
+test('blank effort is unavailable rather than a claimed zero RIR',()=>assert.equal(recordedFirstSet([{set:1,load_kg:20,reps:8,rir:''}]).rir,null));

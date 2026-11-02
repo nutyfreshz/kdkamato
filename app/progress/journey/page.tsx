@@ -24,7 +24,7 @@ export default async function JourneyPage(){
  ]);
  if(baseline.error||program.error||checkins.error)return <AppShell><h1>ไม่สามารถอ่านความก้าวหน้าได้</h1><p>โปรดลองใหม่อีกครั้ง ข้อมูลของคุณไม่ได้ถูกแก้ไข</p></AppShell>;
  const active=program.data;
- const items=active?await db.from('training_program_items').select('exercise_key,metadata').eq('program_id',active.program_id):{data:[],error:null};
+ const items=active?await db.from('training_program_items').select('item_id,training_day,exercise_key,metadata').eq('program_id',active.program_id):{data:[],error:null};
  const historyAvailable=!history.error&&Array.isArray(history.data);
  const goalSnapshot=active?.goal_snapshot as {goal?:string}|null;
  const input:JourneyData={
