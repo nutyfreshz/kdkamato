@@ -29,13 +29,13 @@ function actionText(item?: FreeGuidanceItem | null) {
     case "REVIEW_EXERCISE":
       return "ยังไม่ต้องฝืนท่านี้ มีสัญญาณว่าควรทบทวนท่าหรือวิธีทำก่อน";
     case "REVIEW_PROGRAM":
-      return "ยังไม่ต้องเร่ง progression มีสัญญาณจากหลายครั้งว่าควรทบทวนโปรแกรม";
+      return "ยังไม่ต้องเร่งเพิ่มความหนัก มีสัญญาณจากหลายครั้งว่าควรทบทวนโปรแกรม";
     case "HOLD_RECOVERY":
       return "คงเดิมก่อน รอให้การฟื้นตัวกลับมาดีแล้วค่อยเพิ่มความหนัก";
     case "HOLD_SESSION":
       return "ผลการฝึกล่าสุดแย่ลง คงความหนักเดิมก่อน แล้วดูผลครั้งถัดไป";
     case "HOLD_EFFORT":
-      return "ถึงจำนวนครั้งเป้าแล้ว แต่เซ็ตหนักเกินไป คงน้ำหนักเดิมก่อน";
+      return "ถึงจำนวนครั้งเป้าแล้ว แต่เซตหนักเกินไป คงน้ำหนักเดิมก่อน";
     default:
       return "ทำตามช่วงจำนวนครั้งและเหลือแรงที่กำหนดก่อน";
   }
@@ -96,6 +96,10 @@ export function WorkoutLogForm({
 
   async function save() {
     if (busy || !hasReps) return;
+    const lastFilled=rows.findLastIndex(row=>row.reps.trim()!=="");
+    if(rows.slice(0,lastFilled+1).some(row=>!Number.isInteger(Number(row.reps))||Number(row.reps)<=0)){
+      setError("กรอกจำนวนครั้งตามลำดับเซตโดยไม่เว้นช่อง เพื่อเก็บเลขเซตให้ถูกต้อง");return;
+    }
     const setEntries = rows
       .filter((row) => Number(row.reps) > 0)
       .map((row) => ({
@@ -130,19 +134,21 @@ export function WorkoutLogForm({
   return (
     <div className="form" style={{ marginTop: 10 }}>
       <div className="notice" style={{ marginBottom: 12 }}>
-        <strong>ครั้งถัดไป:</strong> {actionText(guidance)}
+        <strong>คำแนะนำครั้งถัดไป:</strong> {actionText(guidance)}
       </div>
       <p style={{ marginTop: 0 }}>
         บันทึกเฉพาะเซตฝึกจริงของ {label} ไม่รวมวอร์มอัพ · เป้าหมาย {repMin}–{repMax} ครั้ง · เหลือแรงประมาณ {targetRir} ครั้ง
       </p>
 
+      <p>บันทึกแยกตามวันที่ประเทศไทย: วันใหม่เพิ่มประวัติ บันทึกท่าเดิมซ้ำวันนี้จะแก้รายการของวันนี้ ไม่ลบวันก่อนหน้า</p>
+      <a href="/progress/journey">ดูน้ำหนัก จำนวนครั้ง และแรงที่เหลือย้อนหลัง →</a>
       <div style={{ display: "grid", gap: 8 }}>
         {rows.map((row, index) => (
           <div key={index} style={{ display: "grid", gridTemplateColumns: "30px repeat(3, minmax(0, 1fr))", gap: 6, alignItems: "end", minWidth: 0 }}>
             <strong style={{ paddingBottom: 10 }}>#{index + 1}</strong>
             <label style={{ margin: 0, minWidth: 0 }}>กก.<input inputMode="decimal" value={row.load} onChange={(e) => updateRow(index, "load", e.target.value)} placeholder="–" /></label>
             <label style={{ margin: 0, minWidth: 0 }}>ครั้ง<input inputMode="numeric" value={row.reps} onChange={(e) => updateRow(index, "reps", e.target.value)} placeholder={`${repMin}`} /></label>
-            <label style={{ margin: 0, minWidth: 0 }}>เหลือแรง<input inputMode="decimal" value={row.rir} onChange={(e) => updateRow(index, "rir", e.target.value)} placeholder={`${targetRir}`} /></label>
+            <label style={{ margin: 0, minWidth: 0 }}>เหลือแรงอีกกี่ครั้ง<input inputMode="decimal" value={row.rir} onChange={(e) => updateRow(index, "rir", e.target.value)} placeholder={`${targetRir}`} /></label>
           </div>
         ))}
       </div>
@@ -170,9 +176,9 @@ export function WorkoutLogForm({
       </label>
 
       <button className="btn primary" type="button" disabled={busy || !hasReps} onClick={save}>
-        {busy ? "กำลังบันทึก..." : "บันทึกการฝึกท่านี้"}
+        {busy ? "กำลังบันทึก..." : "บันทึกท่านี้ของวันนี้"}
       </button>
-      {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว · คำแนะนำครั้งถัดไปอัปเดตจากผลจริงของคุณ</div>}
+      {saved && <div className="notice" role="status" aria-live="polite">บันทึกของวันนี้แล้ว · ดูประวัติและเปรียบเทียบกับวันก่อนหน้าได้ที่หน้าความก้าวหน้า</div>}
       {error && <div className="notice warning" role="alert">{error}</div>}
     </div>
   );
