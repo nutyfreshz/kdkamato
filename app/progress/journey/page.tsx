@@ -41,5 +41,5 @@ export default async function JourneyPage({searchParams}:{searchParams:Promise<{
   logs:historyAvailable?(history.data as Log[]):[],
   exercises:(items.data||[]) as Exercise[],historyAvailable
  };
- return <AppShell><JourneyDashboard input={input}/></AppShell>;
+ return <AppShell><JourneyDashboard key={windowDays} input={input}/></AppShell>;
 }
