@@ -190,53 +190,53 @@ export function LabSaveResult({ language='th', result, metric, meaning, use, wat
   return <div className="lab-save-account">
     <button type="button" className="share-result" onClick={save} disabled={busy || saved}>
       {saved
-        ? (language === 'en' ? 'SAVED TO ACCOUNT' : 'บันทึกไว้ในบัญชีแล้ว')
+        ? (language === 'en' ? 'SAVED TO ACCOUNT' : "บันทึกผลในบัญชีแล้ว")
         : busy
-          ? (language === 'en' ? 'CHECKING PROGRAM…' : 'กำลังตรวจสอบ Program…')
+          ? (language === 'en' ? 'CHECKING PROGRAM…' : "กำลังตรวจสอบ โปรแกรม…")
           : (language === 'en' ? 'SAVE TO MY ACCOUNT' : 'บันทึกผลไว้ในบัญชี')}
     </button>
 
     {saved && programOutcome?.kind === 'UPDATED' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? `PROGRAM UPDATED · v${programOutcome.programVersion}` : `Program อัปเดตแล้ว · เวอร์ชัน ${programOutcome.programVersion}`}</strong>
-      <p>{language === 'en' ? 'Your new Exercise Fit result changed only the relevant Squat exercise.' : 'ผล Exercise Fit ใหม่ทำให้ระบบปรับเฉพาะท่า Squat ที่เกี่ยวข้อง'}</p>
+      <strong>{language === 'en' ? `PROGRAM UPDATED · v${programOutcome.programVersion}` : `โปรแกรม อัปเดตแล้ว · เวอร์ชัน ${programOutcome.programVersion}`}</strong>
+      <p>{language === 'en' ? 'Your new Exercise Fit result changed only the relevant Squat exercise.' : "ผลวิเคราะห์ความเหมาะสมของท่าล่าสุดทำให้ระบบปรับเฉพาะสควอตที่เกี่ยวข้อง"}</p>
       {programOutcome.changes?.map((change, index) => <p key={`${change.from}-${change.to}-${index}`} style={{ margin: '4px 0' }}><strong>{change.from || '—'} → {change.to || '—'}</strong></p>)}
       <p>{language === 'en' ? 'Other exercises, training volume, and nutrition stayed unchanged.' : 'ท่าอื่น ปริมาณการฝึก และโภชนาการคงเดิม'}</p>
-      <Link className="lab-next" href="/program">{language === 'en' ? 'VIEW UPDATED PROGRAM' : 'ดู Program ที่อัปเดต'} <b>→</b></Link>
+      <Link className="lab-next" href="/program">{language === 'en' ? 'VIEW UPDATED PROGRAM' : "ดู โปรแกรม ที่อัปเดต"} <b>→</b></Link>
     </div>}
 
     {saved && programOutcome?.kind === 'ALREADY_FIT' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? 'YOUR PROGRAM ALREADY MATCHES THIS LAB RESULT' : 'Program ของคุณตรงกับผล LAB อยู่แล้ว'}</strong>
-      <p>{language === 'en' ? 'The current Squat exercise set is already aligned with this result, so no change was needed.' : 'กลุ่มท่า Squat ใน Program ปัจจุบันสอดคล้องกับผลที่วัดได้อยู่แล้ว จึงไม่จำเป็นต้องเปลี่ยน'}</p>
+      <strong>{language === 'en' ? 'YOUR PROGRAM ALREADY MATCHES THIS LAB RESULT' : "โปรแกรมของคุณสอดคล้องกับผล LAB อยู่แล้ว"}</strong>
+      <p>{language === 'en' ? 'The current Squat exercise set is already aligned with this result, so no change was needed.' : "ท่าสควอตในโปรแกรมปัจจุบันสอดคล้องกับค่าที่วัดได้ จึงยังไม่จำเป็นต้องเปลี่ยน"}</p>
     </div>}
 
     {saved && programOutcome?.kind === 'NOT_ENOUGH_EVIDENCE' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? 'SAVED · PROGRAM NOT CHANGED' : 'บันทึกผลแล้ว · Program ยังไม่เปลี่ยน'}</strong>
-      <p>{language === 'en' ? 'The measured direction is still too close to neutral for an automatic exercise change. This result remains available as context for future decisions.' : 'ค่าที่วัดได้ยังอยู่ใกล้ช่วงกึ่งกลางเกินไปสำหรับการเปลี่ยนท่าโดยอัตโนมัติ ผลนี้จะถูกเก็บไว้ใช้ประกอบการตัดสินใจในครั้งต่อไป'}</p>
+      <strong>{language === 'en' ? 'SAVED · PROGRAM NOT CHANGED' : "บันทึกผลแล้ว · โปรแกรม ยังไม่เปลี่ยน"}</strong>
+      <p>{language === 'en' ? 'The measured direction is still too close to neutral for an automatic exercise change. This result remains available as context for future decisions.' : "ค่าที่วัดอยู่ใกล้จุดแบ่งเกณฑ์ จึงยังไม่เปลี่ยนท่าอัตโนมัติ ระบบจะเก็บผลไว้ประกอบการพิจารณาครั้งถัดไป"}</p>
     </div>}
 
     {saved && programOutcome?.kind === 'REAL_RESPONSE_OVERRIDES' && <div className="notice" style={{ marginTop: 12 }}>
-      <strong>{language === 'en' ? 'PROGRAM KEPT FROM REAL TRAINING RESPONSE' : 'Program ยังไม่เปลี่ยน เพราะข้อมูลการฝึกจริงมีความสำคัญสูงกว่า'}</strong>
+      <strong>{language === 'en' ? 'PROGRAM KEPT FROM REAL TRAINING RESPONSE' : "คงโปรแกรมเดิมตามผลฝึกจริง"}</strong>
       <p>{programOutcome.reason === 'ACTUAL_RESPONSE_CONFLICT_TARGET_DEPRIORITIZED'
-        ? (language === 'en' ? 'LAB suggested an option that your prior training response had already deprioritized, so it was not added back automatically.' : 'LAB แนะนำท่าที่ข้อมูลการฝึกก่อนหน้าของคุณเคยลดความสำคัญไว้ ระบบจึงไม่นำกลับเข้าโดยอัตโนมัติ')
-        : (language === 'en' ? 'LAB suggested a different direction, but your current exercise has already shown a good real-world fit, so the Program was preserved.' : 'LAB แนะนำอีกทางหนึ่ง แต่ท่าปัจจุบันมีผลตอบสนองจากการฝึกจริงที่ดีอยู่แล้ว ระบบจึงเก็บท่าเดิมไว้')}</p>
-      <small>{language === 'en' ? 'Real training response has higher authority than LAB prediction.' : 'ผลจากการฝึกจริงมีความสำคัญกว่าการคาดการณ์จาก LAB'}</small>
+        ? (language === 'en' ? 'LAB suggested an option that your prior training response had already deprioritized, so it was not added back automatically.' : "LAB แนะนำท่าที่ผลฝึกก่อนหน้าระบุให้พิจารณาทีหลัง ระบบจึงไม่นำกลับเข้าโปรแกรมอัตโนมัติ")
+        : (language === 'en' ? 'LAB suggested a different direction, but your current exercise has already shown a good real-world fit, so the Program was preserved.' : "LAB แนะนำอีกทาง แต่ท่าปัจจุบันให้ผลฝึกดีอยู่แล้ว ระบบจึงเก็บท่าเดิมไว้")}</p>
+      <small>{language === 'en' ? 'Real training response has higher authority than LAB prediction.' : "ใช้ผลฝึกจริงประกอบการพิจารณาเป็นหลัก"}</small>
     </div>}
 
     {saved && programOutcome?.kind === 'NO_PROGRAM' && <div className="notice" style={{ marginTop: 12 }}>
       <strong>{language === 'en' ? 'LAB RESULT SAVED' : 'บันทึกผล LAB แล้ว'}</strong>
-      <p>{language === 'en' ? 'You do not have an Active Program yet. This result will remain in your account and can inform Program creation.' : 'ขณะนี้คุณยังไม่มี Active Program ผลนี้จะถูกเก็บไว้ในบัญชีและใช้เป็นข้อมูลประกอบเมื่อสร้าง Program'}</p>
-      <Link className="lab-next" href="/program/start">{language === 'en' ? 'CREATE PROGRAM' : 'สร้าง Program'} <b>→</b></Link>
+      <p>{language === 'en' ? 'You do not have an Active Program yet. This result will remain in your account and can inform Program creation.' : "ยังไม่มีโปรแกรมที่เปิดใช้ ระบบจะเก็บผลนี้ไว้ประกอบการสร้างโปรแกรม"}</p>
+      <Link className="lab-next" href="/program/start">{language === 'en' ? 'CREATE PROGRAM' : "สร้าง โปรแกรม"} <b>→</b></Link>
     </div>}
 
     {saved && (programOutcome?.kind === 'CONTEXT_ONLY' || programOutcome?.kind === 'NO_CHANGE') && <small>
-      {language === 'en' ? 'This Lab result is saved to your account and can be reused as context. It did not automatically change your Program.' : 'ผล LAB นี้ถูกบันทึกไว้ในบัญชีแล้ว และสามารถใช้เป็นข้อมูลประกอบได้ โดยไม่เปลี่ยน Program โดยอัตโนมัติ'}
+      {language === 'en' ? 'This Lab result is saved to your account and can be reused as context. It did not automatically change your Program.' : "บันทึกผล LAB ในบัญชีแล้ว ระบบจะใช้เป็นข้อมูลประกอบ โดยไม่เปลี่ยนโปรแกรมอัตโนมัติ"}
     </small>}
 
     {saved && physicalMode && <div className="cta-row" style={{ marginTop: 12 }}>
-      <Link className="btn primary" href="/physical-consult">{language === 'en' ? 'BACK TO PHYSICAL CONSULT' : 'กลับ Physical Consult Session'}</Link>
+      <Link className="btn primary" href="/physical-consult">{language === 'en' ? 'BACK TO PHYSICAL CONSULT' : "กลับหน้าปรึกษาเทรนเนอร์"}</Link>
     </div>}
 
     {error && <small className="warning">{error}</small>}
-    {busy && <ProcessingOverlay title={language === 'en' ? 'Saving result and checking Program…' : 'กำลังบันทึกผลและตรวจสอบ Program…'} detail={language === 'en' ? 'Saving this result, then checking whether the Active Program should change.' : 'กำลังบันทึกผล แล้วตรวจสอบว่ามีเหตุผลเพียงพอให้ Active Program เปลี่ยนหรือไม่'} />}
+    {busy && <ProcessingOverlay title={language === 'en' ? 'Saving result and checking Program…' : "กำลังบันทึกผลและตรวจสอบ โปรแกรม…"} detail={language === 'en' ? 'Saving this result, then checking whether the Active Program should change.' : "กำลังบันทึกผลและตรวจว่ามีข้อมูลเพียงพอให้ปรับโปรแกรมปัจจุบันหรือไม่"} />}
   </div>;
 }

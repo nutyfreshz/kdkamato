@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
     await sendResend(
       adminEmail,
       `[KDKAMATO PRO] คำขอปรึกษา ${code}`,
-      `<h2>มีคำขอ PRO Consult ใหม่</h2><p><strong>Request:</strong> ${code}</p><p><strong>เรื่องที่อยากให้ช่วย:</strong> ${reason}</p><p><strong>ดำเนินการ:</strong> เปิดห้อง ChatGPT PRO Consult ในโปรเจกต์ KDKAMATO แล้วพิมพ์ <code>open ${code}</code></p><p>ChatGPT จะดึง Program, Progress, Nutrition, LAB และ Exercise Memory เพื่อเตรียม Consult Package ให้</p><p>ระบบยังไม่หักสิทธิ์การปรึกษาจนกว่าจะมีการใช้ consult จริง</p>`,
+      `<h2>คำขอปรึกษา PRO ใหม่</h2><p><strong>เลขคำขอ:</strong> ${code}</p><p><strong>เรื่องที่ต้องการปรึกษา:</strong> ${reason}</p><p><strong>ขั้นตอนถัดไป:</strong> เปิดห้อง ChatGPT PRO Consult ในโปรเจกต์ KDKAMATO แล้วพิมพ์ <code>open ${code}</code></p><p>ระบบจะรวบรวมโปรแกรม ความก้าวหน้า อาหาร ผล LAB และประวัติรายท่า เพื่อเตรียมข้อมูลสำหรับการปรึกษา</p><p>ระบบจะนับสิทธิ์เมื่อใช้การปรึกษาจริง</p>`,
     );
     await service.from("consult_meetings").update({ admin_notified_at: new Date().toISOString() }).eq("meeting_id", meetingId);
     return Response.json({ ok: true, sent: true, request_code: code }, { headers: corsHeaders });

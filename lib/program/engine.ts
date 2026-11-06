@@ -98,15 +98,15 @@ export function buildProgramPreview(input: ProgramInput): ProgramPreview {
     nutrition: {
       status: energyInputsReady ? "ESTIMATE_READY" : "NEEDS_MORE_INPUT",
       message: energyInputsReady
-        ? "มีข้อมูลพอสำหรับส่งต่อไปยัง nutrition-target calculation ฝั่ง server โดยไม่ใช้ activity multiplier แบบ subjective"
-        : "Training Program สร้างได้แล้ว ส่วน calorie range จะขอเฉพาะข้อมูลที่ยังขาดเมื่อจำเป็น แทนการเดา activity level",
+        ? "ข้อมูลเพียงพอสำหรับคำนวณเป้าหมายอาหารแล้ว โดยไม่ใช้ตัวคูณกิจกรรมจากการประเมินความรู้สึก"
+        : "สร้างโปรแกรมฝึกได้แล้ว หากข้อมูลคำนวณแคลอรียังไม่ครบ ระบบจะขอข้อมูลที่ขาดเพิ่มเมื่อจำเป็น",
       proteinLowG,
       proteinHighG,
     },
     guardrails: [
-      "นี่คือ starting prescription ไม่ใช่ individual optimal volume",
-      "Exercise option เป็นตัวเลือกมาตรฐานจาก Goal + Equipment + Basic Constraints ไม่ใช่คำตัดสินจาก anatomy",
-      "ปรับจาก observed response ภายหลัง ไม่บังคับ deload ตามจำนวนสัปดาห์ตายตัว",
+      "ใช้ปริมาณฝึกนี้เป็นจุดเริ่มต้น แล้วปรับจากผลฝึกของคุณในภายหลัง",
+      "ท่าฝึกเริ่มต้นเลือกจากเป้าหมาย อุปกรณ์ และข้อจำกัดเบื้องต้น ยังไม่ได้ใช้โครงสร้างร่างกายตัดสินว่าท่าใดเหมาะที่สุด",
+      "ปรับจากผลตอบสนองที่บันทึกภายหลัง ไม่กำหนดให้ลดความหนักตามจำนวนสัปดาห์ตายตัว",
     ],
   };
 }

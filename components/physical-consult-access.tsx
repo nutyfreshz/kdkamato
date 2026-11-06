@@ -32,7 +32,7 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
       setSaved(true);
       setPassword("");
       setConfirm("");
-      setMessage("พร้อมใช้งานแล้ว · เปิดหน้าเข้าสู่ระบบ Physical Consult บนเครื่อง Trainer แล้วใช้อีเมลกับรหัสผ่านนี้");
+      setMessage("พร้อมใช้งานแล้ว เปิดหน้าเข้าสู่ระบบสำหรับปรึกษาเทรนเนอร์บนอุปกรณ์เทรนเนอร์ แล้วใช้อีเมลกับรหัสผ่านนี้");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "ตั้งรหัสไม่สำเร็จ");
     } finally {
@@ -41,27 +41,25 @@ export function PhysicalConsultAccess({ email }: { email: string }) {
   }
 
   return <div className="card" style={{ marginTop: 18 }}>
-    <div className="kicker">การเข้าถึง Physical Consult</div>
-    <h2>การเข้าใช้ Physical Consult บนอุปกรณ์เทรนเนอร์</h2>
-    <p>ใช้อีเมลเดิมของบัญชี <b>{email}</b> แล้วตั้งรหัสผ่านสำหรับ Physical Consult วิธีนี้ใช้บัญชีเดิมและไม่สร้างผู้ใช้ใหม่</p>
+    <div className="kicker">ตั้งค่าการเข้าสู่ระบบสำหรับปรึกษาเทรนเนอร์</div>
+    <h2>การเข้าใช้ การปรึกษาเทรนเนอร์ บนอุปกรณ์เทรนเนอร์</h2>
+    <p>ใช้อีเมลเดิม <b>{email}</b> และตั้งรหัสผ่านสำหรับปรึกษาเทรนเนอร์ โดยยังใช้บัญชีเดิม</p>
     <div className="form" style={{ maxWidth: 520 }}>
-      <label>รหัสผ่าน Physical Consult
-        <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setSaved(false); }} autoComplete="new-password" />
-      </label>
+      <label>รหัสผ่านสำหรับปรึกษาเทรนเนอร์<input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setSaved(false); }} autoComplete="new-password" /></label>
       <label>ยืนยันรหัสผ่าน
         <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
       </label>
       <button className="btn primary" type="button" onClick={savePassword} disabled={busy || password.length < 10 || confirm.length < 10}>
-        {busy ? "กำลังตั้งค่า..." : saved ? "ตั้งค่าแล้ว" : "ตั้ง / เปลี่ยนรหัสผ่าน Physical Consult"}
+        {busy ? "กำลังตั้งค่า…" : saved ? "ตั้งค่าแล้ว" : "ตั้งหรือเปลี่ยนรหัสผ่านสำหรับปรึกษาเทรนเนอร์"}
       </button>
-      <small>รหัสนี้ใช้เข้าสู่บัญชีของคุณสำหรับ Physical Consult เท่านั้น ควรให้เฉพาะ Trainer ที่คุณอนุญาต และเปลี่ยนได้จากหน้านี้ทุกเมื่อ</small>
+      <small>ใช้รหัสนี้เข้าสู่บัญชีเพื่อปรึกษาเทรนเนอร์ ให้เฉพาะเทรนเนอร์ที่คุณอนุญาต และเปลี่ยนได้จากหน้านี้</small>
       {message && <div className="notice warning" role={saved ? "status" : "alert"}>{message}</div>}
     </div>
     <div className="cta-row" style={{ marginTop: 14 }}>
-      <Link className="btn" href="/login?physical=1">ดูหน้าเข้าสู่ระบบ Physical Consult</Link>
-      <Link className="btn" href="/physical-consult">เปิด Physical Consult บนอุปกรณ์นี้</Link>
+      <Link className="btn" href="/login?physical=1">ดูหน้าเข้าสู่ระบบสำหรับปรึกษาเทรนเนอร์</Link>
+      <Link className="btn" href="/physical-consult">เปิดหน้าปรึกษาเทรนเนอร์บนอุปกรณ์นี้</Link>
     </div>
-    <p style={{ marginBottom: 0 }}><small>บนเครื่อง Trainer ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้อีเมลกับรหัสผ่าน Physical Consult เมื่อจบเซสชัน ระบบมีปุ่มออกจากระบบเฉพาะเครื่อง Trainer</small></p>
-    {busy && <ProcessingOverlay title="กำลังตั้งค่าการเข้าถึง Physical Consult…" detail="กำลังเพิ่มหรือเปลี่ยนการเข้าสู่ระบบด้วยอีเมลและรหัสผ่านให้บัญชีเดิม" />}
+    <p style={{ marginBottom: 0 }}><small>บนอุปกรณ์เทรนเนอร์ ให้เปิด <b>kdkamato.vercel.app/login?physical=1</b> แล้วใช้อีเมลและรหัสผ่านสำหรับปรึกษาเทรนเนอร์ เมื่อเสร็จแล้วให้ออกจากระบบเฉพาะอุปกรณ์นั้น</small></p>
+    {busy && <ProcessingOverlay title={"กำลังตั้งค่าการเข้าสู่ระบบสำหรับปรึกษาเทรนเนอร์…"} detail={"กำลังตั้งค่าการเข้าสู่ระบบด้วยอีเมลและรหัสผ่านให้บัญชีเดิม"} />}
   </div>;
 }

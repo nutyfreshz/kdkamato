@@ -25,7 +25,7 @@ function bangkokDate() {
 }
 
 export default async function PhysicalConsultProgramPage() {
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ยังเชื่อมต่อระบบไม่ได้ กรุณาลองใหม่ภายหลัง</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
@@ -35,12 +35,12 @@ export default async function PhysicalConsultProgramPage() {
     supabase.from("user_access").select("tier").eq("user_id", userId).maybeSingle(),
     supabase.from("programs").select("program_id,program_version").eq("user_id", userId).eq("status", "ACTIVE").maybeSingle(),
   ]);
-  if (access?.tier !== "PRO") return <AppShell><div className="notice warning">Physical Consult และ Exercise Memory ใช้ได้กับบัญชี PRO</div></AppShell>;
+  if (access?.tier !== "PRO") return <AppShell><div className="notice warning">การปรึกษาเทรนเนอร์และประวัติรายท่าใช้ได้กับบัญชี PRO</div></AppShell>;
   if (!program) return <AppShell>
     <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><Link href="/physical-consult">ประเมินกับเทรนเนอร์</Link><span>›</span><span>บันทึกผลรายท่า</span></div>
-    <div className="topline">Physical Consult · Program ปัจจุบัน</div>
-    <h1>ยังไม่มี Program ปัจจุบัน</h1>
-    <div className="cta-row"><Link className="btn" href="/physical-consult">กลับสู่ Physical Consult</Link><Link className="btn primary" href="/program/start">สร้าง Program</Link></div>
+    <div className="topline">ปรึกษาเทรนเนอร์ · โปรแกรมปัจจุบัน</div>
+    <h1>ยังไม่มี โปรแกรมปัจจุบัน</h1>
+    <div className="cta-row"><Link className="btn" href="/physical-consult">กลับหน้าปรึกษาเทรนเนอร์</Link><Link className="btn primary" href="/program/start">สร้าง โปรแกรม</Link></div>
   </AppShell>;
 
   const today = bangkokDate();
@@ -55,18 +55,18 @@ export default async function PhysicalConsultProgramPage() {
   return <AppShell>
     <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><Link href="/physical-consult">ประเมินกับเทรนเนอร์</Link><span>›</span><span>บันทึกผลรายท่า</span></div>
     <div className="topline">PRO · Physical Consult · Program v{program.program_version}</div>
-    <h1>บันทึกผลจาก Program</h1>
+    <h1>บันทึกผลจาก โปรแกรม</h1>
     <p>เลือกเฉพาะท่าที่ต้องการประเมิน ไม่ต้องกรอกทุกท่า</p>
     <div className="notice" style={{ marginBottom: 18 }}>
       <strong>บันทึกวันนี้แล้ว {completedCount}/{items.length} ท่า</strong>
-      <p style={{ marginBottom: 0 }}>แตะท่าที่ต้องการบันทึก · ผลการฝึกจริงจะมีน้ำหนักมากกว่าคำคาดการณ์จาก LAB</p>
+      <p style={{ marginBottom: 0 }}>แตะท่าที่ต้องการบันทึก ระบบใช้ผลฝึกจริงประกอบการพิจารณาเป็นหลัก</p>
     </div>
 
     <PhysicalConsultProgramAccordion items={items} feedback={feedback} />
 
     <div className="cta-row" style={{ marginTop: 18 }}>
-      <Link className="btn primary" href="/physical-consult">กลับสู่ Physical Consult</Link>
-      <Link className="btn" href="/program">ดู Program แบบเต็ม</Link>
+      <Link className="btn primary" href="/physical-consult">กลับหน้าปรึกษาเทรนเนอร์</Link>
+      <Link className="btn" href="/program">ดู โปรแกรม แบบเต็ม</Link>
     </div>
   </AppShell>;
 }

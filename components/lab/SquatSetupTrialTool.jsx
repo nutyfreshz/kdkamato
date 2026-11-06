@@ -50,10 +50,10 @@ function buildTrialPlan(ft, ankle, variant, language) {
 
   const rationale = clearlyLonger
     ? (th
-      ? 'สัดส่วนต้นขายาวกว่าหน้าแข้งชัดพอให้ stance เป็นตัวแปรแรกที่ควรเทียบ; งาน biomechanical พบว่าคนที่มีต้นขายาวกว่าอาจต้องใช้ ankle/knee motion มากขึ้นใน stance แคบ และ stance กว้างขึ้นเป็น comparison ที่สมเหตุผล'
+      ? "สัดส่วนต้นขายาวกว่าหน้าแข้งมากพอให้เริ่มลองเปรียบเทียบระยะห่างเท้าก่อน งานด้านกลศาสตร์การเคลื่อนไหวพบว่า ผู้ที่ต้นขายาวอาจต้องใช้การเคลื่อนไหวข้อเท้าและเข่ามากขึ้นเมื่อยืนแคบ การยืนกว้างขึ้นจึงเป็นอีกแบบที่น่าลองเทียบ"
       : 'Your thigh segment is clearly longer relative to the lower leg, so stance is the first variable worth comparing. Biomechanical data suggest relatively longer thighs can require more ankle/knee motion in narrower stances, making a wider stance a reasonable comparison.')
     : (th
-      ? 'สัดส่วนช่วงขาอย่างเดียวไม่ได้ชี้ว่าควรใช้ stance แคบหรือกว้างแบบฟันธง จึงเริ่มจาก heel ซึ่งเป็นตัวแปรที่มีผลต่อ ankle/knee ROM ชัดกว่า แล้วค่อยเทียบ stance ถ้ายังจำเป็น'
+      ? "สัดส่วนขาอย่างเดียวยังเลือกความกว้างเท้าให้คุณไม่ได้ จึงเริ่มจากลองยกส้นซึ่งมีผลต่อช่วงการเคลื่อนไหวข้อเท้าและเข่า แล้วค่อยเทียบความกว้างเท้าหากจำเป็น"
       : 'Leg proportions alone do not justify declaring a narrow or wide stance best, so start with heel elevation, which has a clearer effect on ankle/knee ROM, then compare stance if needed.');
 
   const ankleText = ankle
@@ -64,7 +64,7 @@ function buildTrialPlan(ft, ankle, variant, language) {
 
   const asymmetryNote = ankle && ankle.difference >= 1.5
     ? (th
-      ? `ซ้ายและขวาต่างกัน ${ankle.difference} ซม. ควรวัดซ้ำด้วยวิธีเดิมก่อนใช้ความแตกต่างนี้ตัดสินเลือก setup`
+      ? `สองข้างต่างกัน ${ankle.difference} ซม. ควรวัดซ้ำด้วยวิธีเดิมก่อนใช้ผลนี้เลือกการจัดท่า`
       : `Left-right difference is ${ankle.difference} cm — repeat the same measurement before using the asymmetry to guide setup.`)
     : null;
 
@@ -90,10 +90,10 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       ? `1) ${plan.step1}  2) ${plan.step2}`
       : `1) ${plan.step1}.  2) ${plan.step2}.`,
     use: th
-      ? `${plan.rationale} ให้ทดสอบด้วยน้ำหนักเบาหรือคงน้ำหนักเดิม ใช้ความลึกใกล้เคียงกัน และเปลี่ยนทีละ 1 ตัวแปร แล้วเลือก setup ที่สมดุลและควบคุมได้ดีกว่า`
+      ? `${plan.rationale} ทดสอบด้วยน้ำหนักเบาหรือน้ำหนักเดิม ใช้ความลึกใกล้เคียงกัน และเปลี่ยนทีละ 1 อย่าง จากนั้นเลือกแบบที่ทรงตัวและคุมท่าได้ดีกว่า`
       : `${plan.rationale} Test with a light or fixed load, keep depth similar, change one variable at a time, and keep the setup you can balance and control better.`,
     watch: th
-      ? `C2 ไม่ใช้สัดส่วนร่างกายเพื่อฟันธงว่า Front / High-Bar / Low-Bar แบบไหนดีที่สุด แต่ให้คุณเลือกท่าที่ต้องการทดสอบ แล้วใช้ C2 จัดลำดับ setup ภายในท่านั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
+      ? `เครื่องมือ C2 ไม่ได้ตัดสินว่า Front Squat, High-Bar หรือ Low-Bar แบบไหนดีที่สุด คุณเลือกท่าที่ต้องการทดสอบ แล้วระบบจะจัดลำดับการปรับภายในท่านั้น${plan.asymmetryNote ? ` · ${plan.asymmetryNote}` : ''}`
       : `C2 does not use body proportions to declare Front / High-Bar / Low-Bar best. Choose the variant you actually want to test; C2 prioritizes setup comparisons inside it.${plan.asymmetryNote ? ` ${plan.asymmetryNote}` : ''}`,
     nextHref: ankle ? undefined : '/lab/knee-to-wall',
     nextLabel: ankle ? undefined : (th ? 'วัด Knee-to-Wall เพิ่มเติม (ไม่บังคับ)' : 'ADD KNEE-TO-WALL (OPTIONAL)'),
@@ -106,17 +106,17 @@ export function SquatSetupTrialTool({ language = 'th' }) {
       id="C2_SQUAT_GEOMETRY"
       role="CORE"
       technicalName="Squat Setup Trial"
-      title={th ? 'ควรลองปรับท่า Squat แบบไหนก่อน?' : 'Which Squat setup should you test first?'}
+      title={th ? "ควรลองปรับสควอตแบบไหนก่อน?" : 'Which Squat setup should you test first?'}
       question={th
-        ? 'เลือกท่า Squat ที่คุณใช้อยู่ แล้วระบบจะจัดลำดับการเปรียบเทียบ 2 แบบที่ควรลองก่อนจากสัดส่วนช่วงขา โดยเปลี่ยนทีละอย่าง'
+        ? "เลือกสควอตที่ใช้อยู่ ระบบจะใช้สัดส่วนขาจัดลำดับการจัดท่า 2 แบบให้ลองเปรียบเทียบ โดยเปลี่ยนทีละอย่าง"
         : 'Choose the Squat variant you actually use. The system prioritizes two setup comparisons from your leg proportions, changing one thing at a time.'}
     />
 
     <div className="lab-workbench">
       <div>
         <div className="lab-import-note">
-          <b>{th ? 'กรอกครั้งเดียวพอ' : 'MEASURE ONCE'}</b>
-          <span>{th ? 'หากคุณเคยวัดสัดส่วน Femur:Tibia หรือ Knee-to-Wall แล้ว ระบบจะใช้ค่าเดิมที่นี่โดยอัตโนมัติ' : 'Existing Femur:Tibia and Knee-to-Wall measurements are reused automatically.'}</span>
+          <b>{th ? "ใช้ค่าที่เคยกรอกได้" : 'MEASURE ONCE'}</b>
+          <span>{th ? "หากเคยวัดสัดส่วนต้นขาต่อหน้าแข้ง หรือระยะเท้าถึงผนังแล้ว ระบบจะนำค่าเดิมมาใช้ให้" : 'Existing Femur:Tibia and Knee-to-Wall measurements are reused automatically.'}</span>
         </div>
 
         <div className="lab-input-grid">

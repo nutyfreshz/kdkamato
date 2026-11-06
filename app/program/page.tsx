@@ -109,9 +109,9 @@ const muscleLabel: Record<string, string> = {
 };
 
 const valueLabel: Record<string, string> = {
-  MUSCLE_GAIN: "เพิ่มกล้ามเนื้อ", FAT_LOSS: "ลดไขมัน", RECOMPOSITION: "ปรับองค์ประกอบร่างกาย", GENERAL_FITNESS: "ฟิตเนสทั่วไป",
+  MUSCLE_GAIN: "เพิ่มกล้ามเนื้อ", FAT_LOSS: "ลดไขมัน", RECOMPOSITION: "ลดไขมันและเพิ่มกล้ามเนื้อ", GENERAL_FITNESS: "ดูแลความฟิตโดยรวม",
   BEGINNER: "เริ่มต้น", INTERMEDIATE: "ระดับกลาง", EXPERIENCED: "มีประสบการณ์",
-  FULL_GYM: "ฟิตเนสครบวงจร", LIMITED_GYM: "ฟิตเนสจำกัดอุปกรณ์", HOME_BASIC: "อุปกรณ์พื้นฐานที่บ้าน",
+  FULL_GYM: "ฟิตเนสที่มีอุปกรณ์ครบ", LIMITED_GYM: "ฟิตเนสที่มีอุปกรณ์จำกัด", HOME_BASIC: "อุปกรณ์พื้นฐานที่บ้าน",
 };
 
 const focusLabel: Record<string, string> = {
@@ -128,15 +128,15 @@ function progressStrategyCopy(strategy?: ProgressStrategy) {
   if (!strategy) return null;
   const band = strategy.weight_change_pct_per_week;
   if (strategy.mode === "RECOMPOSITION" && band) {
-    return `คุมน้ำหนักเฉลี่ยให้อยู่ราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมรักษาหรือเพิ่ม performance การฝึก น้ำหนักนิ่งแต่แรงดีขึ้นยังถือว่าเดินถูกทาง`;
+    return `ติดตามน้ำหนักเฉลี่ยประมาณ ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ ควบคู่กับผลฝึกที่คงเดิมหรือดีขึ้น หากน้ำหนักนิ่งแต่ฝึกดีขึ้น ยังถือเป็นสัญญาณที่ดี`;
   }
   if (strategy.mode === "FAT_LOSS" && band) {
-    return `ติดตามน้ำหนักเฉลี่ยราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมรักษา performance ให้ได้มากที่สุด`;
+    return `ติดตามน้ำหนักเฉลี่ยประมาณ ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมพยายามรักษาผลฝึกให้ใกล้เคียงเดิม`;
   }
   if (strategy.mode === "MUSCLE_GAIN" && band) {
-    return `ให้น้ำหนักเพิ่มอย่างควบคุมราว ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ พร้อมดู progression เป็นหลัก`;
+    return `ให้น้ำหนักเพิ่มประมาณ ${signedPct(band.min)} ถึง ${signedPct(band.max)} ต่อสัปดาห์ โดยติดตามพัฒนาการในการฝึกควบคู่กัน`;
   }
-  return "ติดตามผลการฝึก การฟื้นตัว และความสม่ำเสมอเป็นหลัก โดยไม่บังคับเปลี่ยนน้ำหนัก";
+  return "ติดตามผลฝึก การฟื้นตัว และความสม่ำเสมอเป็นหลัก ไม่จำเป็นต้องตั้งเป้าเปลี่ยนน้ำหนัก";
 }
 
 function currentFocus(profile: TrainingProfile | null) {
@@ -178,7 +178,7 @@ function itemPositionKey(item: TrainingProgramItem) {
 
 export default async function ProgramPage({ searchParams }: { searchParams: Promise<{ activated?: string }> }) {
   const params = await searchParams;
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ยังเชื่อมต่อระบบไม่ได้ กรุณาลองใหม่ภายหลัง</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
@@ -190,7 +190,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
 
   if (!program) return <AppShell>
     <div className="topline">โปรแกรม</div><h1>โปรแกรมของคุณ</h1>
-    <div className="card"><h2>ยังไม่มีโปรแกรมปัจจุบัน</h2><p>ตั้งค่าเป้าหมาย จุดเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาฝึกต่อครั้ง แล้วดูตัวอย่างก่อนเปิดใช้โปรแกรมเวอร์ชันแรก</p><div className="cta-row"><Link className="btn primary" href="/program/start">สร้างโปรแกรม</Link></div></div>
+    <div className="card"><h2>ยังไม่มีโปรแกรมปัจจุบัน</h2><p>เลือกเป้าหมาย กล้ามเนื้อที่อยากเน้น จำนวนวันฝึก ประสบการณ์ อุปกรณ์ และเวลาต่อครั้ง แล้วดูตัวอย่างก่อนเปิดใช้</p><div className="cta-row"><Link className="btn primary" href="/program/start">สร้างโปรแกรม</Link></div></div>
   </AppShell>;
 
   const today = bangkokDate();
@@ -235,7 +235,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     acc.set(item.training_day, list);
     return acc;
   }, new Map<number, TrainingProgramItem[]>());
-  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, dayItems]) => [day, dayItems[0]?.metadata?.day_label ?? `วันที่ฝึก ${day}`]));
+  const dayLabels = Object.fromEntries(Array.from(byDay.entries()).map(([day, dayItems]) => [day, dayItems[0]?.metadata?.day_label ?? `วันฝึกที่ ${day}`]));
   const volumeEntries = Object.entries(snapshot.weekly_volume ?? {});
   const hasRepDbVisuals = typedItems.some((x) => Boolean(getExerciseVisual(x.exercise_key)));
   const autoUpdate = snapshot.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" ? snapshot.auto_update : null;
@@ -264,39 +264,39 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     <div className="topline">{program.program_tier} · Program v{program.program_version}</div>
     <h1>{snapshot.program_family ?? "โปรแกรมปัจจุบัน"}</h1>
     <p>{valueLabel[snapshot.goal ?? ""] ?? snapshot.goal ?? "–"} · {valueLabel[snapshot.training_experience ?? ""] ?? snapshot.training_experience ?? "–"} · {valueLabel[snapshot.equipment_profile ?? ""] ?? snapshot.equipment_profile ?? "–"} · {displayFocus} · {snapshot.training_days_per_week ?? "–"} วัน · {snapshot.session_duration_min ?? "–"} นาที</p>
-    {params.activated && <div className="notice" style={{ marginBottom: 16 }}>เปิดใช้ Program สำเร็จ · เวอร์ชันก่อนหน้าจะถูกเก็บไว้ในประวัติเมื่อมีเวอร์ชันใหม่</div>}
+    {params.activated && <div className="notice" style={{ marginBottom: 16 }}>เปิดใช้โปรแกรมแล้ว ระบบจะเก็บเวอร์ชันก่อนหน้าไว้ในประวัติ</div>}
     {autoUpdate && <div className="notice" style={{ marginBottom: 16 }}>
-      <strong>Program อัปเดตจากผล LAB · เวอร์ชัน {program.program_version}</strong>
-      <p>ผล Exercise Fit ล่าสุดชี้ว่ามีท่า Squat ที่ควรลองมากกว่า ระบบจึงปรับเฉพาะส่วนนี้ของ Program โดยยังเก็บส่วนอื่นไว้เหมือนเดิม</p>
+      <strong>ปรับโปรแกรมจากผล LAB แล้ว · เวอร์ชัน {program.program_version}</strong>
+      <p>ผลวิเคราะห์ความเหมาะสมของท่าฝึกล่าสุดพบสควอตอีกแบบที่น่าลอง ระบบจึงปรับเฉพาะท่าสควอตในโปรแกรม</p>
       {autoUpdatePairs.length
         ? autoUpdatePairs.map((pair, index) => <p key={`${pair.from}-${pair.to}-${index}`} style={{ margin: "4px 0" }}><strong>{pair.from} → {pair.to}</strong></p>)
         : autoUpdatedExercises.length ? <p style={{ margin: "4px 0" }}><strong>ท่าปัจจุบัน: {autoUpdatedExercises.join(", ")}</strong></p> : null}
-      <p style={{ marginBottom: 0 }}>ท่าอื่น ปริมาณการฝึก และโภชนาการยังเหมือนเดิม · ผลการฝึกจริงยังมีน้ำหนักมากกว่า LAB</p>
+      <p style={{ marginBottom: 0 }}>ท่าอื่น ปริมาณฝึก และเป้าหมายอาหารยังเหมือนเดิม ให้ใช้ผลฝึกจริงประกอบการตัดสินใจเป็นหลัก</p>
     </div>}
-    {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูลตั้งค่า Program ปัจจุบันต่างจาก Program v{program.program_version} ที่ใช้อยู่ Program จะยังไม่เปลี่ยนจนกว่าคุณจะดูตัวอย่างและเปิดใช้เวอร์ชันใหม่</div>}
+    {pendingInputs && <div className="notice warning" style={{ marginBottom: 16 }}>ข้อมูลตั้งค่าต่างจากโปรแกรม v{program.program_version} ที่ใช้อยู่ ดูตัวอย่างและเปิดใช้เวอร์ชันใหม่เมื่อพร้อมเปลี่ยนโปรแกรม</div>}
 
     <div className="grid">
       <div className="card"><div className="kicker">จุดเน้น</div><div className="metric cyan">{displayFocus}</div></div>
       <div className="card"><div className="kicker">เวลาต่อครั้ง</div><div className="metric">{snapshot.session_duration_min ?? "–"} นาที</div></div>
       <div className="card"><div className="kicker">โปรตีน (กรัม/วัน)</div><div className="metric">{nutrition?.protein_low_g ?? "–"}–{nutrition?.protein_high_g ?? "–"} g</div></div>
-      <div className="card"><div className="kicker">พลังงาน (กิโลแคลอรี/วัน)</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "กำลังปรับเทียบ"}</div><p>{nutrition?.maintenance_low != null ? `พลังงานคงน้ำหนัก ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับการประมาณครั้งแรก"}</p></div>
+      <div className="card"><div className="kicker">พลังงาน (กิโลแคลอรี/วัน)</div><div className="metric" style={{ fontSize: "1.15rem" }}>{nutrition?.calorie_low != null ? `${nutrition.calorie_low}–${nutrition.calorie_high}` : "กำลังปรับเทียบ"}</div><p>{nutrition?.maintenance_low != null ? `พลังงานรักษาน้ำหนัก ${nutrition.maintenance_low}–${nutrition.maintenance_high}` : "ข้อมูลยังไม่พอสำหรับประมาณพลังงาน"}</p></div>
     </div>
 
     {snapshot.activity_target?.mode === "FAT_LOSS_ACTIVITY_TARGET" ? <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">Activity Target</div>
       <h2>เป้ากิจกรรมสำหรับลดไขมัน</h2>
-      <p>{snapshot.activity_target.step_floor != null ? `รักษาจำนวนก้าวเฉลี่ยอย่างน้อยประมาณ ${Math.round(snapshot.activity_target.step_floor).toLocaleString("en-US")} ก้าว/วัน · ` : ""}Cardio เป้าหมาย {snapshot.activity_target.cardio_target_min_week ?? "–"}–{snapshot.activity_target.cardio_target_max_week ?? "–"} นาที/สัปดาห์ ในระดับปานกลางเทียบเท่า</p>
-      <p>ประเมินแนวโน้มหลังประมาณ {snapshot.activity_target.review_after_days ?? 14} วัน แล้วค่อยเพิ่มกิจกรรมทีละขั้นเมื่อจำเป็น</p>
+      <p>{snapshot.activity_target.step_floor != null ? `รักษาจำนวนก้าวเฉลี่ยอย่างน้อยประมาณ ${Math.round(snapshot.activity_target.step_floor).toLocaleString("en-US")} ก้าว/วัน · ` : ""}คาร์ดิโอเป้าหมาย {snapshot.activity_target.cardio_target_min_week ?? "–"}–{snapshot.activity_target.cardio_target_max_week ?? "–"} นาที/สัปดาห์ เทียบเท่าความหนักระดับปานกลาง</p>
+      <p>ดูแนวโน้มหลังประมาณ {snapshot.activity_target.review_after_days ?? 14} วัน แล้วค่อยเพิ่มกิจกรรมทีละขั้นหากจำเป็น</p>
     </section> : null}
 
     {snapshot.progress_strategy ? <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">Goal Progress Logic</div>
-      <h2>{snapshot.progress_strategy.mode === "RECOMPOSITION" ? "เกณฑ์ติดตาม Recomp" : "เกณฑ์ติดตามเป้าหมาย"}</h2>
+      <h2>{snapshot.progress_strategy.mode === "RECOMPOSITION" ? "ติดตามผลลดไขมันและเพิ่มกล้ามเนื้อ" : "เกณฑ์ติดตามเป้าหมาย"}</h2>
       <p>{progressStrategyCopy(snapshot.progress_strategy)}</p>
-      <p>ใช้ข้อมูลอย่างน้อยประมาณ {snapshot.progress_strategy.review_after_days ?? 14} วันก่อนตัดสินใจปรับ เพื่อไม่ไล่ตามน้ำหนักขึ้นลงรายวัน</p>
+      <p>เก็บข้อมูลอย่างน้อยประมาณ {snapshot.progress_strategy.review_after_days ?? 14} วันก่อนปรับแผน เพื่อไม่ตัดสินจากน้ำหนักที่เปลี่ยนในแต่ละวัน</p>
     </section> : null}
 
-    {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">เซตหนักโดยตรงต่อสัปดาห์</div><h2>ปริมาณการฝึกรายสัปดาห์</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
+    {volumeEntries.length ? <section className="card" style={{ marginTop: 18 }}><div className="kicker">เซตฝึกจริงที่ลงกล้ามเนื้อนั้นโดยตรงต่อสัปดาห์</div><h2>ปริมาณการฝึกรายสัปดาห์</h2><p>{volumeEntries.map(([muscle, sets]) => `${muscleLabel[muscle] ?? muscle}: ${sets}`).join(" · ")}</p></section> : null}
 
     <TrainingPrinciplesCard />
     <FreeAdaptiveSummary guidance={guidance} />
@@ -306,9 +306,9 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     <ProgramWeek days={Number(snapshot.training_days_per_week ?? byDay.size)} focus={snapshot.primary_focus ?? "BALANCED"} dayLabels={dayLabels} />
 
     {Array.from(byDay.entries()).map(([day, dayItems]) => {
-      const dayLabel = dayItems[0]?.metadata?.day_label ?? `วันที่ฝึก ${day}`;
+      const dayLabel = dayItems[0]?.metadata?.day_label ?? `วันฝึกที่ ${day}`;
       return <section className="card day" key={day}>
-        <div className="kicker">วันที่ฝึก {day}</div><h2>{dayLabel}</h2>
+        <div className="kicker">วันฝึกที่ {day}</div><h2>{dayLabel}</h2>
         {dayItems.map((x) => {
           const label = x.metadata?.display_name ?? x.exercise_key;
           const updatedFromLab = Boolean(autoUpdate && x.metadata?.auto_update?.kind === "LAB_C1_TARGETED_REFRESH" && x.metadata?.auto_update?.source_result_id === autoUpdate.source_result_id);
@@ -333,7 +333,7 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
             </details>
 
             <details style={{ margin: "2px 0 8px" }}>
-              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>บันทึกการฝึก · ดูคำแนะนำครั้งถัดไป</summary>
+              <summary style={{ cursor: "pointer", fontSize: ".82rem", opacity: .78 }}>บันทึกผลและดูคำแนะนำครั้งถัดไป</summary>
               <WorkoutLogForm
                 itemId={x.item_id}
                 label={label}
@@ -355,6 +355,6 @@ export default async function ProgramPage({ searchParams }: { searchParams: Prom
     })}
 
     {hasRepDbVisuals && <RepDbAttribution />}
-    <div className="cta-row"><Link className="btn" href="/program/start">แก้การตั้งค่า Program</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">ดูตัวอย่างเวอร์ชันใหม่</Link>}<Link className="btn" href="/progress">บันทึกความคืบหน้า</Link>{isPro && <Link className="btn" href="/consult">เปิด PRO Review</Link>}</div>
+    <div className="cta-row"><Link className="btn" href="/program/start">แก้การตั้งค่า โปรแกรม</Link>{pendingInputs && <Link className="btn primary" href="/program/preview">ดูตัวอย่างเวอร์ชันใหม่</Link>}<Link className="btn" href="/progress">บันทึกความก้าวหน้า</Link>{isPro && <Link className="btn" href="/consult">เปิด การทบทวน PRO</Link>}</div>
   </AppShell>;
 }

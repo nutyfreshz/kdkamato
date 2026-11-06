@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/supabase/config";
 
 export default async function AccountPage(){
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ยังเชื่อมต่อระบบไม่ได้ กรุณาลองใหม่ภายหลัง</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
@@ -26,9 +26,9 @@ export default async function AccountPage(){
       <div className="card"><div className="kicker">อีเมล</div><div className="metric" style={{fontSize:"1rem"}}>{email || "–"}</div></div>
       <div className="card"><div className="kicker">ระดับบัญชี</div><div className="metric cyan">{access?.tier ?? "FREE"}</div></div>
       <div className="card"><div className="kicker">เวอร์ชันโปรแกรม</div><div className="metric">{programCount ?? 0}</div></div>
-      <div className="card"><div className="kicker">การเช็กอินความคืบหน้า</div><div className="metric">{progressCount ?? 0}</div></div>
+      <div className="card"><div className="kicker">จำนวนเช็กอิน</div><div className="metric">{progressCount ?? 0}</div></div>
     </div>
     {email ? <PhysicalConsultAccess email={email} /> : null}
-    <div className="card" style={{marginTop:18}}><p>บัญชี FREE และ PRO ใช้บัญชีและประวัติเดียวกัน การเปลี่ยนระดับบัญชีจัดการโดยระบบและไม่สามารถเปลี่ยนจากหน้าเว็บได้โดยตรง</p><LogoutButton /></div>
+    <div className="card" style={{marginTop:18}}><p>FREE และ PRO ใช้บัญชีและประวัติเดียวกัน ระบบเป็นผู้จัดการระดับบัญชี คุณเปลี่ยนระดับจากหน้านี้ไม่ได้</p><LogoutButton /></div>
   </AppShell>;
 }

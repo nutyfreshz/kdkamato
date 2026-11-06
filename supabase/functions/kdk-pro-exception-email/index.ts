@@ -72,14 +72,7 @@ Deno.serve(async (req) => {
       await sendResend(
         adminEmail,
         `[KDKAMATO PRO][${priority}] Training Exception ${code}`,
-        `<h2>KDKAMATO PRO — Exception ต้องตรวจ</h2>` +
-          `<p><strong>Case:</strong> ${code}</p>` +
-          `<p><strong>User:</strong> ${displayName}</p>` +
-          `<p><strong>Priority:</strong> ${priority}</p>` +
-          `<p><strong>Trigger:</strong> ${trigger}</p>` +
-          `<p><strong>Reason:</strong> ${reasons || "ไม่ระบุ"}</p>` +
-          `<p><strong>Review ID:</strong> <code>${esc(reviewId)}</code></p>` +
-          `<p>เปิด KDKAMATO PRO review package ด้วย Review ID นี้เพื่อดู evidence ก่อนตัดสินใจ</p>`,
+        `<h2>KDKAMATO PRO — มีกรณีที่ต้องตรวจสอบ</h2><p><strong>กรณี:</strong> ${code}</p><p><strong>ผู้ใช้:</strong> ${displayName}</p><p><strong>ความสำคัญ:</strong> ${priority}</p><p><strong>สิ่งที่ทำให้แจ้งเตือน:</strong> ${trigger}</p><p><strong>เหตุผล:</strong> ${reasons || "ไม่ระบุ"}</p><p><strong>รหัสทบทวน:</strong> <code>${esc(reviewId)}</code></p><p>ใช้รหัสนี้เปิดชุดข้อมูลทบทวน KDKAMATO PRO เพื่อตรวจข้อมูลก่อนตัดสินใจ</p>`,
       );
 
       const { error: markError } = await service.rpc(

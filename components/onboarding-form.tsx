@@ -82,28 +82,28 @@ export function OnboardingForm({ initial = {} }: { initial?: InitialFoundation }
   return (
     <div className="form">
       <div className="form-grid">
-        <label>เป้าหมาย<select value={form.goal} onChange={(e) => set("goal", e.target.value)}><option value="MUSCLE_GAIN">เพิ่มกล้ามเนื้อ</option><option value="FAT_LOSS">ลดไขมัน</option><option value="RECOMPOSITION">ปรับองค์ประกอบร่างกาย</option><option value="GENERAL_FITNESS">ฟิตเนสทั่วไป</option></select></label>
-        <label>ส่วนที่อยากเน้น<select value={form.trainingFocus} onChange={(e) => set("trainingFocus", e.target.value)}><option value="BALANCED">สมดุลทั้งตัว</option><option value="CHEST">เน้นหน้าอก</option><option value="BACK">เน้นหลัง</option><option value="ARMS">เน้นแขน</option><option value="LEGS">เน้นขา</option><option value="REPOSTURE">ปรับท่าทาง / สมดุลหัวไหล่</option></select></label>
+        <label>เป้าหมาย<select value={form.goal} onChange={(e) => set("goal", e.target.value)}><option value="MUSCLE_GAIN">เพิ่มกล้ามเนื้อ</option><option value="FAT_LOSS">ลดไขมัน</option><option value="RECOMPOSITION">ลดไขมันและเพิ่มกล้ามเนื้อ</option><option value="GENERAL_FITNESS">ดูแลความฟิตโดยรวม</option></select></label>
+        <label>ส่วนที่อยากเน้น<select value={form.trainingFocus} onChange={(e) => set("trainingFocus", e.target.value)}><option value="BALANCED">สมดุลทั้งตัว</option><option value="CHEST">เน้นหน้าอก</option><option value="BACK">เน้นหลัง</option><option value="ARMS">เน้นแขน</option><option value="LEGS">เน้นขา</option><option value="REPOSTURE">เน้นสมดุลหัวไหล่และสะบัก</option></select></label>
         <label>น้ำหนัก (กก.)<input inputMode="decimal" value={form.weightKg} onChange={(e) => set("weightKg", e.target.value)} placeholder="เช่น 80" /></label>
         <label>ประสบการณ์การฝึก<select value={form.trainingExperience} onChange={(e) => set("trainingExperience", e.target.value)}><option value="BEGINNER">เริ่มต้น</option><option value="INTERMEDIATE">ระดับกลาง</option><option value="EXPERIENCED">มีประสบการณ์</option></select></label>
         <label>จำนวนวันฝึกต่อสัปดาห์<select value={form.trainingDaysPerWeek} onChange={(e) => set("trainingDaysPerWeek", e.target.value)}><option value="2">2 วัน</option><option value="3">3 วัน</option><option value="4">4 วัน</option><option value="5">5 วัน</option><option value="6">6 วัน</option></select></label>
         <label>เวลาฝึกเฉลี่ยต่อครั้ง<select value={form.sessionDurationMin} onChange={(e) => set("sessionDurationMin", e.target.value)}><option value="45">ประมาณ 45 นาที</option><option value="60">ประมาณ 60 นาที</option><option value="75">ประมาณ 75 นาที</option><option value="90">ประมาณ 90 นาที</option></select></label>
-        <label>อุปกรณ์ที่ใช้งานได้<select value={form.equipmentProfile} onChange={(e) => set("equipmentProfile", e.target.value)}><option value="FULL_GYM">ฟิตเนสครบวงจร</option><option value="LIMITED_GYM">ฟิตเนสจำกัดอุปกรณ์</option><option value="HOME_BASIC">อุปกรณ์พื้นฐานที่บ้าน</option></select></label>
+        <label>อุปกรณ์ที่ใช้งานได้<select value={form.equipmentProfile} onChange={(e) => set("equipmentProfile", e.target.value)}><option value="FULL_GYM">ฟิตเนสที่มีอุปกรณ์ครบ</option><option value="LIMITED_GYM">ฟิตเนสที่มีอุปกรณ์จำกัด</option><option value="HOME_BASIC">อุปกรณ์พื้นฐานที่บ้าน</option></select></label>
       </div>
 
-      <div className="notice">จุดเน้นมีผลต่อจำนวนเซตหนักโดยตรงและการจัดท่าใน Program จริง ตัวเลือกปรับท่าทาง/สมดุลหัวไหล่จะเน้นกล้ามเนื้อหลังส่วนบน ด้านหลังหัวไหล่ ข้อต่อหัวไหล่ และกล้ามเนื้อควบคุมสะบัก เพื่อเพิ่มสมดุลของหัวไหล่และสะบัก แต่ไม่ใช่การฟื้นฟูหรือรักษาอาการปวด</div>
+      <div className="notice">กล้ามเนื้อที่เลือกเน้นมีผลต่อจำนวนเซตฝึกจริงและการจัดท่า ตัวเลือกสมดุลหัวไหล่จะเน้นหลังส่วนบน หัวไหล่ด้านหลัง กล้ามเนื้อรอบหัวไหล่ และกล้ามเนื้อควบคุมสะบัก โปรแกรมนี้ไม่ได้ใช้ฟื้นฟูหรือรักษาอาการปวด</div>
 
       <div className="form-grid">
         <label>ส่วนสูง (ซม.)<input inputMode="decimal" value={form.heightCm} onChange={(e) => set("heightCm", e.target.value)} /></label>
         <label>อายุ<input inputMode="numeric" value={form.ageYears} onChange={(e) => set("ageYears", e.target.value)} /></label>
-        <label>เพศสำหรับใช้คำนวณพลังงาน<select value={form.sex} onChange={(e) => set("sex", e.target.value)}><option value="">ยังไม่ระบุ</option><option value="MALE">ชาย</option><option value="FEMALE">หญิง</option></select></label>
+        <label>เพศที่ใช้ประกอบการคำนวณพลังงาน<select value={form.sex} onChange={(e) => set("sex", e.target.value)}><option value="">ยังไม่ระบุ</option><option value="MALE">ชาย</option><option value="FEMALE">หญิง</option></select></label>
         <label>จำนวนก้าวเฉลี่ยต่อวัน<input inputMode="numeric" value={form.averageSteps} onChange={(e) => set("averageSteps", e.target.value)} placeholder="ถ้าทราบ" /></label>
         <label>คาร์ดิโอ (นาทีต่อสัปดาห์)<input inputMode="numeric" value={form.cardioMinutesPerWeek} onChange={(e) => set("cardioMinutesPerWeek", e.target.value)} placeholder="ถ้ามี" /></label>
       </div>
 
-      <div className="notice">การประมาณพลังงานเป็นข้อมูลเสริม หากข้อมูลที่วัดได้ยังไม่เพียงพอ ระบบจะไม่เดาระดับกิจกรรมหรือแสดงตัวเลขที่ดูแม่นยำเกินจริง</div>
+      <div className="notice">ระบบจะประมาณพลังงานเมื่อมีข้อมูลเพียงพอ โดยไม่เดาระดับกิจกรรมแทนคุณ</div>
 
-      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังบันทึกข้อมูล..." : "บันทึกข้อมูลและดูตัวอย่าง"}</button>
+      <button className="btn primary" disabled={busy || !(Number(form.weightKg) > 0)} onClick={save}>{busy ? "กำลังบันทึกข้อมูล…" : "บันทึกข้อมูลและดูตัวอย่าง"}</button>
       {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกข้อมูลและเตรียมตัวอย่างโปรแกรม</div>}
       {error && <div className="notice warning" role="alert">{error}</div>}
     </div>

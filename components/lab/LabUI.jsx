@@ -26,7 +26,7 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
     why: 'ใช้เปรียบเทียบความยาวหน้าแข้งกับต้นขา เพื่อดูสัดส่วนช่วงขา',
     path: 'กึ่งกลางหัวเข่าด้านข้าง → ปุ่มกระดูกข้อเท้าด้านนอก',
     guide: 'ยืนตรง แล้ววัดด้านข้างของขาเป็นเส้นตรงจากหัวเข่าถึงข้อเท้า หน่วยเป็น ซม.',
-    mistake: 'อย่าวัดเฉียง และใช้จุดหัวเข่าหรือข้อเท้าคนละจุดในแต่ละครั้ง',
+    mistake: "อย่าวัดเฉียง และใช้จุดอ้างอิงหัวเข่ากับข้อเท้าตำแหน่งเดิมทุกครั้ง",
   } : {
     why: 'Used with femur length to describe your leg proportions.',
     path: 'Center of the outside of the knee → outer ankle bone',
@@ -95,7 +95,7 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   };
 
   if (has('knee-to-wall', 'เข่าถึงผนัง', 'knee to wall')) return th ? {
-    why: 'ใช้ระยะเข่าถึงผนังเพื่อเปรียบเทียบว่าแต่ละข้างสามารถเข่าเดินหน้าได้มากน้อยต่างกันแค่ไหนขณะลงน้ำหนัก',
+    why: "ใช้ระยะเท้าถึงผนังเปรียบเทียบการดันเข่าไปข้างหน้าของแต่ละข้างขณะส้นยังติดพื้น",
     path: 'ปลายนิ้วโป้งเท้า → กำแพง',
     guide: 'หันหน้าเข้าผนัง วางเท้าราบ ดันเข่าแตะผนังโดยส้นเท้าไม่ยก แล้วเลื่อนเท้าออกจนได้ระยะไกลที่สุดที่ทำซ้ำได้ วัดจากจุดเดิมของเท้าถึงผนัง',
     mistake: 'อย่าปล่อยส้นเท้าลอย อย่าหมุนเท้าเปลี่ยนมุมมากเกินไป หรือใช้จุดวัดคนละจุดระหว่างซ้ายและขวา',
@@ -109,7 +109,7 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
   if (has('body fat', 'bodyfat', 'ไขมัน')) return th ? {
     why: 'ใช้ร่วมกับน้ำหนักเพื่อคำนวณมวลไร้ไขมันและ FFMI',
     path: 'กรอกเปอร์เซ็นต์ไขมันจากวิธีที่คุณใช้จริง',
-    guide: 'ใช้ค่าจากเครื่องหรือวิธีประเมินที่คุณใช้จริง และหากต้องการเปรียบเทียบในครั้งต่อไป ควรใช้วิธีเดิม',
+    guide: "กรอกค่าจากวิธีที่คุณใช้จริง และใช้วิธีเดิมเมื่อต้องการเปรียบเทียบครั้งต่อไป",
     mistake: 'อย่าถือว่าค่าเปอร์เซ็นต์ไขมันเป็นค่าที่แม่นยำ 100%',
   } : {
     why: 'Used with body weight to estimate fat-free mass and FFMI.',
@@ -122,7 +122,7 @@ function simpleMeasurementCopy(label, language, guide, mistake, why) {
     why: 'ใช้คำนวณ FFMI และติดตามการเปลี่ยนแปลง',
     path: 'ชั่งด้วยเครื่องชั่งตามปกติ',
     guide: 'หากต้องการติดตาม ให้ชั่งในช่วงเวลาและเงื่อนไขใกล้เคียงกัน เช่น ตอนเช้าหลังเข้าห้องน้ำ',
-    mistake: 'อย่าเปรียบเทียบน้ำหนักที่ชั่งคนละช่วงเวลาและคนละสภาพ แล้วตีความมากเกินไป',
+    mistake: "น้ำหนักที่ชั่งคนละเวลาและคนละเงื่อนไขอาจต่างกัน จึงควรเปรียบเทียบอย่างระมัดระวัง",
   } : {
     why: 'Used for FFMI and progress tracking.',
     path: 'Use a normal body-weight scale',
@@ -173,15 +173,15 @@ export function ResultContract({ result, metric, meaning, use, watch, nextHref, 
 }
 
 export function PrivacyStrip({ ruleset, language = 'th' }) {
-  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : 'คำนวณบนอุปกรณ์ของคุณ'}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account' : 'ไม่ต้องมีบัญชีก็ใช้ได้ · บันทึกลงเซิร์ฟเวอร์เฉพาะเมื่อคุณกดบันทึกเข้าบัญชี'}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
+  return <div className="lab-privacy"><b>{language === 'en' ? 'ON-DEVICE CALCULATION' : "คำนวณบนอุปกรณ์นี้"}</b><span>{language === 'en' ? 'No account required · Server storage only when you choose Save to account' : "ใช้งานได้โดยไม่ต้องมีบัญชี ผลจะถูกส่งไปเก็บในบัญชีเมื่อคุณกดบันทึกเท่านั้น"}</span>{ruleset && <small>{ruleset.id}</small>}</div>;
 }
 
 export function MeasurementCheckNote({ language = 'th' }) {
-  return <p className="measurement-check-note">{language === 'en' ? 'Your entered values are never silently changed. If a result looks unusual, check your measurement landmarks and units first.' : 'ระบบจะไม่แก้ไขค่าที่คุณกรอกเอง หากผลดูผิดปกติ ให้ตรวจสอบจุดวัดและหน่วยวัดก่อนตีความ'}</p>;
+  return <p className="measurement-check-note">{language === 'en' ? 'Your entered values are never silently changed. If a result looks unusual, check your measurement landmarks and units first.' : "ระบบใช้ค่าที่คุณกรอก หากผลดูผิดปกติ ให้ตรวจจุดวัดและหน่วยก่อนอ่านผล"}</p>;
 }
 
 export function ImportedMeasurementNote({ children, language = 'th' }) {
-  return <div className="lab-import-note"><b>{language === 'en' ? 'Previously measured values loaded' : 'ระบบนำค่าที่วัดไว้ก่อนหน้ามาใช้แล้ว'}</b><span>{children}</span></div>;
+  return <div className="lab-import-note"><b>{language === 'en' ? 'Previously measured values loaded' : "ใช้ค่าที่เคยวัดแล้ว"}</b><span>{children}</span></div>;
 }
 
 export function ShareResult({ title, text, language = 'th' }) {

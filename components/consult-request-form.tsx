@@ -41,7 +41,7 @@ export function ConsultRequestForm() {
         const { error: notifyError } = await supabase.functions.invoke("kdk-consult-email", {
           body: { event: "REQUEST_CREATED", meetingId },
         });
-        if (notifyError) setWarning("บันทึกคำขอแล้ว แต่ระบบแจ้งเตือนอีเมล PRO ยังไม่สำเร็จ คำขอยังอยู่ในระบบและค้นได้จากเลขคำขอ");
+        if (notifyError) setWarning("บันทึกคำขอแล้ว แต่ยังส่งอีเมลแจ้งเตือนไม่สำเร็จ คุณยังติดตามคำขอได้จากเลขอ้างอิง");
       }
       setSent(true);
     } catch (e) {
@@ -53,17 +53,17 @@ export function ConsultRequestForm() {
 
   return <div className="card form">
     <div className="kicker">การปรึกษาออนไลน์เพิ่มเติม</div>
-    <h2>ขอให้ PRO ช่วยทบทวนเพิ่มเติม</h2>
-    <p>PRO ใช้การปรึกษาออนไลน์ได้สูงสุด 2 ครั้งต่อเดือน การส่งคำขอยังไม่ตัดสิทธิ์จนกว่าจะมีการใช้การปรึกษาจริง</p>
+    <h2>ขอให้ทบทวนเพิ่มเติม</h2>
+    <p>PRO ปรึกษาออนไลน์ได้สูงสุด 2 ครั้งต่อเดือน ระบบจะนับสิทธิ์เมื่อใช้การปรึกษาจริง</p>
     <label>อยากให้ช่วยดูเรื่องอะไร? (ไม่บังคับ)
-      <input value={reason} maxLength={500} onChange={(e) => setReason(e.target.value)} placeholder="เช่น การฝึก โภชนาการ Exercise Fit หรือคำถามอื่น" />
+      <input value={reason} maxLength={500} onChange={(e) => setReason(e.target.value)} placeholder={"เช่น ผลฝึก อาหาร ความเหมาะสมของท่า หรือคำถามอื่น"} />
     </label>
     <button className="btn primary" type="button" onClick={submit} disabled={busy || sent}>
-      {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง..." : "ส่งคำขอปรึกษา"}
+      {sent ? "ส่งคำขอแล้ว" : busy ? "กำลังส่ง…" : "ส่งคำขอปรึกษา"}
     </button>
-    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} เก็บเลขคำขอนี้ไว้สำหรับอ้างอิง PRO จะทบทวนข้อมูลและแจ้งวันนัดกลับทางอีเมล</div>}
+    {sent && <div className="notice">รับคำขอแล้ว{requestId ? ` · เลขคำขอ ${requestId}` : ""} เก็บเลขคำขอไว้สำหรับอ้างอิง ทีมงานจะทบทวนข้อมูลและแจ้งวันนัดทางอีเมล</div>}
     {warning && <div className="notice warning">{warning}</div>}
     {error && <div className="notice warning">{error}</div>}
-    {busy && <ProcessingOverlay title="กำลังส่งคำขอปรึกษา..." detail="กำลังสร้างคำขอเพื่อให้ PRO ทบทวน โดยยังไม่ตัดสิทธิ์การปรึกษา" />}
+    {busy && <ProcessingOverlay title={"กำลังส่งคำขอปรึกษา…"} detail={"กำลังส่งคำขอทบทวนเพิ่มเติม ขั้นตอนนี้ยังไม่นับสิทธิ์การปรึกษา"} />}
   </div>;
 }

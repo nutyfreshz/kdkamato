@@ -4,7 +4,7 @@ import { getLanguage } from '../../lib/language';
 
 export const metadata = {
   title: 'Training',
-  description: 'เปลี่ยนความรู้ฟิตเนสให้เป็นโปรแกรมฝึกที่นำไปใช้และติดตามผลได้กับ KDKAMATO.',
+  description: "นำความรู้ฟิตเนสมาใช้วางโปรแกรมฝึกและติดตามผลกับ KDKAMATO",
   alternates: { canonical: '/training' },
   openGraph: { title: 'Training | KDKAMATO', description: 'Turn evidence-led fitness knowledge into application.', url: '/training', siteName: 'KDKAMATO' }
 };
@@ -29,7 +29,7 @@ export default async function TrainingPage() {
           <p>
             {en
               ? 'Set your goal, training time, and equipment to build your program, then keep tracking your results with the same account.'
-              : 'ตั้งค่าเป้าหมายและเวลาฝึก เพื่อสร้างโปรแกรมของคุณ แล้วติดตามผลต่อในบัญชีเดิม'}
+              : "เลือกเป้าหมายและเวลาที่ฝึกได้ เพื่อสร้างโปรแกรมและติดตามผลในบัญชีเดิม"}
           </p>
           <div style={{display:'flex',gap:'12px',flexWrap:'wrap',marginTop:'28px'}}>
             <Link className="text-cta" href="/home">

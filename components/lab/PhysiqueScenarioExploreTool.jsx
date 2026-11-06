@@ -37,10 +37,10 @@ export function PhysiqueScenarioExploreTool({ language = 'th' }) {
       ? `ค่าปัจจุบันคือไหล่ ${shoulder} ซม. / เอว ${waist} ซม. ตัวอย่างที่เลือกจะเป็นไหล่ ${targetShoulder} ซม. / เอว ${targetWaist} ซม.`
       : `Current baseline: shoulder ${shoulder} cm / waist ${waist} cm. Selected scenario: shoulder ${targetShoulder} cm / waist ${targetWaist} cm.`,
     use: th
-      ? 'ใช้เพื่อเข้าใจว่าตัวเลขสัดส่วนตอบสนองต่อการเปลี่ยนช่วงบน เอว หรือทั้งสองด้านอย่างไรเท่านั้น ไม่ได้ใช้เลือก Program หรือกำหนดเป้าหมายให้คุณ'
+      ? "ใช้ดูว่าการเปลี่ยนช่วงบน เอว หรือทั้งสองอย่างส่งผลต่อสัดส่วนอย่างไร ผลนี้ไม่ได้ใช้เลือกโปรแกรมหรือตั้งเป้าหมายให้คุณ"
       : 'Use this only to understand how the ratio responds to upper-body, waist, or combined changes. It does not select your Program or prescribe a target.',
     watch: th
-      ? 'รอบไหล่และรอบเอวเปลี่ยนแปลงจากหลายปัจจัย และการเพิ่มรอบไหล่ 3 ซม. กับการลดรอบเอว 3 ซม. ไม่มีความยากหรือระยะเวลาเท่ากัน จึงไม่ควรตีความสถานการณ์จำลองนี้เป็นคำแนะนำ'
+      ? "รอบไหล่และเอวเปลี่ยนได้จากหลายปัจจัย การเพิ่มไหล่ 3 ซม. กับลดเอว 3 ซม. อาจใช้เวลาและความพยายามต่างกัน จึงไม่ควรใช้ตัวอย่างนี้เป็นคำแนะนำให้เปลี่ยนรูปร่าง"
       : 'Shoulder and waist measurements change for many reasons, and +3 cm at the shoulders is not equivalent in difficulty or time to -3 cm at the waist. Do not read this scenario as a prescription.',
     resultCode: 'C3_SCENARIO_RATIO'
   } : null;
@@ -51,15 +51,15 @@ export function PhysiqueScenarioExploreTool({ language = 'th' }) {
       id="C3_PHYSIQUE_GOAL"
       role="EXPLORE"
       technicalName="Physique Scenario Explorer"
-      title={th ? 'ถ้าไหล่หรือเอวเปลี่ยน สัดส่วน V (V-shape) จะเปลี่ยนไปแค่ไหน?' : 'If shoulder or waist measurements changed, how would the V-ratio change?'}
-      question={th ? 'นี่คือการคำนวณสถานการณ์จำลองเพื่อทำความเข้าใจสัดส่วน ไม่ใช่คำแนะนำว่าควรเพิ่มหรือลดกี่เซนติเมตร' : 'This is scenario math for understanding the ratio, not a recommendation for how many centimeters you should gain or lose.'}
+      title={th ? "เมื่อรอบไหล่หรือเอวเปลี่ยน สัดส่วนตัววีจะเปลี่ยนแค่ไหน?" : 'If shoulder or waist measurements changed, how would the V-ratio change?'}
+      question={th ? "แบบจำลองนี้ช่วยให้เข้าใจสัดส่วน ไม่ได้กำหนดว่าคุณควรเพิ่มหรือลดกี่เซนติเมตร" : 'This is scenario math for understanding the ratio, not a recommendation for how many centimeters you should gain or lose.'}
     />
 
     <div className="lab-workbench">
       <div>
         <div className="lab-import-note">
-          <b>{th ? 'กรอกครั้งเดียวพอ' : 'MEASURE ONCE'}</b>
-          <span>{th ? 'หากคุณเคยวัดสัดส่วน V (V-Taper) แล้ว ระบบจะใช้ค่ารอบไหล่และรอบเอวเดิมที่นี่โดยอัตโนมัติ' : 'If you already measured V-Taper, the same shoulder and waist values are reused automatically.'}</span>
+          <b>{th ? "ใช้ค่าที่เคยกรอกได้" : 'MEASURE ONCE'}</b>
+          <span>{th ? "หากเคยวัดสัดส่วนไหล่ต่อเอวแล้ว ระบบจะใช้รอบไหล่และเอวเดิมให้โดยอัตโนมัติ" : 'If you already measured V-Taper, the same shoulder and waist values are reused automatically.'}</span>
         </div>
 
         <div className="lab-input-grid">

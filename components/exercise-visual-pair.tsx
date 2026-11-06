@@ -11,9 +11,7 @@ export function ExerciseVisualPair({ exerciseKey, label }: { exerciseKey: string
   if (!visual) {
     return (
       <div style={{ marginTop: 10, maxWidth: 360 }}>
-        <p style={{ margin: "0 0 8px" }}>
-          ท่านี้ยังไม่มีภาพ Start / End ใน KDKAMATO เปิดรูปตัวอย่างที่ค้นหาชื่อท่าไว้ให้แล้วได้ทันที
-        </p>
+        <p style={{ margin: "0 0 8px" }}>ท่านี้ยังไม่มีภาพเริ่มต้นและสิ้นสุด กดดูรูปตัวอย่างจากผลค้นหาชื่อท่าได้</p>
         <a className="btn" href={searchUrl(label)} target="_blank" rel="noreferrer">
           ดูรูปตัวอย่างท่าบน Google
         </a>

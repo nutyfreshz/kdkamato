@@ -20,8 +20,8 @@ export function LogoutButton({ label = "ออกจากระบบ", redirec
 
   return (
     <>
-      <button className="btn" type="button" disabled={busy} onClick={logout}>{busy ? "กำลังออกจากระบบ..." : label}</button>
-      {busy && <ProcessingOverlay title="กำลังออกจากระบบ..." detail="กำลังปิดเซสชันของอุปกรณ์นี้และกลับไปที่หน้าเข้าสู่ระบบ" />}
+      <button className="btn" type="button" disabled={busy} onClick={logout}>{busy ? "กำลังออกจากระบบ…" : label}</button>
+      {busy && <ProcessingOverlay title={"กำลังออกจากระบบ…"} detail={"กำลังออกจากระบบบนอุปกรณ์นี้และกลับหน้าเข้าสู่ระบบ"} />}
     </>
   );
 }

@@ -47,11 +47,11 @@ export function ProgramWeek({
         {week.map((slot) => (
           <div key={slot.day} className={`${styles.weekCell} ${slot.rest ? styles.weekRest : styles.weekTrain}`}>
             <strong>{slot.day}</strong>
-            <span>{slot.rest ? "พัก" : dayLabels[slot.trainingDay ?? 0] ?? `วันที่ฝึก ${slot.trainingDay}`}</span>
+            <span>{slot.rest ? "พัก" : dayLabels[slot.trainingDay ?? 0] ?? `วันฝึกที่ ${slot.trainingDay}`}</span>
           </div>
         ))}
       </div>
-      <p className={styles.weekNote}>นี่คือตารางพักเริ่มต้น คุณสามารถขยับวันตามชีวิตจริงได้ แต่ควรเว้นวันพักให้ใกล้เคียงเดิม โดยเฉพาะรอบกล้ามเนื้อที่เป็นจุดเน้น</p>
+      <p className={styles.weekNote}>ใช้ตารางนี้เป็นจุดเริ่มต้น คุณขยับวันฝึกได้ตามสะดวก โดยรักษาระยะห่างของวันพักให้ใกล้เคียงเดิม โดยเฉพาะกล้ามเนื้อที่เลือกเน้น</p>
     </section>
   );
 }

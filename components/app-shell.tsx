@@ -23,7 +23,7 @@ const bottomNav = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={`${styles.root} app-shell`}>
-      <a className="skip-link" href="#app-main-content">ข้ามไปเนื้อหา</a>
+      <a className="skip-link" href="#app-main-content">ข้ามไปยังเนื้อหา</a>
       <aside className={`${styles.sidebar} app-sidebar`}>
         <Link className={styles.brand} href="/home">KDKAMATO <span>PROGRAM</span></Link>
         <nav className={`${styles.nav} app-nav`} aria-label="เมนูโปรแกรม">

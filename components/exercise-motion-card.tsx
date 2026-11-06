@@ -37,10 +37,10 @@ const SPECS: Record<MotionKind, Spec> = {
 function FailedPrototypeNotice({ title }: { title: string }) {
   return <article className={styles.motionCard}>
     <div className={styles.motionHeader}>
-      <div><div className="kicker">ต้นแบบที่เก็บไว้เป็นบันทึก</div><h2>{title}</h2><p>ภาพ SVG แบบนามธรรมไม่ผ่านเกณฑ์ด้านการจดจำ จึงไม่ถูกนำไปใช้จริง</p></div>
+      <div><div className="kicker">ต้นแบบที่เก็บไว้เป็นบันทึก</div><h2>{title}</h2><p>ภาพ SVG ชุดนี้ยังแสดงท่าฝึกได้ไม่ชัด จึงไม่นำมาใช้ในโปรแกรมจริง</p></div>
       <span className={styles.motionBadge}>ไม่ผ่านเกณฑ์</span>
     </div>
-    <div className="notice warning">แนวทางภาพถัดไป: ต้องเห็นคนและอุปกรณ์ชัดเจน พร้อมแยกภาพท่าเริ่มต้นและท่าสิ้นสุด ไม่ใช้ภาพเคลื่อนไหวแบบคนเส้นนามธรรม</div>
+    <div className="notice warning">ภาพชุดถัดไปต้องเห็นคน อุปกรณ์ และท่าเริ่มต้นกับท่าสิ้นสุดชัดเจน โดยไม่ใช้ภาพคนเส้นแบบนามธรรม</div>
   </article>;
 }
 

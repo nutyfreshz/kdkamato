@@ -54,8 +54,8 @@ export default async function GuidePage() {
         <section className={`${styles.journeySection} guide-journey`} id="start">
           <div className={styles.sectionHead} data-guide-reveal>
             <p className={styles.eyebrow}>{language === "en" ? "ONE SIMPLE MODEL" : "หลักการทำงาน"}</p>
-            <h2>{language === "en" ? "KDKAMATO turns information into a testable decision." : "KDKAMATO ไม่ได้ตัดสินจากตัวเลขเดียว"}</h2>
-            <p>{language === "en" ? "Not input → answer. The useful loop is input → context → decision → real-world test." : "เราเอาข้อมูลมาดูร่วมกับเป้าหมายของคุณ แล้วแนะนำสิ่งที่น่าลอง จากนั้นใช้ผลจริงของคุณตัดสินต่อ"}</p>
+            <h2>{language === "en" ? "KDKAMATO turns information into a testable decision." : "ใช้ข้อมูลหลายด้านประกอบการฝึก"}</h2>
+            <p>{language === "en" ? "Not input → answer. The useful loop is input → context → decision → real-world test." : "ระบบพิจารณาข้อมูลร่วมกับเป้าหมายของคุณ เพื่อแนะนำสิ่งที่น่าลอง แล้วใช้ผลฝึกจริงประกอบการปรับครั้งถัดไป"}</p>
           </div>
           <div className={styles.journey}>
             {guideJourney.map((step, index) => (
@@ -92,24 +92,24 @@ export default async function GuidePage() {
             <h2>{language === "en" ? "Not two separate systems." : "FREE และ PRO ใช้ระบบเดียวกัน"}</h2>
             <p>{language === "en"
               ? "FREE builds the same useful loop: Program, LAB, and Progress. PRO adds deeper review across more signals and longer history."
-              : "FREE มี Program, LAB และ Progress ครบสำหรับใช้งานหลัก ส่วน PRO เพิ่มการดูข้อมูลหลายด้านและประวัติที่ยาวขึ้น เพื่อช่วยตัดสินใจก่อนปรับ Program"}</p>
+              : "FREE มีโปรแกรม LAB และการติดตามผลสำหรับใช้งานหลัก ส่วน PRO เพิ่มการทบทวนข้อมูลหลายด้านและประวัติระยะยาวก่อนปรับโปรแกรม"}</p>
           </div>
           <div className={styles.tierCards}>
             <article className={styles.freeTier} data-guide-reveal>
               <span>FREE</span>
               <h3>{language === "en" ? "Build the loop" : "ใช้ครบตั้งแต่เริ่มจนดูผล"}</h3>
-              <p>{language === "en" ? "Set your Program, use LAB when a specific question appears, and feed real outcomes back through Progress." : "ตั้ง Program ใช้ LAB เมื่อต้องการตอบคำถามเฉพาะ แล้วดูผลจริงผ่าน Progress"}</p>
+              <p>{language === "en" ? "Set your Program, use LAB when a specific question appears, and feed real outcomes back through Progress." : "ตั้งโปรแกรม ใช้ LAB เมื่อมีคำถามเฉพาะ แล้วติดตามผลฝึกจริงในหน้าความก้าวหน้า"}</p>
             </article>
             <article className={styles.proTier} data-guide-reveal>
               <span>PRO</span>
               <h3>{language === "en" ? "Deepen the review" : "ช่วยดูภาพรวมให้ลึกขึ้น"}</h3>
-              <p>{language === "en" ? "Review progress, training response, LAB context, Exercise Memory, and Program history together before deciding what should change." : "เอาความคืบหน้า ผลการฝึก LAB, Exercise Memory และประวัติ Program มาดูพร้อมกันก่อนตัดสินใจว่าจะปรับอะไร"}</p>
+              <p>{language === "en" ? "Review progress, training response, LAB context, Exercise Memory, and Program history together before deciding what should change." : "พิจารณาความก้าวหน้า ผลฝึก ผล LAB ประวัติรายท่า และประวัติโปรแกรมร่วมกัน ก่อนแนะนำการปรับแผน"}</p>
             </article>
           </div>
         </section>
 
         <section className={`${styles.detailSection} guide-details`}>
-          <aside className={`${styles.detailNav} guide-detail-nav`} aria-label={language === "en" ? "Guideline sections" : "หัวข้อ Guideline"}>
+          <aside className={`${styles.detailNav} guide-detail-nav`} aria-label={language === "en" ? "Guideline sections" : "หัวข้อในคู่มือ"}>
             <p>{language === "en" ? "JUMP TO" : "ไปที่"}</p>
             {guideSections.map((section) => <Link key={section.id} href={`#${section.id}`}>{section.number} · {t(section.eyebrow)}</Link>)}
           </aside>
@@ -124,7 +124,7 @@ export default async function GuidePage() {
                 <h2>{t(section.title)}</h2>
                 <div className={styles.explainGrid}>
                   <div><small>{language === "en" ? "WHY" : "ช่วยอะไร"}</small><p>{t(section.why)}</p></div>
-                  <div><small>{language === "en" ? "WHEN" : "ใช้เมื่อไหร่"}</small><p>{t(section.when)}</p></div>
+                  <div><small>{language === "en" ? "WHEN" : "ใช้เมื่อไร"}</small><p>{t(section.when)}</p></div>
                 </div>
                 <ol className={styles.steps}>
                   {section.steps.map((step, index) => (
@@ -132,7 +132,7 @@ export default async function GuidePage() {
                   ))}
                 </ol>
                 <div className={styles.outcome}>
-                  <small>{language === "en" ? "WHAT YOU SHOULD GET" : "สุดท้ายควรได้อะไร"}</small>
+                  <small>{language === "en" ? "WHAT YOU SHOULD GET" : "ผลที่ควรได้"}</small>
                   <p>{t(section.outcome)}</p>
                 </div>
                 {section.links.length > 0 && (
@@ -151,10 +151,10 @@ export default async function GuidePage() {
 
         <section className={`${styles.finalCta} guide-final`} data-guide-reveal>
           <p className={styles.eyebrow}>{language === "en" ? "START WHERE YOU ARE" : "พร้อมแล้วค่อยไปใช้จริง"}</p>
-          <h2>{language === "en" ? "The guide should disappear once you know your next action." : "ถ้าเข้าใจแล้วว่าควรเริ่มตรงไหน ก็ไปใช้เครื่องมือได้เลย"}</h2>
+          <h2>{language === "en" ? "The guide should disappear once you know your next action." : "เมื่อรู้ว่าจะเริ่มตรงไหนแล้ว เปิดเครื่องมือที่ต้องการใช้ได้เลย"}</h2>
           <div className={styles.heroActions}>
             <Link className={styles.primaryButton} href="/lab">{language === "en" ? "OPEN LAB" : "เปิด LAB"} <span>→</span></Link>
-            <Link className={styles.secondaryButton} href="/program/start">{language === "en" ? "START PROGRAM" : "เริ่ม Program"} <span>→</span></Link>
+            <Link className={styles.secondaryButton} href="/program/start">{language === "en" ? "START PROGRAM" : "เริ่ม โปรแกรม"} <span>→</span></Link>
           </div>
         </section>
       </main>

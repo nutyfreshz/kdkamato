@@ -25,7 +25,7 @@ export default async function JourneyPage({searchParams}:{searchParams:Promise<{
   db.rpc('get_my_workout_history',{p_days:windowDays}),
   db.from('nutrition_daily_logs').select('entry_date,calories,target_low,target_high').eq('user_id',uid).gte('entry_date',start).lte('entry_date',today).order('entry_date',{ascending:false}).limit(90)
  ]);
- if(baseline.error||program.error||checkins.error)return <AppShell><h1>ไม่สามารถอ่านความก้าวหน้าได้</h1><p>โปรดลองใหม่อีกครั้ง ข้อมูลของคุณไม่ได้ถูกแก้ไข</p></AppShell>;
+ if(baseline.error||program.error||checkins.error)return <AppShell><h1>ยังโหลดข้อมูลความก้าวหน้าไม่ได้</h1><p>กรุณาลองใหม่อีกครั้ง ประวัติของคุณยังเหมือนเดิม</p></AppShell>;
  const active=program.data;
  const items=active?await db.from('training_program_items').select('item_id,training_day,sets,exercise_key,metadata').eq('program_id',active.program_id):{data:[],error:null};
  const targets=active?await db.from('nutrition_targets').select('calorie_low,calorie_high,maintenance_low,maintenance_high').eq('program_id',active.program_id).maybeSingle():{data:null,error:null};

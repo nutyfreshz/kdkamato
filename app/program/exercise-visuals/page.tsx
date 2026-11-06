@@ -19,7 +19,7 @@ export default function ExerciseVisualBatchPage() {
     <AppShell>
       <div className="topline">ภาพประกอบท่าฝึก · ชุดที่ 01</div>
       <h1>คลังภาพท่าฝึก RepDB</h1>
-      <p>ชุดภาพที่ใช้งานใน Program ปัจจุบัน ท่าที่ค้างอยู่จะเพิ่มเมื่อผ่านการตรวจสอบความชัดเจนและเหมาะกับการใช้งานจริง</p>
+      <p>ภาพที่ใช้ในโปรแกรมปัจจุบัน เราจะเพิ่มท่าอื่นเมื่อภาพผ่านการตรวจความชัดเจนและความเหมาะสมแล้ว</p>
       <div className="grid" style={{ marginTop: 18 }}>
         {BATCH.map(([key, label]) => (
           <section className="card" key={key}>

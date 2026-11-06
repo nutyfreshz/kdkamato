@@ -51,7 +51,7 @@ export default function SiteHeader({ language = 'th' }) {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">{language === 'en' ? 'Skip to content' : 'ข้ามไปเนื้อหา'}</a>
+      <a className="skip-link" href="#main-content">{language === 'en' ? 'Skip to content' : "ข้ามไปยังเนื้อหา"}</a>
       <header className="site-header">
         <Link className="brand" href="/" onClick={close}>KDKAMATO</Link>
         <div style={{display:'flex',alignItems:'center'}}>

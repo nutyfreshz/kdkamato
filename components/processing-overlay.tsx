@@ -3,8 +3,8 @@
 import styles from "./program-app.module.css";
 
 export function ProcessingOverlay({
-  title = "กำลังประมวลผล...",
-  detail = "กรุณารอสักครู่ ระบบกำลังบันทึกและอัปเดตข้อมูล",
+  title = "กำลังประมวลผล…",
+  detail = "กำลังบันทึกและอัปเดตข้อมูล กรุณารอสักครู่",
 }: {
   title?: string;
   detail?: string;

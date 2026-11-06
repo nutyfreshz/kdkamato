@@ -17,7 +17,7 @@ function actionText(item?: FreeGuidanceItem | null) {
     case "READY_TO_PROGRESS":
       return "ถึงช่วงบนของจำนวนครั้งแล้ว ถ้าคุมท่าได้ดี ให้เพิ่มน้ำหนักเล็กน้อย";
     case "CONFIRM_EFFORT":
-      return "ถึงช่วงบนของจำนวนครั้งแล้ว แต่ข้อมูล RIR หรือการคุมท่ายังไม่พอ ครั้งถัดไปคงน้ำหนักเดิมและบันทึกให้ครบก่อนเพิ่ม";
+      return "ทำได้ถึงจำนวนครั้งสูงสุดของช่วงแล้ว แต่ยังต้องบันทึกแรงที่เหลือและการคุมท่าให้ครบ ครั้งถัดไปใช้น้ำหนักเดิมก่อน";
     case "HOLD_CONTROL":
       return "คงน้ำหนักเดิมก่อน แล้วทำให้ท่านิ่งและคุมช่วงลงได้ดีขึ้น";
     case "BUILD_REPS":
@@ -25,9 +25,9 @@ function actionText(item?: FreeGuidanceItem | null) {
     case "COMPLETE_TARGET":
       return "ทำจำนวนเซตให้ครบตามแผนก่อน แล้วค่อยเพิ่มความยาก";
     case "REDUCE_LOAD":
-      return "ลดน้ำหนักเล็กน้อย เพื่อกลับเข้าเป้าจำนวนครั้งโดยยังคุมท่าได้";
+      return "ลดน้ำหนักที่ยกเล็กน้อย เพื่อให้กลับมาทำจำนวนครั้งตามเป้าและยังคุมท่าได้";
     case "REVIEW_EXERCISE":
-      return "ยังไม่ต้องฝืนท่านี้ มีสัญญาณว่าควรทบทวนท่าหรือวิธีทำก่อน";
+      return "ยังไม่ต้องฝืนท่านี้ ควรทบทวนท่าหรือวิธีทำก่อน";
     case "REVIEW_PROGRAM":
       return "ยังไม่ต้องเร่งเพิ่มความหนัก มีสัญญาณจากหลายครั้งว่าควรทบทวนโปรแกรม";
     case "HOLD_RECOVERY":
@@ -37,7 +37,7 @@ function actionText(item?: FreeGuidanceItem | null) {
     case "HOLD_EFFORT":
       return "ถึงจำนวนครั้งเป้าแล้ว แต่เซตหนักเกินไป คงน้ำหนักเดิมก่อน";
     default:
-      return "ทำตามช่วงจำนวนครั้งและเหลือแรงที่กำหนดก่อน";
+      return "ทำจำนวนครั้งตามช่วงที่กำหนด โดยเหลือแรงตามเป้าหมาย";
   }
 }
 
@@ -98,7 +98,7 @@ export function WorkoutLogForm({
     if (busy || !hasReps) return;
     const lastFilled=rows.findLastIndex(row=>row.reps.trim()!=="");
     if(rows.slice(0,lastFilled+1).some(row=>!Number.isInteger(Number(row.reps))||Number(row.reps)<=0)){
-      setError("กรอกจำนวนครั้งตามลำดับเซตโดยไม่เว้นช่อง เพื่อเก็บเลขเซตให้ถูกต้อง");return;
+      setError("กรอกจำนวนครั้งเรียงตามเซตโดยไม่เว้นช่อง เพื่อให้ระบบเก็บเลขเซตถูกต้อง");return;
     }
     const setEntries = rows
       .filter((row) => Number(row.reps) > 0)
@@ -136,11 +136,9 @@ export function WorkoutLogForm({
       <div className="notice" style={{ marginBottom: 12 }}>
         <strong>คำแนะนำครั้งถัดไป:</strong> {actionText(guidance)}
       </div>
-      <p style={{ marginTop: 0 }}>
-        บันทึกเฉพาะเซตฝึกจริงของ {label} ไม่รวมวอร์มอัพ · เป้าหมาย {repMin}–{repMax} ครั้ง · เหลือแรงประมาณ {targetRir} ครั้ง
-      </p>
+      <p style={{ marginTop: 0 }}>บันทึกเฉพาะเซตฝึกจริงของ {label} ไม่รวมวอร์มอัป · เป้าหมาย {repMin}–{repMax} ครั้ง · เหลือแรงประมาณ {targetRir} ครั้ง</p>
 
-      <p>บันทึกแยกตามวันที่ประเทศไทย: วันใหม่เพิ่มประวัติ บันทึกท่าเดิมซ้ำวันนี้จะแก้รายการของวันนี้ ไม่ลบวันก่อนหน้า</p>
+      <p>ระบบใช้วันที่ประเทศไทย บันทึกวันใหม่จะเพิ่มประวัติ ส่วนบันทึกท่าเดิมซ้ำในวันเดียวกันจะอัปเดตเฉพาะวันนั้น</p>
       <a href="/progress/journey">ดูน้ำหนัก จำนวนครั้ง และแรงที่เหลือย้อนหลัง →</a>
       <div style={{ display: "grid", gap: 8 }}>
         {rows.map((row, index) => (
@@ -176,7 +174,7 @@ export function WorkoutLogForm({
       </label>
 
       <button className="btn primary" type="button" disabled={busy || !hasReps} onClick={save}>
-        {busy ? "กำลังบันทึก..." : "บันทึกท่านี้ของวันนี้"}
+        {busy ? "กำลังบันทึก…" : "บันทึกท่านี้ของวันนี้"}
       </button>
       {saved && <div className="notice" role="status" aria-live="polite">บันทึกของวันนี้แล้ว · ดูประวัติและเปรียบเทียบกับวันก่อนหน้าได้ที่หน้าความก้าวหน้า</div>}
       {error && <div className="notice warning" role="alert">{error}</div>}

@@ -663,10 +663,10 @@ function buildProgressStrategy(goal) {
 function nextRule(exercise, repMax, targetRir) {
   const rule = exercise.load_rule;
   if (rule.mode === "VARIATION_OR_LOAD") {
-    return { trigger: `ทุก working set ถึง ${repMax} reps ที่ประมาณ RIR ${targetRir}`, action: rule.label, increment_pct_low: null, increment_pct_high: null };
+    return { trigger: `ทำทุกเซตฝึกจริงได้ถึง ${repMax} ครั้ง โดยเหลือแรงประมาณ ${targetRir} ครั้ง (RIR)`, action: rule.label, increment_pct_low: null, increment_pct_high: null };
   }
   return {
-    trigger: `ทุก working set ถึง ${repMax} reps ที่ประมาณ RIR ${targetRir}`,
+    trigger: `ทำทุกเซตฝึกจริงได้ถึง ${repMax} ครั้ง โดยเหลือแรงประมาณ ${targetRir} ครั้ง (RIR)`,
     action: `เพิ่มน้ำหนัก ${rule.label}`,
     increment_pct_low: rule.low,
     increment_pct_high: rule.high,

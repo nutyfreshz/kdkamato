@@ -20,10 +20,10 @@ function SelectButtons({ label, value, onChange, options }) {
 
 function ReuseNote({ language }) {
   return <div className="lab-import-note">
-    <b>{language === 'en' ? 'MEASURE ONCE' : 'กรอกครั้งเดียวพอ'}</b>
+    <b>{language === 'en' ? 'MEASURE ONCE' : "ใช้ค่าที่เคยกรอกได้"}</b>
     <span>{language === 'en'
       ? 'If you already measured this in a Quick Check, the same value is reused here automatically.'
-      : 'หากคุณเคยวัดค่านี้ใน Quick Check แล้ว ระบบจะใช้ค่าเดิมที่นี่โดยอัตโนมัติ โดยไม่ต้องวัดใหม่'}</span>
+      : "หากเคยวัดค่านี้ในเครื่องมือวัดแบบรวดเร็ว ระบบจะนำค่าเดิมมาใช้ให้ ไม่ต้องวัดใหม่"}</span>
   </div>;
 }
 
@@ -43,8 +43,8 @@ export function ExerciseFitSimpleTool({ language='th' }) {
       id="C1_EXERCISE_FIT"
       role="CORE"
       technicalName="Exercise Fit Explorer"
-      title={th ? 'ท่านี้ควรปรับอะไรให้เข้ากับโครงสร้างร่างกายของคุณมากขึ้น?' : 'What should you adjust to make this movement fit you better?'}
-      question={th ? 'เลือกท่าก่อน แล้วกรอกเฉพาะค่าที่ท่านั้นต้องใช้ ระบบจะแนะนำให้ลองเปรียบเทียบอะไรต่อ' : 'Choose the movement first, then enter only the measurements that movement needs.'}
+      title={th ? "ควรลองปรับท่านี้อย่างไรให้เข้ากับร่างกายคุณ?" : 'What should you adjust to make this movement fit you better?'}
+      question={th ? "เลือกท่าและกรอกข้อมูลที่จำเป็น ระบบจะแนะนำสิ่งที่ควรลองเปรียบเทียบ" : 'Choose the movement first, then enter only the measurements that movement needs.'}
     />
 
     <div className="lab-workbench">
@@ -56,20 +56,20 @@ export function ExerciseFitSimpleTool({ language='th' }) {
         <ReuseNote language={language}/>
 
         {movement === 'SQUAT' && <InputGrid>
-          <Field language={language} label={th?'ช่วงต้นขา (Femur segment)':'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
-          <Field language={language} label={th?'ช่วงหน้าแข้ง (Tibia segment)':'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
+          <Field language={language} label={th?"ความยาวช่วงต้นขา":'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
+          <Field language={language} label={th?"ความยาวช่วงหน้าแข้ง":'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
         </InputGrid>}
 
         {movement === 'BENCH' && <InputGrid>
-          <Field language={language} label={th?'ส่วนสูง (Height)':'HEIGHT'} unit="cm" value={height} onChange={setHeight}/>
-          <Field language={language} label={th?'ช่วงแขน (Arm span)':'ARM SPAN'} unit="cm" value={armSpan} onChange={setArmSpan}/>
+          <Field language={language} label={th?"ส่วนสูง":'HEIGHT'} unit="cm" value={height} onChange={setHeight}/>
+          <Field language={language} label={th?"ช่วงแขนเมื่อกางแขน":'ARM SPAN'} unit="cm" value={armSpan} onChange={setArmSpan}/>
         </InputGrid>}
 
         {movement === 'DEADLIFT' && <InputGrid>
-          <Field language={language} label={th?'ส่วนสูง (Height)':'HEIGHT'} unit="cm" value={height} onChange={setHeight}/>
-          <Field language={language} label={th?'ช่วงแขน (Arm span)':'ARM SPAN'} unit="cm" value={armSpan} onChange={setArmSpan}/>
-          <Field language={language} label={th?'ช่วงต้นขา (Femur segment)':'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
-          <Field language={language} label={th?'ช่วงหน้าแข้ง (Tibia segment)':'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
+          <Field language={language} label={th?"ส่วนสูง":'HEIGHT'} unit="cm" value={height} onChange={setHeight}/>
+          <Field language={language} label={th?"ช่วงแขนเมื่อกางแขน":'ARM SPAN'} unit="cm" value={armSpan} onChange={setArmSpan}/>
+          <Field language={language} label={th?"ความยาวช่วงต้นขา":'FEMUR SEGMENT'} unit="cm" value={femur} onChange={setFemur}/>
+          <Field language={language} label={th?"ความยาวช่วงหน้าแข้ง":'TIBIA SEGMENT'} unit="cm" value={tibia} onChange={setTibia}/>
         </InputGrid>}
 
         <MeasurementCheckNote language={language}/>
@@ -98,22 +98,22 @@ export function SquatGeometrySimpleTool({ language='th' }) {
 
   const variantName = variant === 'front' ? 'Front Squat' : variant === 'lowbar' ? 'Low-Bar Back Squat' : 'High-Bar Back Squat';
   const result = ft ? {
-    result: th ? `กำลังเทียบ ${variantName} กับ setup ที่คุณเลือก` : `Comparing ${variantName} with your selected setup`,
+    result: th ? `กำลังเปรียบเทียบ ${variantName} ตามการจัดท่าที่เลือก` : `Comparing ${variantName} with your selected setup`,
     metric:`Femur:Tibia ${ft.ratio}`,
     meaning: th
       ? `ช่วงต้นขากับหน้าแข้งของคุณต่างกันประมาณ ${Math.abs(ft.percent)}% ${copy.kneeCopy} ${copy.variantCopy}`
       : `Your measured femur and tibia segments differ by about ${Math.abs(ft.percent)}%. ${copy.kneeCopy} ${copy.variantCopy}`,
     use: th
-      ? `${copy.heelCopy} ${copy.stanceCopy} เปลี่ยนทีละอย่าง แล้วเอา setup ที่รู้สึกควบคุมง่ายไปลองจริงในยิม${ankle ? ` · Knee-to-Wall ที่วัดไว้: ซ้าย ${ankle.left} ซม. / ขวา ${ankle.right} ซม.` : ''}`
+      ? `${copy.heelCopy} ${copy.stanceCopy} เปลี่ยนทีละอย่าง แล้วนำแบบที่คุมท่าได้ง่ายไปลองฝึกจริง${ankle ? ` · Knee-to-Wall ที่วัดไว้: ซ้าย ${ankle.left} ซม. / ขวา ${ankle.right} ซม.` : ''}`
       : `${copy.heelCopy} ${copy.stanceCopy} Change one thing at a time, then test the easiest-to-control setup in training${ankle ? ` · Saved Knee-to-Wall: L ${ankle.left} cm / R ${ankle.right} cm` : ''}.`,
     watch: th
-      ? 'นี่คือ scenario สำหรับเปรียบเทียบ ไม่ใช่ภาพจำลองกระดูกจริง และไม่ได้ฟันธงว่า setup ไหนดีที่สุดก่อนที่คุณจะลองฝึกจริง'
+      ? "ใช้แบบจำลองนี้เปรียบเทียบการจัดท่า ไม่ใช่ภาพกระดูกจริง และยังสรุปไม่ได้ว่าท่าใดดีที่สุดจนกว่าจะลองฝึก"
       : 'This is a comparison scenario, not a skeletal simulation, and it cannot decide the best setup before you test it in training.',
     resultCode:'C2_SCENARIO_COMPARE'
   } : null;
 
   return <>
-    <ToolHeader language={language} id="C2_SQUAT_GEOMETRY" role="CORE" technicalName="Squat Setup Explorer" title={th?'Squat setup แบบไหนควรลองก่อน?':'Which Squat setup is worth trying first?'} question={th?'ใช้สัดส่วนช่วงขาที่วัดไว้ แล้วเปลี่ยน setup ทีละอย่าง ไม่ต้องอ่านภาพ vector หรือมุมข้อต่อ':'Reuse your leg measurements and change one setup variable at a time. No joint-angle diagram required.'}/>
+    <ToolHeader language={language} id="C2_SQUAT_GEOMETRY" role="CORE" technicalName="Squat Setup Explorer" title={th?"ควรลองจัดท่าสควอตแบบไหนก่อน?":'Which Squat setup is worth trying first?'} question={th?"ใช้สัดส่วนขาที่วัดไว้เปรียบเทียบการจัดท่าทีละอย่าง โดยไม่ต้องอ่านภาพเวกเตอร์หรือมุมข้อต่อ":'Reuse your leg measurements and change one setup variable at a time. No joint-angle diagram required.'}/>
     <div className="lab-workbench">
       <div>
         <ReuseNote language={language}/>
@@ -127,8 +127,8 @@ export function SquatGeometrySimpleTool({ language='th' }) {
         <div className="control-stack">
           <SelectButtons label={th?'รูปแบบ Squat':'SQUAT VARIANT'} value={variant} onChange={setVariant} options={[["front","FRONT"],["highbar","HIGH-BAR"],["lowbar","LOW-BAR"]]}/>
           <SelectButtons label={th?'ส้นเท้า':'HEEL'} value={heel} onChange={setHeel} options={[["flat",th?"พื้นราบ":"FLAT"],["small",th?"ยกเล็กน้อย":"SMALL LIFT"],["moderate",th?"ยกปานกลาง":"MODERATE LIFT"]]}/>
-          <SelectButtons label={th?'ความกว้างเท้า':'STANCE'} value={stance} onChange={setStance} options={[["narrow",th?"แคบ":"NARROW"],["medium",th?"กลาง":"MEDIUM"],["wide",th?"กว้าง":"WIDE"]]}/>
-          <SelectButtons label={th?'ให้เข่าเดินหน้า':'KNEE TRAVEL'} value={kneeTravel} onChange={setKneeTravel} options={[["less",th?"น้อย":"LESS"],["mid",th?"กลาง":"MID"],["more",th?"มาก":"MORE"]]}/>
+          <SelectButtons label={th?"ระยะห่างระหว่างเท้า":'STANCE'} value={stance} onChange={setStance} options={[["narrow",th?"แคบ":"NARROW"],["medium",th?"กลาง":"MEDIUM"],["wide",th?"กว้าง":"WIDE"]]}/>
+          <SelectButtons label={th?"ระยะที่เข่าเคลื่อนไปข้างหน้า":'KNEE TRAVEL'} value={kneeTravel} onChange={setKneeTravel} options={[["less",th?"น้อย":"LESS"],["mid",th?"กลาง":"MID"],["more",th?"มาก":"MORE"]]}/>
         </div>
 
         <MeasurementCheckNote language={language}/>
@@ -163,16 +163,16 @@ export function PhysiqueGoalSimpleTool({ language='th' }) {
       ? `ฐานปัจจุบันคือไหล่ ${shoulder} ซม. / เอว ${waist} ซม. ตัวอย่างที่เลือกจะเป็นไหล่ ${targetShoulder} ซม. / เอว ${targetWaist} ซม.`
       : `Current baseline: shoulder ${shoulder} cm / waist ${waist} cm. Selected scenario: shoulder ${targetShoulder} cm / waist ${targetWaist} cm.`,
     use: th
-      ? 'ใช้เพื่อดูว่าการเปลี่ยนช่วงบน เอว หรือทั้งสองทางให้ผลเชิงสัดส่วนต่างกันอย่างไร ไม่ใช่เป้าหมายที่ระบบบังคับให้คุณต้องทำ'
+      ? "ใช้ดูว่าการเปลี่ยนช่วงบน เอว หรือทั้งสองอย่างส่งผลต่อสัดส่วนอย่างไร โดยไม่ได้กำหนดเป้าหมายให้คุณ"
       : 'Use this to compare how upper-body, waist, or combined changes affect proportion. It is not a prescribed target.',
     watch: th
-      ? 'V-Taper ratio ไม่ใช่คะแนนความน่าดึงดูด และตัวเลขตัวอย่างไม่ได้บอกว่าคุณควรเพิ่มกล้ามหรือลดไขมันเท่าไรจริง'
+      ? "อัตราส่วนไหล่ต่อเอวใช้เปรียบเทียบสัดส่วน ไม่ใช่คะแนนความน่าดึงดูดหรือคำแนะนำว่าควรเพิ่มกล้ามหรือลดไขมันเท่าไร"
       : 'V-Taper ratio is not an attractiveness score, and these example numbers do not prescribe how much muscle to gain or fat to lose.',
     resultCode:'C3_SCENARIO_RATIO'
   } : null;
 
   return <>
-    <ToolHeader language={language} id="C3_PHYSIQUE_GOAL" role="CORE" technicalName="Physique Goal Explorer" title={th?'อยากให้หุ่นดู V ขึ้น ควรเปลี่ยนด้านไหน?':'Want a stronger V-shape? Which side of the ratio changes it?'} question={th?'ใช้รอบไหล่และเอวที่วัดไว้เป็นฐาน แล้วลอง scenario แบบง่าย ๆ โดยไม่ต้องคำนวณซ้ำ':'Reuse your shoulder and waist measurements as the baseline, then compare simple scenarios.'}/>
+    <ToolHeader language={language} id="C3_PHYSIQUE_GOAL" role="CORE" technicalName="Physique Goal Explorer" title={th?"ถ้าอยากให้หุ่นดูเป็นตัววี ลองเปลี่ยนส่วนไหนได้บ้าง?":'Want a stronger V-shape? Which side of the ratio changes it?'} question={th?"ใช้รอบไหล่และเอวที่วัดไว้ลองปรับค่าในแบบจำลอง โดยไม่ต้องคำนวณใหม่":'Reuse your shoulder and waist measurements as the baseline, then compare simple scenarios.'}/>
     <div className="lab-workbench">
       <div>
         <ReuseNote language={language}/>
@@ -207,13 +207,13 @@ export function ApeIndexSimpleTool({ language='th' }) {
       : `Your arm span is ${Math.abs(x.diff)} cm ${x.diff >= 0 ? 'longer' : 'shorter'} than your height`,
     metric: th ? `Ape Index ${x.diff >= 0 ? '+' : ''}${x.diff} ซม. · ${x.ratio}×` : `Ape Index ${x.diff >= 0 ? '+' : ''}${x.diff} cm · ${x.ratio}×`,
     meaning: th
-      ? 'นี่คือค่าระยะเอื้อมเมื่อเทียบกับส่วนสูงเท่านั้น'
+      ? "ค่านี้เปรียบเทียบช่วงแขนเมื่อกางแขนกับส่วนสูงเท่านั้น"
       : 'This is simply your reach relative to height.',
     use: th
-      ? 'หากอยากรู้ว่าค่านี้มีผลต่อ Bench Press หรือ Deadlift อย่างไร ให้เปิด Exercise Fit แล้วระบบจะใช้ค่าเดิมต่อทันที'
+      ? "เปิดเครื่องมือเลือกท่าฝึกเพื่อดูว่าระยะเอื้อมอาจเกี่ยวข้องกับ Bench Press หรือ Deadlift อย่างไร ระบบจะใช้ค่าเดิมให้"
       : 'To apply this to Bench Press or Deadlift, open Exercise Fit. The same measurement will be reused automatically.',
     watch: th
-      ? 'Ape Index ไม่ได้ทำนายประสิทธิภาพการฝึก หรือบอกว่าท่าไหนดีที่สุดสำหรับคุณ'
+      ? "อัตราส่วนช่วงแขนต่อส่วนสูงใช้ทำนายผลฝึกหรือตัดสินท่าที่เหมาะที่สุดไม่ได้"
       : 'Ape Index does not predict performance or decide the best exercise for you.',
     nextHref:'/lab/exercise-fit',
     nextLabel: th ? 'นำค่านี้ไปใช้กับท่าฝึก' : 'APPLY THIS TO A MOVEMENT',
@@ -221,7 +221,7 @@ export function ApeIndexSimpleTool({ language='th' }) {
   } : null;
 
   return <>
-    <ToolHeader language={language} id="Q4_APE_INDEX" role="QUICK" technicalName="Ape Index" title={th?'แขนของคุณยาวแค่ไหนเมื่อเทียบกับส่วนสูง?':'How long are your arms relative to height?'} question={th?'Quick Check นี้มีหน้าที่วัดระยะเอื้อม (reach) อย่างเดียว การเลือกหรือปรับท่าจะอยู่ใน Exercise Fit':'This Quick Check measures reach only. Movement application belongs in Exercise Fit.'}/>
+    <ToolHeader language={language} id="Q4_APE_INDEX" role="QUICK" technicalName="Ape Index" title={th?'แขนของคุณยาวแค่ไหนเมื่อเทียบกับส่วนสูง?':'How long are your arms relative to height?'} question={th?"ส่วนนี้ใช้วัดระยะเอื้อม หากต้องการเลือกหรือปรับท่า ให้ใช้เครื่องมือเลือกท่าฝึกต่อ":'This Quick Check measures reach only. Movement application belongs in Exercise Fit.'}/>
     <div className="lab-workbench">
       <div>
         <InputGrid>
@@ -247,13 +247,13 @@ export function FemurTibiaSimpleTool({ language='th' }) {
       : `Your femur segment is about ${Math.abs(x.percent)}% ${x.percent >= 0 ? 'longer' : 'shorter'} than your tibia segment`,
     metric:`Femur:Tibia ${x.ratio} · ${x.percent >= 0 ? '+' : ''}${x.percent}%`,
     meaning: th
-      ? 'นี่คือความสัมพันธ์ระหว่างช่วงต้นขากับหน้าแข้งเท่านั้น'
+      ? "ค่านี้เปรียบเทียบความยาวช่วงต้นขากับหน้าแข้งเท่านั้น"
       : 'This is simply the relationship between your thigh and lower-leg segments.',
     use: th
-      ? 'หากอยากรู้ว่าค่านี้มีผลต่อท่า Squat อย่างไร ให้เปิด Exercise Fit หรือ Squat Setup Trial แล้วค่าเดิมจะถูกใช้ต่อโดยอัตโนมัติ'
+      ? "เปิดเครื่องมือเลือกท่าฝึกหรือทดลองสควอต เพื่อดูว่าสัดส่วนขาอาจเกี่ยวข้องกับท่าสควอตอย่างไร ระบบจะใช้ค่าเดิมให้"
       : 'To apply this to Squat, open Exercise Fit or Squat Geometry. The same measurements will be reused automatically.',
     watch: th
-      ? 'อัตราส่วนนี้อย่างเดียวไม่สามารถบอกว่า Front หรือ Back Squat เหมาะกับคุณมากกว่า'
+      ? "อัตราส่วนนี้เพียงค่าเดียวยังตัดสินไม่ได้ว่าควรใช้ Front Squat หรือ Back Squat"
       : 'This ratio alone cannot decide whether Front or Back Squat is better for you.',
     nextHref:'/lab/exercise-fit',
     nextLabel: th ? 'นำค่านี้ไปใช้กับท่า Squat' : 'APPLY THIS TO SQUAT',
@@ -261,7 +261,7 @@ export function FemurTibiaSimpleTool({ language='th' }) {
   } : null;
 
   return <>
-    <ToolHeader language={language} id="Q5_FEMUR_TIBIA" role="QUICK" technicalName="Femur:Tibia" title={th?'ต้นขาของคุณยาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?':'How long is your thigh relative to your lower leg?'} question={th?'Quick Check นี้มีหน้าที่วัดสัดส่วนช่วงขาอย่างเดียว การปรับท่า Squat จะอยู่ใน Exercise Fit หรือ Squat Setup Trial':'This Quick Check measures leg proportions only. Squat application belongs in Exercise Fit / Squat Geometry.'}/>
+    <ToolHeader language={language} id="Q5_FEMUR_TIBIA" role="QUICK" technicalName="Femur:Tibia" title={th?'ต้นขาของคุณยาวแค่ไหนเมื่อเทียบกับหน้าแข้ง?':'How long is your thigh relative to your lower leg?'} question={th?"ส่วนนี้ใช้วัดสัดส่วนขา หากต้องการปรับท่า ให้ใช้เครื่องมือเลือกท่าฝึกหรือทดลองสควอตต่อ":'This Quick Check measures leg proportions only. Squat application belongs in Exercise Fit / Squat Geometry.'}/>
     <div className="lab-workbench">
       <div>
         <InputGrid>

@@ -26,22 +26,22 @@ function slotLabel(slot?: string) {
 function memoryStatusLabel(status?: string) {
   const labels: Record<string, string> = {
     CONFIRMED_GOOD_FIT: "เคยลองแล้ว: เหมาะดี",
-    DEPRIORITIZED: "เคยลองแล้ว: ควรลดความสำคัญ",
+    DEPRIORITIZED: "เคยลองแล้ว: ควรพิจารณาท่าอื่นก่อน",
     TRY: "ควรลองต่อ",
   };
   return labels[status ?? ""] ?? "";
 }
 
 export default async function PhysicalConsultPage() {
-  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ระบบเชื่อมต่อข้อมูลไม่พร้อมใช้งานชั่วคราว</div></AppShell>;
+  if (!hasSupabaseEnv()) return <AppShell><div className="notice warning">ยังเชื่อมต่อระบบไม่ได้ กรุณาลองใหม่ภายหลัง</div></AppShell>;
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub as string | undefined;
   if (!userId) return <AppShell>
     <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">Physical Consult</div>
-    <h1>เซสชันสำหรับ Trainer</h1>
-    <div className="card"><p>เข้าสู่ระบบด้วยบัญชีของผู้ใช้ก่อนเริ่มเซสชัน</p><Link className="btn primary" href="/login?physical=1">เข้าสู่ Physical Consult</Link></div>
+    <h1>การใช้งานบนอุปกรณ์เทรนเนอร์</h1>
+    <div className="card"><p>เข้าสู่ระบบด้วยบัญชีของผู้ใช้ก่อนเริ่มเซสชัน</p><Link className="btn primary" href="/login?physical=1">เข้าสู่ระบบสำหรับปรึกษาเทรนเนอร์</Link></div>
   </AppShell>;
 
   const [{ data: access }, { data: program }] = await Promise.all([
@@ -53,9 +53,9 @@ export default async function PhysicalConsultPage() {
   if (!isPro) return <AppShell>
     <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">Physical Consult</div>
-    <h1>Physical Consult สำหรับ PRO</h1>
+    <h1>ปรึกษาเทรนเนอร์สำหรับบัญชี PRO</h1>
     <div className="card">
-      <p>Physical Consult ใช้ผลการฝึกจริงเป็นส่วนหนึ่งของการปรับ Program บัญชีนี้ยังเป็น FREE จึงยังบันทึกผลการทดลองเข้า Exercise Memory ไม่ได้</p>
+      <p>การปรึกษาเทรนเนอร์ใช้ผลฝึกจริงประกอบการปรับโปรแกรม บัญชีนี้ยังเป็น FREE จึงยังบันทึกผลลองท่าเข้าประวัติรายท่าไม่ได้</p>
       <div className="cta-row"><Link className="btn" href="/lab">ใช้ LAB ต่อ</Link><Link className="btn" href="/home">กลับหน้าแรก</Link></div>
     </div>
   </AppShell>;
@@ -80,26 +80,26 @@ export default async function PhysicalConsultPage() {
   return <AppShell>
     <div className="app-breadcrumb"><Link href="/home">หน้าแรก</Link><span>›</span><span>ประเมินกับเทรนเนอร์</span></div>
     <div className="topline">PRO · Physical Consult</div>
-    <h1>วัด → ลองจริง → ให้ระบบจำ</h1>
-    <p>ข้อมูลที่บันทึกในครั้งนี้จะเชื่อมกับ LAB โปรแกรมฝึก และประวัติการลองท่าของผู้ใช้คนเดิม</p>
+    <h1>วัด ลองฝึก แล้วบันทึกผล</h1>
+    <p>ผลที่บันทึกครั้งนี้จะเชื่อมกับ LAB โปรแกรม และประวัติลองท่าของบัญชีเดิม</p>
 
     <div className="notice" style={{ marginBottom: 18 }}>
-      <strong>จำไว้ในเซสชันนี้</strong>
-      <p style={{ marginBottom: 0 }}>LAB ช่วยบอกว่าควรลองอะไร · ผลตอนลองจริงสำคัญกว่า · บันทึกเฉพาะสิ่งที่สังเกตได้</p>
+      <strong>ใช้ค่าที่จำไว้ในการใช้งานครั้งนี้</strong>
+      <p style={{ marginBottom: 0 }}>ใช้ LAB เลือกสิ่งที่น่าลอง แล้วบันทึกเฉพาะสิ่งที่สังเกตได้จากการฝึกจริง</p>
     </div>
 
     <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">ขั้นตอนที่ 1 · วัดและประเมิน</div>
       <h2>Exercise Fit</h2>
-      <p>เลือกท่าที่ต้องการดู หากเคยวัดไว้แล้ว ระบบจะใช้ค่าเดิมให้ทันที</p>
-      <div className="cta-row"><Link className="btn primary" href="/lab/exercise-fit?consult=1">เปิด Exercise Fit</Link><Link className="btn" href="/lab/squat-geometry?consult=1">ลองปรับท่า Squat</Link></div>
+      <p>เลือกท่าที่ต้องการประเมิน หากเคยวัดแล้ว ระบบจะใช้ค่าเดิมให้</p>
+      <div className="cta-row"><Link className="btn primary" href="/lab/exercise-fit?consult=1">เปิดเครื่องมือเลือกท่าฝึก</Link><Link className="btn" href="/lab/squat-geometry?consult=1">ทดลองปรับท่าสควอต</Link></div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">ขั้นตอนที่ 2 · ลองท่าที่ LAB แนะนำ</div>
-      <h2>ลองท่าที่ LAB แนะนำและยังไม่อยู่ใน Program</h2>
-      <p>บันทึกได้เฉพาะท่าตัวเลือกปัจจุบันจาก LAB ของผู้ใช้คนนี้ หากท่าอยู่ใน Program ปัจจุบันแล้ว ให้ใช้ขั้นตอนที่ 3 แทน</p>
-      {!offProgramGroups.length ? <div className="notice">ขณะนี้ไม่มีท่าจาก LAB ที่อยู่นอก Program ให้ลอง อาจเป็นเพราะยังไม่มีผล Exercise Fit หรือท่าที่เกี่ยวข้องอยู่ใน Program แล้ว</div> : null}
+      <h2>ลองท่าที่ LAB แนะนำและยังไม่อยู่ใน โปรแกรม</h2>
+      <p>บันทึกได้เฉพาะท่าตัวเลือกจากผล LAB ปัจจุบันของผู้ฝึกคนนี้ หากท่าอยู่ในโปรแกรมแล้ว ให้บันทึกในขั้นตอนที่ 3</p>
+      {!offProgramGroups.length ? <div className="notice">ยังไม่มีท่าจาก LAB ที่อยู่นอกโปรแกรมให้ลอง อาจยังไม่ได้วิเคราะห์ความเหมาะสมของท่า หรือท่าที่แนะนำอยู่ในโปรแกรมแล้ว</div> : null}
       {offProgramGroups.map((group) => <div key={group.slot ?? "movement"} style={{ marginTop: 18 }}>
         <div className="kicker">{slotLabel(group.slot)}</div>
         {group.candidates.map((candidate, index) => {
@@ -113,17 +113,17 @@ export default async function PhysicalConsultPage() {
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">ขั้นตอนที่ 3 · บันทึกผลจาก Program ปัจจุบัน</div>
-      <h2>{program ? `Program v${program.program_version}` : "ยังไม่มี Program ปัจจุบัน"}</h2>
-      <p>{program ? "เปิดท่าใน Program ปัจจุบันเพื่อบันทึกผลการฝึกจริง ระบบจะนำข้อมูลนี้ไปอัปเดต Exercise Memory" : "สร้าง Program ก่อน หากต้องการบันทึกผลของท่าที่อยู่ใน Program"}</p>
-      <div className="cta-row">{program ? <Link className="btn primary" href="/physical-consult/program">บันทึกผลของท่าใน Program</Link> : <Link className="btn" href="/program/start">สร้าง Program</Link>}</div>
+      <div className="kicker">ขั้นตอนที่ 3 · บันทึกผลจาก โปรแกรมปัจจุบัน</div>
+      <h2>{program ? `Program v${program.program_version}` : "ยังไม่มี โปรแกรมปัจจุบัน"}</h2>
+      <p>{program ? "เปิดท่าในโปรแกรมปัจจุบันและบันทึกผลฝึก ระบบจะอัปเดตประวัติรายท่าให้" : "สร้างโปรแกรมก่อน เพื่อบันทึกผลของท่าที่อยู่ในโปรแกรม"}</p>
+      <div className="cta-row">{program ? <Link className="btn primary" href="/physical-consult/program">บันทึกผลของท่าใน โปรแกรม</Link> : <Link className="btn" href="/program/start">สร้าง โปรแกรม</Link>}</div>
     </section>
 
     <section className="card" style={{ marginTop: 18 }}>
       <div className="kicker">ขั้นตอนที่ 4 · จบเซสชัน</div>
-      <h2>จบเซสชันบนเครื่อง Trainer</h2>
-      <p>การออกจากระบบด้านล่างจะปิดเฉพาะเซสชันของอุปกรณ์นี้ ไม่ได้ออกจากระบบของผู้ใช้บนโทรศัพท์หรืออุปกรณ์อื่น</p>
-      <LogoutButton label="จบ Physical Consult และออกจากระบบเครื่องนี้" />
+      <h2>จบการใช้งานบนอุปกรณ์เทรนเนอร์</h2>
+      <p>ปุ่มด้านล่างจะออกจากระบบเฉพาะอุปกรณ์นี้ บัญชีบนโทรศัพท์หรืออุปกรณ์อื่นยังใช้งานต่อได้</p>
+      <LogoutButton label={"จบการปรึกษาและออกจากระบบเครื่องนี้"} />
     </section>
   </AppShell>;
 }

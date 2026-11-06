@@ -71,7 +71,7 @@ export function ExerciseFeedbackForm({
     <div className="form" style={{ marginTop: 12 }}>
       <div className="kicker">Exercise Memory</div>
       <h3 style={{ margin: "4px 0 8px" }}>ท่านี้เป็นอย่างไรบ้าง? · {label}</h3>
-      <p style={{ marginTop: 0 }}>ไม่ต้องกรอกทุกท่า บันทึกเมื่อมีอะไรที่สังเกตได้จริง เช่น ทำได้ดีขึ้น ท่ารู้สึกไม่เข้ากับคุณ หรือกำลังลองท่าใหม่ ระบบจะจำข้อมูลนี้ไว้ใช้ในการตัดสินใจครั้งต่อไป</p>
+      <p style={{ marginTop: 0 }}>บันทึกเมื่อสังเกตเห็นสิ่งที่เปลี่ยนไป เช่น ฝึกได้ดีขึ้น รู้สึกไม่เข้ากับท่า หรือกำลังลองท่าใหม่ ระบบจะใช้ข้อมูลนี้ประกอบคำแนะนำครั้งถัดไป ไม่ต้องกรอกทุกท่า</p>
       <div className="form-grid">
         <label>ผลการฝึก
           <select value={performance} onChange={(e) => setPerformance(e.target.value)}>
@@ -81,7 +81,7 @@ export function ExerciseFeedbackForm({
             <option value="WORSE">แย่ลง</option>
           </select>
         </label>
-        <label>การควบคุม / ความสบาย
+        <label>การคุมท่าและความสบายขณะฝึก
           <select value={tolerance} onChange={(e) => setTolerance(e.target.value)}>
             <option value="">ไม่ระบุ</option>
             <option value="GOOD">ดี</option>
@@ -110,10 +110,10 @@ export function ExerciseFeedbackForm({
         <input value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} placeholder="เช่น คุมท่าได้ดีขึ้น หรือเครื่องนี้ไม่เข้ากับช่วงแขน" />
       </label>
       <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
-        {busy ? "กำลังบันทึก..." : "บันทึกผลของท่านี้"}
+        {busy ? "กำลังบันทึก…" : "บันทึกผลของท่านี้"}
       </button>
       {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลของท่านี้</div>}
-      {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว · Exercise Memory จะจำผลของท่านี้ไว้ใช้ครั้งต่อไป</div>}
+      {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว ระบบจะใช้ประวัติของท่านี้ประกอบคำแนะนำครั้งถัดไป</div>}
       {error && <div className="notice warning" role="alert">{error}</div>}
     </div>
   );

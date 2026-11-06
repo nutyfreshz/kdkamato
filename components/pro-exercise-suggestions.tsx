@@ -43,17 +43,17 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
 
   if (!suggestions.length) {
     return <section className="card" style={{ marginTop: 18 }}>
-      <div className="kicker">PRO · คำแนะนำท่าจาก LAB</div>
+      <div className="kicker">PRO · ท่าที่น่าลองจากผล LAB</div>
       <h2>ยังไม่มีคำแนะนำท่าฝึกจาก LAB</h2>
-      <p>เมื่อบันทึก LAB ที่เกี่ยวข้อง ระบบจะช่วยจัดลำดับว่าท่าไหนควรลองก่อน โดยยังไม่เปลี่ยน Program ทันที</p>
+      <p>เมื่อบันทึกผล LAB ที่เกี่ยวข้อง ระบบจะจัดลำดับท่าที่น่าลองให้ โดยยังไม่เปลี่ยนโปรแกรมทันที</p>
       <div className="cta-row"><Link className="btn" href="/lab">เปิด KDKAMATO LAB</Link></div>
     </section>;
   }
 
   return <section className="card" style={{ marginTop: 18 }}>
-    <div className="kicker">PRO · คำแนะนำท่าจาก LAB</div>
+    <div className="kicker">PRO · ท่าที่น่าลองจากผล LAB</div>
     <h2>คำแนะนำท่าฝึก</h2>
-    <p>LAB ช่วยแนะนำท่าที่ควรลองก่อน เมื่อมีประวัติการลองท่าแล้ว ระบบจะให้น้ำหนักกับผลการฝึกจริงมากขึ้น</p>
+    <p>LAB ช่วยจัดลำดับท่าที่น่าลอง เมื่อมีประวัติลองท่าแล้ว ระบบจะใช้ผลฝึกจริงประกอบคำแนะนำมากขึ้น</p>
     {suggestions.map((s) => {
       const top = s.suggested;
       const current = names(s.current_exercises);
@@ -61,7 +61,7 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
       return <div className="exercise" key={s.movement_slot ?? top?.exercise_key}>
         <div style={{ minWidth: 0 }}>
           <strong>{slotLabel(s.movement_slot)}</strong><br/>
-          <small>{current ? `ปัจจุบัน: ${current}` : "ยังไม่มีท่านี้ใน Program ปัจจุบัน"}</small>
+          <small>{current ? `ปัจจุบัน: ${current}` : "ยังไม่มีท่านี้ใน โปรแกรมปัจจุบัน"}</small>
           {alternatives ? <p style={{ margin: "5px 0 0", fontSize: ".78rem", opacity: .72 }}>ตัวเลือก: {alternatives}</p> : null}
         </div>
         <div style={{ textAlign: "right" }}>
@@ -70,6 +70,6 @@ export function ProExerciseSuggestions({ data }: { data?: ProExerciseSuggestionP
         </div>
       </div>;
     })}
-    <div className="notice" style={{ marginTop: 12 }}>คำแนะนำนี้ยังไม่เปลี่ยน Program โดยอัตโนมัติ และจะใช้เป็นข้อมูลประกอบในการทบทวนครั้งถัดไป</div>
+    <div className="notice" style={{ marginTop: 12 }}>ระบบจะใช้คำแนะนำนี้ประกอบการทบทวนครั้งถัดไป โดยยังไม่เปลี่ยนโปรแกรมอัตโนมัติ</div>
   </section>;
 }

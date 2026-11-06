@@ -49,7 +49,7 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
   return <div className="form" style={{ marginTop: 12 }}>
     <div className="kicker">ลองท่านี้จริง</div>
     <h3 style={{ margin: "4px 0 8px" }}>{label}</h3>
-    <p style={{ marginTop: 0 }}>ลองท่านี้แล้วบันทึกสิ่งที่สังเกตได้ ระบบจะจำผลไว้แม้ท่านี้ยังไม่ได้อยู่ใน Program</p>
+    <p style={{ marginTop: 0 }}>ลองฝึกท่านี้แล้วบันทึกสิ่งที่สังเกตได้ ระบบจะเก็บผลไว้แม้ท่ายังไม่อยู่ในโปรแกรม</p>
     <div className="form-grid">
       <label>เทียบกับท่าที่ใช้อยู่
         <select value={performance} onChange={(e) => { setPerformance(e.target.value); setSaved(false); }}>
@@ -59,7 +59,7 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
           <option value="WORSE">แย่กว่า</option>
         </select>
       </label>
-      <label>การควบคุม / ความสบาย
+      <label>การคุมท่าและความสบายขณะฝึก
         <select value={tolerance} onChange={(e) => { setTolerance(e.target.value); setSaved(false); }}>
           <option value="">ไม่ระบุ</option>
           <option value="GOOD">ดี</option>
@@ -76,15 +76,13 @@ export function PhysicalConsultTrialForm({ exerciseKey, label }: { exerciseKey: 
         </select>
       </label>
     </div>
-    <label>หมายเหตุของ Trainer (ไม่บังคับ)
-      <input value={note} maxLength={500} onChange={(e) => { setNote(e.target.value); setSaved(false); }} placeholder="เช่น คุมแนวได้ง่ายกว่า แต่ช่วงล่างยังต้องปรับ setup" />
-    </label>
-    <small>การฟื้นตัวยังไม่ต้องกรอกตอนนี้ เพราะต้องดูหลังการฝึก หากมีข้อมูลภายหลังค่อยบันทึกจาก Program</small>
+    <label>หมายเหตุจากเทรนเนอร์ (ไม่บังคับ)<input value={note} maxLength={500} onChange={(e) => { setNote(e.target.value); setSaved(false); }} placeholder={"เช่น คุมแนวได้ง่ายขึ้น แต่ยังต้องปรับการจัดท่าในช่วงล่าง"} /></label>
+    <small>ยังไม่ต้องประเมินการฟื้นตัวขณะลองท่า ให้กลับมาบันทึกในโปรแกรมหลังมีข้อมูลจากการฝึก</small>
     <button className="btn primary" type="button" disabled={busy || !hasSignal} onClick={save}>
-      {busy ? "กำลังบันทึก..." : saved ? "บันทึกการทดลองแล้ว" : "บันทึกผลการทดลองจริง"}
+      {busy ? "กำลังบันทึก…" : saved ? "บันทึกการทดลองแล้ว" : "บันทึกผลการทดลองจริง"}
     </button>
     {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลการทดลอง</div>}
-    {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว · Exercise Memory จะจำผลที่เกิดขึ้นจริง และให้ความสำคัญมากกว่าคำคาดการณ์จาก LAB</div>}
+    {saved && <div className="notice" role="status" aria-live="polite">บันทึกผลแล้ว ระบบจะใช้ผลฝึกจริงประกอบการพิจารณามากกว่าการคาดการณ์จาก LAB</div>}
     {error && <div className="notice warning" role="alert">{error}</div>}
   </div>;
 }

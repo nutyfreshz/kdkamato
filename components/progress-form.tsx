@@ -70,20 +70,20 @@ export function ProgressForm({ hasActiveProgram, initial }: { hasActiveProgram: 
 
   return <div className="card form">
     <h2>เช็กอินประจำวัน</h2>
-    <p>{hasActiveProgram ? "บันทึกน้ำหนัก ผลฝึก และการฟื้นตัวของวันนี้ ส่วนแคลอรีและเปอร์เซ็นต์เซตตามแผนดูได้ด้านล่าง" : "ยังไม่มีโปรแกรมปัจจุบัน คุณบันทึกน้ำหนักได้ เมื่อเริ่มใช้โปรแกรมแล้วระบบจะเชื่อมผลฝึกให้"}</p>
+    <p>{hasActiveProgram ? "บันทึกน้ำหนัก ผลฝึก และการฟื้นตัวของวันนี้ ดูแคลอรีและเปอร์เซ็นต์เซตตามแผนได้ด้านล่าง" : "ยังไม่มีโปรแกรมปัจจุบัน คุณบันทึกน้ำหนักได้ก่อน เมื่อเริ่มใช้โปรแกรมแล้วระบบจะเชื่อมผลฝึกให้"}</p>
     <div className="form-grid">
       <label>น้ำหนักวันนี้ (ไม่บังคับ)<input inputMode="decimal" value={form.weight} onChange={(e)=>setForm({...form,weight:e.target.value})} placeholder="กก." /></label>
       <label>ผลการฝึก<select value={form.trainingStatus} onChange={(e)=>setForm({...form,trainingStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="BETTER">ดีขึ้น</option><option value="SAME">ใกล้เคียงเดิม</option><option value="WORSE">แย่ลง</option></select></label>
       <label>การฟื้นตัว<select value={form.recoveryStatus} onChange={(e)=>setForm({...form,recoveryStatus:e.target.value})}><option value="">ไม่ระบุ</option><option value="GOOD">ดี</option><option value="OK">พอใช้</option><option value="POOR">ยังฟื้นไม่ดี</option></select></label>
-      <details><summary>ประเมินการทำตามแผนด้วยตัวเอง (ไม่บังคับ)</summary><p>ใช้ประกอบการทบทวนแผน เป็นความเห็นของคุณ แยกจากเปอร์เซ็นต์เซตและแคลอรีที่บันทึก</p><label>การฝึก (ไม่บังคับ)<select value={form.trainingAdherence} onChange={(e)=>setForm({...form,trainingAdherence:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ทำได้เกือบครบ</option><option value="MEDIUM">ทำได้บางส่วน</option><option value="LOW">ทำได้น้อย</option></select></label>
-      <label>ประเมินการกินตามแผนด้วยตัวเอง (ไม่ใช่แคลอรี)<select value={form.nutritionAdherence} onChange={(e)=>setForm({...form,nutritionAdherence:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ส่วนใหญ่ทำได้</option><option value="MEDIUM">ประมาณครึ่งหนึ่ง</option><option value="LOW">ทำได้ไม่ค่อยถึง</option></select></label></details>
+      <details><summary>ประเมินการทำตามแผนด้วยตนเอง (ไม่บังคับ)</summary><p>คำตอบนี้ใช้ประกอบการทบทวนแผน และแยกจากเปอร์เซ็นต์เซตกับแคลอรีที่บันทึก</p><label>การฝึก (ไม่บังคับ)<select value={form.trainingAdherence} onChange={(e)=>setForm({...form,trainingAdherence:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ทำได้เกือบครบ</option><option value="MEDIUM">ทำได้บางส่วน</option><option value="LOW">ทำได้น้อย</option></select></label>
+      <label>ประเมินการกินตามแผนด้วยตนเอง (ไม่ใช่ยอดแคลอรี)<select value={form.nutritionAdherence} onChange={(e)=>setForm({...form,nutritionAdherence:e.target.value})}><option value="">ไม่ระบุ</option><option value="HIGH">ส่วนใหญ่ทำได้</option><option value="MEDIUM">ประมาณครึ่งหนึ่ง</option><option value="LOW">ทำได้ไม่ค่อยถึง</option></select></label></details>
     </div>
     <label className="check"><input type="checkbox" checked={form.trainingCompleted} onChange={(e)=>setForm({...form,trainingCompleted:e.target.checked})}/> วันนี้ฝึกแล้ว</label>
     <label className="check"><input type="checkbox" checked={form.newIssue} onChange={(e)=>setForm({...form,newIssue:e.target.checked})}/> มีปัญหาใหม่</label>
     <label>หมายเหตุ (ไม่บังคับ)<input value={form.note} onChange={(e)=>setForm({...form,note:e.target.value})} /></label>
-    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก..." : "บันทึกการเช็กอิน"}</button>
+    <button className="btn primary" onClick={save} disabled={busy}>{busy ? "กำลังบันทึก…" : "บันทึกการเช็กอิน"}</button>
     {busy && <div className="notice" role="status" aria-live="polite">กำลังบันทึกผลการฝึก</div>}
-    {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว หากบันทึกซ้ำในวันเดียวกัน ระบบจะอัปเดตการเช็กอินเดิม</div>}
+    {saved && <div className="notice" role="status" aria-live="polite">บันทึกแล้ว หากบันทึกซ้ำวันนี้ ระบบจะอัปเดตเช็กอินของวันนี้</div>}
     {error && <div className="notice warning" role="alert">{error}</div>}
   </div>;
 }
