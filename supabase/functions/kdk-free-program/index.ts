@@ -136,7 +136,7 @@ Deno.serve(async (req: Request) => {
 
   if (accessError || baselineError || nutritionError || trainingProfileError) return json({ error: "FOUNDATION_READ_FAILED" }, 500);
   if (!access) return json({ error: "USER_ACCESS_NOT_FOUND" }, 409);
-  if (access.tier !== "FREE") return json({ error: "FREE_GENERATOR_REQUIRES_FREE_USER" }, 409);
+  if (access.tier !== "FREE" && access.tier !== "PRO") return json({ error: "PROGRAM_GENERATOR_REQUIRES_ACTIVE_USER" }, 409);
   if (!baseline) return json({ error: "BASELINE_REQUIRED" }, 409);
 
   const foundationErrors = validateFoundation(
